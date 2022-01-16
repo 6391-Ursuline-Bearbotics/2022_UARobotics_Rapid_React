@@ -1,12 +1,23 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2017-2019 FIRST. All Rights Reserved.                        */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
 
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.ShooterConstants;
+import io.github.oblarg.oblog.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -28,14 +39,29 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    // The first argument is the root container
+    // The second argument is whether logging and config should be given separate tabs
+    Logger.configureLoggingAndConfig(m_robotContainer, false);
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // Here we calculate the battery voltage based on drawn current.
+    // As our robot draws more power from the battery its voltage drops.
+    // The estimated voltage is highly dependent on the battery's internal
+    // resistance.
+    /* double drawCurrent = m_robotContainer.getRobotDrive().getDrawnCurrentAmps();
+    double loadedVoltage = BatterySim.calculateDefaultBatteryLoadedVoltage(drawCurrent);
+    RoboRioSim.setVInVoltage(loadedVoltage);
+    m_robotContainer.m_PhotonVision.visionSys.processFrame(m_robotContainer.m_robotDrive.getCurrentPose()); */
   }
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like
    * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
+   * <p>This runs after the mode specific periodic functions, but before
+   * LiveWindow and SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
@@ -44,29 +70,56 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    Logger.updateEntries();
   }
 
-  /** This function is called once each time the robot enters Disabled mode. */
+  /**
+   * This function is called once each time the robot enters Disabled mode.
+   */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    Shuffleboard.selectTab("Dashboard");
+    m_robotContainer.m_PhotonVision.lightsOff();
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    m_robotContainer.m_PhotonVision.lightsOff();
+  }
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  /**
+   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
+   */
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
+    m_robotContainer.m_intake.setOutput(0);
+    m_robotContainer.m_intake.extendIntake(false);
+    m_robotContainer.m_conveyor.turnOff();
+    m_robotContainer.m_climb.invertclimber(false);
+    m_robotContainer.m_climb.setOutput(0, 0);
+    m_robotContainer.m_climb.climbstage = 0;
+    m_robotContainer.m_climb.resetEnc(true);
+    m_robotContainer.m_shooter.setSetpoint(0);
+    m_robotContainer.m_shooter.disable();
+    m_robotContainer.m_PhotonVision.lightsOff();
+    SmartDashboard.putString("GalacticSearch", "");
+
     // schedule the autonomous command (example)
+    //move this down
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
   }
 
-  /** This function is called periodically during autonomous. */
+  /**
+   * This function is called periodically during autonomous.
+   */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+
+  }
 
   @Override
   public void teleopInit() {
@@ -77,19 +130,44 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.m_intake.setOutput(0);
+    m_robotContainer.m_intake.extendIntake(false);
+    m_robotContainer.m_conveyor.turnOff();
+    m_robotContainer.m_climb.invertclimber(false);
+    m_robotContainer.m_climb.setOutput(0, 0);
+    m_robotContainer.m_climb.climbstage = 0;
+    m_robotContainer.m_climb.resetEnc(true);
+    m_robotContainer.m_shooter.setSetpoint(0);
+    m_robotContainer.m_shooter.disable();
+    m_robotContainer.m_PhotonVision.lightsOff();
   }
 
-  /** This function is called periodically during operator control. */
+  /**
+   * This function is called periodically during operator control.
+   */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+
+    new InstantCommand(m_robotContainer.m_conveyor::turnBackwards)
+        .andThen(new WaitCommand(.15)
+        .andThen(new InstantCommand(m_robotContainer.m_conveyor::turnOff)
+        .andThen(new InstantCommand(() -> {
+          m_robotContainer.m_shooter.setSetpoint(ShooterConstants.kShooterFarTrenchRPS);
+          m_robotContainer.m_shooter.enable();
+      }, m_robotContainer.m_shooter)))).schedule();
+
   }
 
-  /** This function is called periodically during test mode. */
+  /**
+   * This function is called periodically during test mode.
+   */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 }
