@@ -106,18 +106,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Spin up the shooter to far trench speed when the 'X' button is pressed.
     drv.XButton.or(op.XButton)
-        .whenActive(new InstantCommand(m_conveyor::turnBackwards)
-        .andThen(new WaitCommand(.15)
-        .andThen(new InstantCommand(m_conveyor::turnOff)
-        .andThen(new InstantCommand(() -> {
-        m_shooter.setSetpoint(ShooterConstants.kShooterFarTrenchRPS);
-        m_shooter.enable();
-      }, m_shooter)))));
+      .whenActive(new InstantCommand(() -> {
+        m_shooter.setVoltage(3.0);
+      }, m_shooter));
 
     // Stop the Shooter when the B button is pressed
     drv.BButton.or(op.BButton)
       .whenActive(new InstantCommand(() -> {
-        m_shooter.setSetpoint(0);
+        m_shooter.setVoltage(0);
         m_shooter.disable();
       }, m_shooter));
     

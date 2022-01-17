@@ -6,6 +6,8 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.InvertType;
 
@@ -30,9 +32,11 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class ShooterSubsystem extends PIDSubsystem implements Loggable {
   @Log
-  private final WPI_VictorSPX m_shooterMotor = new WPI_VictorSPX(ShooterConstants.kShooterMotorPort2);
+  // private final WPI_TalonSRX m_shooterMotor = new WPI_TalonSRX(ShooterConstants.kShooterMotorPort2);
+  private final WPI_TalonFX m_shooterMotor = new WPI_TalonFX(ShooterConstants.kShooterMotorPort2);
 
-  private final WPI_VictorSPX m_shooterMotor2 = new WPI_VictorSPX(ShooterConstants.kShooterMotorPort);
+  // private final WPI_TalonSRX m_shooterMotor2 = new WPI_TalonSRX(ShooterConstants.kShooterMotorPort);
+  private final WPI_TalonFX m_shooterMotor2 = new WPI_TalonFX(ShooterConstants.kShooterMotorPort);
 
   private final Encoder m_shooterEncoder = new Encoder(ShooterConstants.kEncoderPorts[0],
       ShooterConstants.kEncoderPorts[1], ShooterConstants.kEncoderReversed, CounterBase.EncodingType.k1X);
@@ -159,5 +163,10 @@ public class ShooterSubsystem extends PIDSubsystem implements Loggable {
     else {
       this.disable();
     }
+  }
+
+  @Config
+  public void setVoltage(double voltage) {
+    m_shooterMotor.setVoltage(voltage);
   }
 }

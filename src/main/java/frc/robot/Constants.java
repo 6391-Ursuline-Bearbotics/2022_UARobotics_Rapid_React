@@ -184,8 +184,8 @@ public final class Constants {
         public static final double kGearRatio = 2.0;
         // 18730 (775pro RPM) / 600 = 31.21666
         // 4096 (sensor units per rotation) / 4 = 1024 * 31.21666 = 31965.866
-        public static final int kShooterMotorPort = 8;
-        public static final int kShooterMotorPort2 = 9;
+        public static final int kShooterMotorPort = 10;
+        public static final int kShooterMotorPort2 = 11;
     
         public static final double kShooterFarTrenchRPS = 112;
         public static final double kShooter1 = 116;
