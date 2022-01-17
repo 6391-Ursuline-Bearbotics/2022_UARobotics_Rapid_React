@@ -10,34 +10,31 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.Constants.LimelightConstants;
-import frc.robot.Constants.PhotonConstants;
+import frc.robot.Constants.CAMERA;
 
 public class PhotonVision {
    // Creates a new PhotonCamera.
-   public PhotonCamera m_limePhoton = new PhotonCamera("gloworm");
-   public PhotonCamera m_HD3000 = new PhotonCamera("HD3000");
-   public SimVisionSystem visionSys;
+   public PhotonCamera m_limePhoton = new PhotonCamera("limelight");
+   public PhotonCamera m_HD3000 = new PhotonCamera("lifecam");
+   public SimVisionSystem ballvisionSys;
+   public SimVisionSystem shootervisionSys;
 
    public PhotonVision() {
-      m_limePhoton.setPipelineIndex(PhotonConstants.kLimePipe);
-      m_HD3000.setPipelineIndex(PhotonConstants.kHD3000Pipe);
+      m_limePhoton.setPipelineIndex(CAMERA.kLimePipe);
+      m_HD3000.setPipelineIndex(CAMERA.kHD3000Pipe);
 
-      String camName = "gloworm";
       double camDiagFOV = 75.0; // degrees
-      double camPitch = LimelightConstants.kCameraAngle;     // degrees
       Transform2d cameraToRobot = new Transform2d(new Translation2d(0.0, 0.0), new Rotation2d()); // meters
-      double camHeightOffGround = LimelightConstants.kCameraHeight; // meters
       double maxLEDRange = 20;          // meters
       int camResolutionWidth = 640;     // pixels
       int camResolutionHeight = 480;    // pixels
       double minTargetArea = 10;        // square pixels
 
-      visionSys = new SimVisionSystem(camName,
+      ballvisionSys = new SimVisionSystem("lifecam",
                                     camDiagFOV,
-                                    camPitch,
+                                    CAMERA.BALLCAMERAANGLE,
                                     cameraToRobot,
-                                    camHeightOffGround,
+                                    CAMERA.BALLCAMERAHEIGHT,
                                     maxLEDRange,
                                     camResolutionWidth,
                                     camResolutionHeight,
@@ -48,14 +45,13 @@ public class PhotonVision {
       var targetPose = new Pose2d(new Translation2d(tgtXPos, tgtYPos), new Rotation2d(0.0)); // meters
       double targetWidth = Units.inchesToMeters(41.30) - Units.inchesToMeters(6.70);
       double targetHeight = Units.inchesToMeters(98.19) - Units.inchesToMeters(81.19);
-      double targetHeightAboveGround = LimelightConstants.kTargetHeight; // meters
       
       var newTgt = new SimVisionTarget(targetPose,
-                                       targetHeightAboveGround,
+                                       CAMERA.BALLTARGEHEIGHT,
                                        targetWidth,
                                        targetHeight);
       
-      visionSys.addSimVisionTarget(newTgt);
+      ballvisionSys.addSimVisionTarget(newTgt);
    }
 
    public void lightsOn() {

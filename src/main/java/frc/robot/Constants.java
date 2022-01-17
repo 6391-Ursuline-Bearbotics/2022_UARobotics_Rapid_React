@@ -288,15 +288,15 @@ public final class Constants {
         public static final int kHangingEncoderCount = 63000;
     }
 
-    public static final class LimelightConstants {
-        public static final double kCameraAngle = 0; // Degrees
-        public static final double kCameraHeight = .8; // Meters
-        public static final double kTargetHeight = Units.inchesToMeters(81.19); // Height to bottom of the tape
+    public static final class CAMERA {
+        public static final double BALLCAMERAANGLE = 0; // Degrees
+        public static final double SHOOTERCAMERAANGLE = 0; // Degrees
+        public static final double BALLCAMERAHEIGHT = .8; // Meters
+        public static final double SHOOTERCAMERAHEIGHT = .8; // Meters
+        public static final double BALLTARGEHEIGHT = Units.inchesToMeters(9.5); // Height to top of the ball
+        public static final double SHOOTERTARGEHEIGHT = Units.inchesToMeters(81.19); // Height to bottom of the tape
         // public static final double kMinimumRange = 4; // Meters
         // public static final double kMaximumRange = -9; // Meters
-    }
-
-    public static final class PhotonConstants {
         public static final int kLimePipe = 0;
         public static final int kHD3000Pipe = 0;
     }
