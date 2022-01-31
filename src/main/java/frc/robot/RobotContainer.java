@@ -26,6 +26,8 @@ import frc.robot.commands.AutoAim;
 import frc.robot.commands.NextClimbPosition;
 // Subsystem Imports
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.swervelib.SwerveDrivetrainModel;
+import frc.swervelib.SwerveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ConveyorSubsystem;
@@ -33,8 +35,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.PhotonVision;
 // Constant Imports
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.OI;
 // Special Imports
 import frc.robot.UA6391.XboxController6391;
 
@@ -47,6 +48,8 @@ import frc.robot.UA6391.XboxController6391;
 public class RobotContainer {
   public final PhotonVision m_PhotonVision = new PhotonVision();
   
+  private static SwerveDrivetrainModel dt;
+  private static SwerveSubsystem m_swerveSubsystem;
   @Log
   public final ShooterSubsystem m_shooter = new ShooterSubsystem();
   @Log
@@ -62,12 +65,13 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   // The driver's controller
-  XboxController6391 drv = new XboxController6391(OIConstants.kDriverControllerPort, 0.1);
-  XboxControllerSim m_driverControllerSim = new XboxControllerSim(OIConstants.kDriverControllerPort);
+  XboxController6391 drv = new XboxController6391(OI.DRVCONTROLLERPORT, 0.1);
+  XboxControllerSim m_driverControllerSim = new XboxControllerSim(OI.DRVCONTROLLERPORT);
+  private final controlscheme m_scheme = new controlscheme(drv.getXboxController());
 
   // The operator's controller
-  XboxController6391 op = new XboxController6391(OIConstants.kOperatorControllerPort, 0.1);
-  XboxControllerSim m_operatorControllerSim = new XboxControllerSim(OIConstants.kOperatorControllerPort);
+  XboxController6391 op = new XboxController6391(OI.OPCONTROLLERPORT, 0.1);
+  XboxControllerSim m_operatorControllerSim = new XboxControllerSim(OI.OPCONTROLLERPORT);
 
   Button frontConveyorSensor = new Button(() -> m_conveyor.getFrontConveyor());
   Button topConveyorSensor = new Button(() -> m_conveyor.getTopConveyor());
@@ -77,8 +81,13 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    dt = BearSwerveHelper.createBearSwerve();
+    m_swerveSubsystem = BearSwerveHelper.createSwerveSubsystem(dt);
+
+    m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> m_scheme.getJoystickSpeeds(), m_swerveSubsystem));
+
     // Detect if controllers are missing / Stop multiple warnings
-    DriverStation.silenceJoystickConnectionWarning(OIConstants.kPractice);
+    DriverStation.silenceJoystickConnectionWarning(OI.PRACTICE);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -114,7 +123,6 @@ public class RobotContainer {
     drv.BButton.or(op.BButton)
       .whenActive(new InstantCommand(() -> {
         m_shooter.setVoltage(0);
-        m_shooter.disable();
       }, m_shooter));
     
     // While driver holds the Y button Auto Aim to the goal using the left stick for distance control

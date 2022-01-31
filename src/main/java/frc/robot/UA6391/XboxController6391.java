@@ -99,6 +99,10 @@ public class XboxController6391 {
       m_Xbox6391Controller.setRumble(GenericHID.RumbleType.kRightRumble, value);
    }
 
+   public XboxController getXboxController() {
+      return m_Xbox6391Controller;
+   }
+
    private double applyDeadband(double value) {
       if (Math.abs(value) > m_deadband) {
          if (value > 0.0) {

@@ -6,13 +6,11 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.InvertType;
 
-import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -22,61 +20,65 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
-import frc.robot.Constants.SHOOTER;
+import frc.robot.Constants.ShooterConstants;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-public class ShooterSubsystem extends SubsystemBase implements Loggable {
+public class ShooterSubsystemold extends PIDSubsystem implements Loggable {
   @Log
-  // private final WPI_TalonSRX m_shooterMotor = new WPI_TalonSRX(SHOOTER.kShooterMotorPort2);
-  private final WPI_TalonFX m_shooterMotor = new WPI_TalonFX(SHOOTER.kShooterMotorPort2);
+  // private final WPI_TalonSRX m_shooterMotor = new WPI_TalonSRX(ShooterConstants.kShooterMotorPort2);
+  private final WPI_TalonFX m_shooterMotor = new WPI_TalonFX(ShooterConstants.kShooterMotorPort2);
 
-  // private final WPI_TalonSRX m_shooterMotor2 = new WPI_TalonSRX(SHOOTER.kShooterMotorPort);
-  private final WPI_TalonFX m_shooterMotor2 = new WPI_TalonFX(SHOOTER.kShooterMotorPort);
+  // private final WPI_TalonSRX m_shooterMotor2 = new WPI_TalonSRX(ShooterConstants.kShooterMotorPort);
+  private final WPI_TalonFX m_shooterMotor2 = new WPI_TalonFX(ShooterConstants.kShooterMotorPort);
 
-  private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(SHOOTER.kSVolts,
-      SHOOTER.kVVoltSecondsPerRotation, SHOOTER.kA);
+  private final Encoder m_shooterEncoder = new Encoder(ShooterConstants.kEncoderPorts[0],
+      ShooterConstants.kEncoderPorts[1], ShooterConstants.kEncoderReversed, CounterBase.EncodingType.k1X);
 
-  private final BangBangController m_bangBangController = new BangBangController(SHOOTER.ToleranceRPS);
+  private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(ShooterConstants.kSVolts,
+      ShooterConstants.kVVoltSecondsPerRotation, ShooterConstants.kA);
+
+  private final PIDController shooterPID;
 
   @Log
-  private double m_desiredVelocityRPS;
+  private double output;
 
   // The Kv and Ka constants are found using the FRC Characterization toolsuite.
-  LinearSystem<N2, N1, N1> m_flywheelPosition = LinearSystemId.identifyPositionSystem(SHOOTER.kVVoltSecondsPerRotation, SHOOTER.kA);
+  LinearSystem<N2, N1, N1> m_flywheelPosition = LinearSystemId.identifyPositionSystem(ShooterConstants.kVVoltSecondsPerRotation, ShooterConstants.kA);
   LinearSystemSim<N2, N1, N1> m_flywheelPositionSim = new LinearSystemSim<>(m_flywheelPosition);
 
   //private final DCMotor m_flywheelGearbox = DCMotor.getVex775Pro(2);
   //private final FlywheelSim m_flywheelSim = new FlywheelSim(m_flywheelPositionSim, m_flywheelGearbox, 2);
+  private final EncoderSim m_encoderSim = new EncoderSim(m_shooterEncoder);
+
+  private LinearFilter m_velocityFilterMA = LinearFilter.movingAverage(4);
+  private LinearFilter m_velocityFilterIIR = LinearFilter.singlePoleIIR(.1, .02);
+
+  private double m_time = 0;
+  private double m_lastTime = Timer.getFPGATimestamp() - 0.02;
+  private double m_angle = 0;
+  private double m_lastAngle = 0;
+
+  private double m_angularVelocity = 0;
 
   // The shooter subsystem for the robot.
-  public ShooterSubsystem() {
-    TalonFXConfiguration flywheelTalonConfig = new TalonFXConfiguration();
-    flywheelTalonConfig.slot0.kP = SHOOTER.P;
-    flywheelTalonConfig.slot0.kD = SHOOTER.D;
-    m_shooterMotor.configAllSettings(flywheelTalonConfig);
-
+  public ShooterSubsystemold() {
+    super(new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD));
+    shooterPID = getController();
+    shooterPID.setTolerance(ShooterConstants.kShooterToleranceRPS, ShooterConstants.kShooterToleranceAccel);
+    m_shooterEncoder.setDistancePerPulse(ShooterConstants.kEncoderDistancePerPulse);
+    m_shooterEncoder.setSamplesToAverage(1);
     m_shooterMotor2.follow(m_shooterMotor);
     m_shooterMotor.setInverted(false);
     m_shooterMotor2.setInverted(InvertType.OpposeMaster);
     m_shooterMotor.setNeutralMode(NeutralMode.Coast);
 		m_shooterMotor2.setNeutralMode(NeutralMode.Coast);
-  }
-
-  @Override
-  public void periodic() {
-    double voltage = m_shooterFeedforward.calculate(m_desiredVelocityRPS)
-     + m_bangBangController.calculate(getTalonVelocity(), m_desiredVelocityRPS) * kNominalVoltage;
-    m_shooterMotor.setVoltage(voltage);
-    
-    SmartDashboard.putNumber("ff applied voltage", voltage);
-    SmartDashboard.putNumber("talon applied voltage", m_shooterMotor.getBusVoltage());
   }
 
   @Override
@@ -94,8 +96,21 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_flywheelPositionSim.getCurrentDrawAmps()));
   }
 
+  @Override
+  public void useOutput(double output, double setpoint) {
+    var feedforward = m_shooterFeedforward.calculate(setpoint);
+    SmartDashboard.putNumber("ShooterPID", output);
+    SmartDashboard.putNumber("feedforward", feedforward);
+    /* if (output > 8 && getMeasurement() > 50) {
+      // output is still high after being up to speed encoder must be broken
+      output = 0;
+    } */
+    m_shooterMotor.setVoltage(MathUtil.clamp(output + feedforward, 0, 14));
+  }
+
   @Log
   @Log(tabName = "Dashboard", name = "Shooter Speed")
+  @Override
   public double getMeasurement() {
     // old way was getRate
     m_angle = getAngle();
@@ -114,6 +129,15 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
     return m_shooterMotor.get();
   }
 
+  public double getAngle() {
+    return m_shooterEncoder.getDistance();
+  }
+
+  @Log
+  public double getSpeedChange() {
+    return shooterPID.getVelocityError();
+  } 
+
   @Log
   @Log(tabName = "Dashboard", name = "Shooter Setpoint")
   public double getSetpoint() {
@@ -129,6 +153,16 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
   @Config
   public void setShooterRPS(double rps) {
     this.setSetpoint(rps);
+  }
+
+  @Config
+  public void enableShooter(boolean enable) {
+    if (enable) {
+      this.enable();
+    }
+    else {
+      this.disable();
+    }
   }
 
   @Config

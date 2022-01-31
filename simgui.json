@@ -1,0 +1,21 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/ClimbSubsystem": "Subsystem",
+      "/LiveWindow/ConveyorSubsystem": "Subsystem",
+      "/LiveWindow/IntakeSubsystem": "Subsystem",
+      "/LiveWindow/LEDSubsystem": "Subsystem",
+      "/LiveWindow/ShooterSubsystem": "Subsystem",
+      "/LiveWindow/ShooterSubsystem/PID Controller": "PIDController",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/Shuffleboard/Dashboard/autoChooser": "String Chooser",
+      "/Shuffleboard/RobotContainer/m_LED": "Subsystem",
+      "/Shuffleboard/RobotContainer/m_climb": "Subsystem",
+      "/Shuffleboard/RobotContainer/m_conveyor": "Subsystem",
+      "/Shuffleboard/RobotContainer/m_intake": "Subsystem",
+      "/Shuffleboard/RobotContainer/m_shooter": "Subsystem",
+      "/SmartDashboard/Auto Chooser": "String Chooser"
+    }
+  }
+}

@@ -20,8 +20,8 @@ public class PhotonVision {
    public SimVisionSystem shootervisionSys;
 
    public PhotonVision() {
-      m_limePhoton.setPipelineIndex(CAMERA.kLimePipe);
-      m_HD3000.setPipelineIndex(CAMERA.kHD3000Pipe);
+      m_limePhoton.setPipelineIndex(CAMERA.LIMELIGHTPIPELINE);
+      m_HD3000.setPipelineIndex(CAMERA.HD3000PIPELINE);
 
       double camDiagFOV = 75.0; // degrees
       Transform2d cameraToRobot = new Transform2d(new Translation2d(0.0, 0.0), new Rotation2d()); // meters
