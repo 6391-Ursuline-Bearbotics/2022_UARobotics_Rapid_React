@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import io.github.oblarg.oblog.annotations.Log;
-import frc.robot.commands.AutoAim;
 // Command Imports
 import frc.robot.commands.NextClimbPosition;
 // Subsystem Imports
@@ -34,7 +33,6 @@ import frc.robot.subsystems.ConveyorSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.PhotonVision;
 // Constant Imports
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.OI;
 // Special Imports
 import frc.robot.UA6391.XboxController6391;
@@ -53,7 +51,7 @@ public class RobotContainer {
   @Log
   public final ShooterSubsystem m_shooter = new ShooterSubsystem();
   @Log
-  private final LEDSubsystem m_LED = new LEDSubsystem();
+  public final LEDSubsystem m_LED = new LEDSubsystem(m_PhotonVision.m_HD3000);
   @Log
   public final IntakeSubsystem m_intake = new IntakeSubsystem();
   @Log
@@ -158,15 +156,15 @@ public class RobotContainer {
 
     // Create "button" from POV Hat in up direction.  Use both of the angles to the left and right also.
     //drv.POVUp.whileActiveOnce(new LStoCP(m_shooter, m_robotDrive, m_intake));
-    drv.POVUp.whenActive(() -> m_shooter.setSetpoint(ShooterConstants.kShooter1));
-    drv.POVRight.whenActive(() -> m_shooter.setSetpoint(ShooterConstants.kShooter2));
-    drv.POVDown.whenActive(() -> m_shooter.setSetpoint(ShooterConstants.kShooter3));
-    drv.POVLeft.whenActive(() -> m_shooter.setSetpoint(ShooterConstants.kShooter4));
+/*     drv.POVUp.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter1));
+    drv.POVRight.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter2));
+    drv.POVDown.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter3));
+    drv.POVLeft.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter4));
 
-    op.POVUp.whenActive(() -> m_shooter.setSetpoint(ShooterConstants.kShooter1));
-    op.POVRight.whenActive(() -> m_shooter.setSetpoint(ShooterConstants.kShooter2));
-    op.POVDown.whenActive(() -> m_shooter.setSetpoint(ShooterConstants.kShooter3));
-    op.POVLeft.whenActive(() -> m_shooter.setSetpoint(ShooterConstants.kShooter4));
+    op.POVUp.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter1));
+    op.POVRight.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter2));
+    op.POVDown.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter3));
+    op.POVLeft.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter4)); */
 
     op.POVRight.whenActive(new InstantCommand(m_conveyor::CPRightSlow, m_conveyor))
       .whenInactive(new InstantCommand(m_conveyor::CPOff, m_conveyor));
@@ -180,10 +178,10 @@ public class RobotContainer {
     //drv.POVDown.whileActiveOnce(new CPtoLS(m_shooter, m_robotDrive, m_intake));
 
     // POV Up Direction on Operator Controller relatively increases the current setpoint of the shooter
-    //op.POVUpish.whenActive(new InstantCommand(() -> {m_shooter.setSetpoint(m_shooter.getSetpoint() + 1);}));
+    //op.POVUpish.whenActive(new InstantCommand(() -> {m_shooter.setRPS(m_shooter.getSetpoint() + 1);}));
 
     // POV Down Direction on Operator Controller relatively increases the current setpoint of the shooter
-    //op.POVDownish.whenActive(new InstantCommand(() -> {m_shooter.setSetpoint(m_shooter.getSetpoint() - 1);}));
+    //op.POVDownish.whenActive(new InstantCommand(() -> {m_shooter.setRPS(m_shooter.getSetpoint() - 1);}));
 
     // Add a light rumble when there is a ball at the bottom of the conveyor moving up.
     /* topConveyorSensor.negate().and(frontConveyorSensor)

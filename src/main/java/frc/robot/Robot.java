@@ -9,14 +9,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.ShooterConstants;
 import io.github.oblarg.oblog.Logger;
 
 /**
@@ -80,6 +74,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     Shuffleboard.selectTab("Dashboard");
     m_robotContainer.m_PhotonVision.lightsOff();
+    m_robotContainer.m_LED.rainbow();
   }
 
   @Override
@@ -101,10 +96,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_climb.setOutput(0, 0);
     m_robotContainer.m_climb.climbstage = 0;
     m_robotContainer.m_climb.resetEnc(true);
-    m_robotContainer.m_shooter.setSetpoint(0);
-    m_robotContainer.m_shooter.disable();
+    m_robotContainer.m_shooter.setRPS(0);
     m_robotContainer.m_PhotonVision.lightsOff();
-    SmartDashboard.putString("GalacticSearch", "");
 
     // schedule the autonomous command (example)
     //move this down
@@ -137,8 +130,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_climb.setOutput(0, 0);
     m_robotContainer.m_climb.climbstage = 0;
     m_robotContainer.m_climb.resetEnc(true);
-    m_robotContainer.m_shooter.setSetpoint(0);
-    m_robotContainer.m_shooter.disable();
+    m_robotContainer.m_shooter.setRPS(0);
     m_robotContainer.m_PhotonVision.lightsOff();
   }
 
@@ -150,19 +142,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
-
-    new InstantCommand(m_robotContainer.m_conveyor::turnBackwards)
-        .andThen(new WaitCommand(.15)
-        .andThen(new InstantCommand(m_robotContainer.m_conveyor::turnOff)
-        .andThen(new InstantCommand(() -> {
-          m_robotContainer.m_shooter.setSetpoint(ShooterConstants.kShooterFarTrenchRPS);
-          m_robotContainer.m_shooter.enable();
-      }, m_robotContainer.m_shooter)))).schedule();
-
-  }
+  public void testInit() {}
 
   /**
    * This function is called periodically during test mode.

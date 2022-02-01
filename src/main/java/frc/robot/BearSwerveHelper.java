@@ -109,7 +109,7 @@ public class BearSwerveHelper {
 
     private static void passConstants() {
         SwerveConstants.MAX_FWD_REV_SPEED_MPS = DRIVE.MAX_FWD_REV_SPEED_MPS;
-        SwerveConstants.MAX_VOLTAGE = DRIVE.MAX_VOLTAGE;
+        SwerveConstants.MAX_VOLTAGE = ROBOT.MAX_VOLTAGE;
         SwerveConstants.DFLT_START_POSE = ROBOT.DFLT_START_POSE;
 
         SwerveConstants.THETACONTROLLERkP = AUTO.THETACONTROLLERkP;

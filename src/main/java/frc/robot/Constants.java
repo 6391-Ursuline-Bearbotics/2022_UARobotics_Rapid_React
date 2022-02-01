@@ -81,7 +81,6 @@ public final class Constants {
         static public final double MAX_ROTATE_SPEED_RAD_PER_SEC = Units.degreesToRadians(360.0);
         static public final double MAX_TRANSLATE_ACCEL_MPS2 = MAX_FWD_REV_SPEED_MPS/0.25; //0-full time of 0.25 second
         static public final double MAX_ROTATE_ACCEL_RAD_PER_SEC_2 = MAX_ROTATE_SPEED_RAD_PER_SEC/0.25; //0-full time of 0.25 second
-        public static final double MAX_VOLTAGE = 12.0; // Maximum Voltage sent to the drive motors
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // SENSOR CONSTANTS
@@ -116,6 +115,7 @@ public final class Constants {
         public static final double QUIESCENT_CURRENT_DRAW_A = 2.0; //Misc electronics
         public static final double BATTERY_NOMINAL_VOLTAGE = 13.2; //Nicely charged battery
         public static final double BATTERY_NOMINAL_RESISTANCE = 0.040; //40mOhm - average battery + cabling
+        public static final double MAX_VOLTAGE = 12.0; // Maximum Voltage sent to a motor controller
 
         // Assumed starting location of the robot. Auto routines will pick their own location and update this.
         static public final Pose2d DFLT_START_POSE = new Pose2d(Units.feetToMeters(24.0), Units.feetToMeters(10.0), Rotation2d.fromDegrees(0));
@@ -286,55 +286,6 @@ public final class Constants {
         public static final double kVelocityI = 0;
         public static final double kVelocityD = 0.15;
     }
-    
-    public static final class ShooterConstants {
-        public static final int[] kEncoderPorts = new int[]{0, 1};
-        public static final boolean kEncoderReversed = true;
-        public static final double kGearRatio = 2.0;
-        // 18730 (775pro RPM) / 600 = 31.21666
-        // 4096 (sensor units per rotation) / 4 = 1024 * 31.21666 = 31965.866
-        public static final int kShooterMotorPort = 10;
-        public static final int kShooterMotorPort2 = 11;
-    
-        public static final double kShooterFarTrenchRPS = 112;
-        public static final double kShooter1 = 116;
-        public static final double kShooter2 = 114;
-        public static final double kShooter3 = 112;
-        public static final double kShooter4 = 110;
-        public static final double kShooterToleranceRPS = 6.0;
-        public static final double kShooterToleranceAccel = 30.0;
-        
-        public static final double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(500.0);
-
-        public static final int kEncoderCPR = 2048;
-        public static final double kWheelDiameterInches = 4;
-        public static final double kEncoderDistancePerPulse =
-            // Distance units will be rotations per second
-            1.0 / (double) kEncoderCPR;
-
-        // These are not real PID gains, and will have to be tuned for your specific robot.
-        public static final double kP = 0.12; // .000321 / 1.2 was competition number
-        public static final double kI = 0;
-        public static final double kD = 0;
-        public static final double kF = 0; //Not used
-    
-        // On a real robot the feedforward constants should be empirically determined; these are
-        // reasonable guesses.
-        public static final double kSVolts = 1;//0.87; // .05 original / .92 comp
-        public static final double kVVoltSecondsPerRotation = 0.0774; // 12 / .0764 comp
-        public static final double kA = 0.00003; //.0429 comp
-    }
-    
-    public static final class ControlPanelConstants {
-        public static final int kSolenoidPort = 0;
-        public static final int kSpinWheelPort = 33;
-        public static final double kWheelSpeedFast = 0.6;
-        public static final double kWheelSpeedSlow = 0.1;
-        public static final double colorwheel_past = 2;
-        public static final double colorwheel_slow = 0.2;
-        public static final double colorwheel_fast = 0.3;
-        public static final double colorwheel_ticks = 110;
-    }
 
     public static final class AutoConstants {
         public static final double kAutoTimeoutSeconds = 12;
@@ -350,9 +301,9 @@ public final class Constants {
         public static final double kBallArea = 0.5;
     }
 
-    public static final class LEDConstants {
-        public static final int kLEDPWMPort = 0;
-        public static final int kBufferSize = 60;
+    public static final class LED {
+        public static final int PWMPORT = 0;
+        public static final int BUFFERSIZE = 60;
     }
     
     public static final class OI {
@@ -411,36 +362,26 @@ public final class Constants {
     }
 
     public static final class SHOOTER {
-        public static final boolean kEncoderReversed = true;
-        public static final double kGearRatio = 2.0;
-        // 18730 (775pro RPM) / 600 = 31.21666
-        // 4096 (sensor units per rotation) / 4 = 1024 * 31.21666 = 31965.866
-        public static final int kShooterMotorPort = 10;
-        public static final int kShooterMotorPort2 = 11;
+        public static final int MOTORPORT = 10;
+        public static final int MOTOR2PORT = 11;
     
-        public static final double kShooterFarTrenchRPS = 112;
-        public static final double kShooter1 = 116;
-        public static final double kShooter2 = 114;
-        public static final double kShooter3 = 112;
-        public static final double kShooter4 = 110;
         public static final double TOLERANCERPS = 6.0;
-        public static final double kShooterToleranceAccel = 30.0;
         
-        public static final double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(500.0);
+        public static final double WHEELDIAMETERINCHES = 4;
+        public static final int ENCODERCPR = 2048;
+        // Multiply by 10 to get Raw per second.  Divide by encoder CPR to get rotations
+        public static final double RAWTOFLYWHEELRPS = 10 / (double) ENCODERCPR;
 
-        public static final int kEncoderCPR = 2048;
-        public static final double kWheelDiameterInches = 4;
-        public static final double kEncoderDistancePerPulse =
-            // Distance units will be rotations per second
-            1.0 / (double) kEncoderCPR;
+        // Multiply by encoder CPR to get raw counts per second.  Divide by 10 to get per decisecond
+        public static final double RPSTORAW = (double) ENCODERCPR / 10;
 
-        public static final double P = 0.12;
+        public static final double P = 999999999999999.0;
         public static final double D = 0;
     
         // On a real robot the feedforward constants should be empirically determined; these are
         // reasonable guesses.
-        public static final double kSVolts = 1;//0.87; // .05 original / .92 comp
-        public static final double kVVoltSecondsPerRotation = 0.0774; // 12 / .0764 comp
+        public static final double kSVOLTS = 1;//0.87; // .05 original / .92 comp
+        public static final double kVVOLTSECONDSPERROTATION = 0.0774; // 12 / .0764 comp
         public static final double kA = 0.00003; //.0429 comp
     }
 }

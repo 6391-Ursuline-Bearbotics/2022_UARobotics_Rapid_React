@@ -57,7 +57,7 @@ public class AutoAim extends CommandBase {
       SmartDashboard.putNumber("distanceToTarget", Units.metersToFeet(range));
 
       // this should actually be a conversion from range to speed
-      double speedRPS = m_shooter.getMeasurement();
+      double speedRPS = m_shooter.getShooterSpeed();
 
       // set shooter speed to value based on distance
       //m_shooter.setSetpoint(speedRPS);
