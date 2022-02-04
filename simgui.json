@@ -8,6 +8,10 @@
       "/LiveWindow/LEDSubsystem": "Subsystem",
       "/LiveWindow/ShooterSubsystem": "Subsystem",
       "/LiveWindow/ShooterSubsystem/PID Controller": "PIDController",
+      "/LiveWindow/SwerveSubsystem": "Subsystem",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/Shuffleboard/Dashboard/autoChooser": "String Chooser",
       "/Shuffleboard/RobotContainer/m_LED": "Subsystem",
@@ -15,7 +19,50 @@
       "/Shuffleboard/RobotContainer/m_conveyor": "Subsystem",
       "/Shuffleboard/RobotContainer/m_intake": "Subsystem",
       "/Shuffleboard/RobotContainer/m_shooter": "Subsystem",
-      "/SmartDashboard/Auto Chooser": "String Chooser"
+      "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Driver Chooser": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Orientation Chooser": "String Chooser"
+    },
+    "windows": {
+      "/SmartDashboard/Auto Chooser": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Driver Chooser": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field": {
+        "bottom": 900,
+        "height": 8.229599952697754,
+        "image": "C:\\Users\\jason\\Documents\\FRC\\2022_UARobotics_Rapid_React\\FieldImages\\2022-field.png",
+        "left": 74,
+        "right": 1774,
+        "top": 50,
+        "width": 16.459199905395508,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Orientation Chooser": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "Shuffleboard": {
+      "SwerveDt": {
+        "open": true
+      },
+      "open": true
+    },
+    "limelight": {
+      "open": true
     }
   }
 }

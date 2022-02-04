@@ -11,6 +11,7 @@ import org.photonvision.PhotonUtils;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.FieldConstants;
 import frc.robot.Constants.CAMERA;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -52,7 +53,7 @@ public class AutoAim extends CommandBase {
       //m_robotDrive.driveToTarget(m_joystickY.getAsDouble(), targetAngle);
 
       // Get the distance to the Target
-      double range = PhotonUtils.calculateDistanceToTargetMeters(CAMERA.SHOOTERCAMERAHEIGHT, CAMERA.SHOOTERTARGEHEIGHT,
+      double range = PhotonUtils.calculateDistanceToTargetMeters(CAMERA.SHOOTERCAMERAHEIGHT, FieldConstants.visionTargetHeightLower,
           Units.degreesToRadians(CAMERA.SHOOTERCAMERAANGLE), Units.degreesToRadians(result.getBestTarget().getPitch()));
       SmartDashboard.putNumber("distanceToTarget", Units.metersToFeet(range));
 

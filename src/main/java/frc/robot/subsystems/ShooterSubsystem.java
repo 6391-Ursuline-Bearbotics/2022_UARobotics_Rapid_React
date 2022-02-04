@@ -7,9 +7,7 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 
 import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ROBOT;
 import frc.robot.Constants.SHOOTER;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -29,9 +27,6 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
 
   private final BangBangController m_bangBangController = new BangBangController(SHOOTER.TOLERANCERPS);
 
-  @Log
-  private double m_desiredVelocityRPS;
-
   // The shooter subsystem for the robot.
   public ShooterSubsystem() {
     TalonFXConfiguration flywheelTalonConfig = new TalonFXConfiguration();
@@ -48,15 +43,6 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
 		m_shooterMotor2.setNeutralMode(NeutralMode.Coast);
   }
 
-  @Override
-  public void periodic() {
-/*     double voltage = m_shooterFeedforward.calculate(m_desiredVelocityRPS)
-     + m_bangBangController.calculate(getShooterSpeed(), m_desiredVelocityRPS) * ROBOT.MAX_VOLTAGE;
-    m_shooterMotor.setVoltage(voltage); */
-    
-    m_shooterMotor.set(ControlMode.Velocity, m_desiredVelocityRPS * SHOOTER.RPSTORAW);
-  }
-
   @Log(name = "Current Shooter Speed (RPS)")
   public double getShooterSpeed() {
     return m_shooterMotor.getSelectedSensorVelocity() * SHOOTER.RAWTOFLYWHEELRPS;
@@ -70,18 +56,24 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
   @Log
   @Log(tabName = "Dashboard", name = "Shooter Setpoint")
   public double getSetpoint() {
-    return m_desiredVelocityRPS;
+    if (m_shooterMotor.getControlMode() == ControlMode.Velocity) {
+      return m_shooterMotor.getClosedLoopTarget() * SHOOTER.RAWTOFLYWHEELRPS;
+    }
+    else {
+      return 0.0;
+    }
+    
   }
 
   @Log
   @Log(tabName = "Dashboard", name = "Good to Shoot?")
   public boolean atSetpoint() {
-    return m_bangBangController.atSetpoint() && m_desiredVelocityRPS > 0;
+    return m_bangBangController.atSetpoint() && getSetpoint() > 0;
   }
 
   @Config
   public void setRPS(double rps) {
-    m_desiredVelocityRPS = rps;
+    m_shooterMotor.set(ControlMode.Velocity, rps * SHOOTER.RPSTORAW);
   }
 
   @Config

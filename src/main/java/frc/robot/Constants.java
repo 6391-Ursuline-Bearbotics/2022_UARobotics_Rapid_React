@@ -11,14 +11,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.system.LinearSystem;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.math.numbers.N2;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -35,13 +30,13 @@ public final class Constants {
          *
          * Should be measured from center to center.
          */
-        public static final double TRACKWIDTH_METERS = 1.0; // FIXME Measure and set trackwidth
+        public static final double TRACKWIDTH_METERS = Units.inchesToMeters(29.0); // FIXME Measure and set trackwidth
         /**
          * The front-to-back distance between the drivetrain wheels.
          *
          * Should be measured from center to center.
          */
-        public static final double WHEELBASE_METERS = 1.0; // FIXME Measure and set wheelbase
+        public static final double WHEELBASE_METERS = Units.inchesToMeters(29.0); // FIXME Measure and set wheelbase
 
         public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
                 new Translation2d(DRIVE.TRACKWIDTH_METERS / 2.0, DRIVE.WHEELBASE_METERS / 2.0),
@@ -55,25 +50,25 @@ public final class Constants {
 
         public static final int PIGEON_ID = 0; // FIXME Set Pigeon ID
 
-        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 0; // FIXME Set front left module drive motor ID
-        public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1; // FIXME Set front left module steer motor ID
-        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 0; // FIXME Set front left steer encoder ID
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); // FIXME Measure and set front left steer offset
+        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 11; // FIXME Set front left module drive motor ID
+        public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 12; // FIXME Set front left module steer motor ID
+        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 13; // FIXME Set front left steer encoder ID
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(189.492); // FIXME Measure and set front left steer offset
 
-        public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 2; // FIXME Set front right drive motor ID
-        public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 3; // FIXME Set front right steer motor ID
-        public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 1; // FIXME Set front right steer encoder ID
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); // FIXME Measure and set front right steer offset
+        public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 21; // FIXME Set front right drive motor ID
+        public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 22; // FIXME Set front right steer motor ID
+        public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 23; // FIXME Set front right steer encoder ID
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(175.781); // FIXME Measure and set front right steer offset
 
-        public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4; // FIXME Set back left drive motor ID
-        public static final int BACK_LEFT_MODULE_STEER_MOTOR = 5; // FIXME Set back left steer motor ID
-        public static final int BACK_LEFT_MODULE_STEER_ENCODER = 2; // FIXME Set back left steer encoder ID
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); // FIXME Measure and set back left steer offset
+        public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 31; // FIXME Set back left drive motor ID
+        public static final int BACK_LEFT_MODULE_STEER_MOTOR = 32; // FIXME Set back left steer motor ID
+        public static final int BACK_LEFT_MODULE_STEER_ENCODER = 33; // FIXME Set back left steer encoder ID
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(209.619); // FIXME Measure and set back left steer offset
 
-        public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 6; // FIXME Set back right drive motor ID
-        public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 7; // FIXME Set back right steer motor ID
-        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 3; // FIXME Set back right steer encoder ID
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); // FIXME Measure and set back right steer offset        
+        public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 41; // FIXME Set back right drive motor ID
+        public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 42; // FIXME Set back right steer motor ID
+        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 43; // FIXME Set back right steer encoder ID
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(328.175); // FIXME Measure and set back right steer offset        
 
         // Drivetrain Performance Mechanical limits
         static public final double MAX_FWD_REV_SPEED_MPS = Units.feetToMeters(12.0);
@@ -132,161 +127,6 @@ public final class Constants {
         static public final String PHOTON_CAM_NAME = "MainCamera";
     }
 
-    public static final class DriveConstants {
-        // The CAN Id that each of these devices is configured with
-        public static final int kLeftMotor1Port = 1;
-        public static final int kLeftMotor2Port = 2;
-        public static final int kRightMotor1Port = 3;
-        public static final int kRightMotor2Port = 4;
-        public static final int kPigeonPort = 0;
-    
-        // Differential Drive setup parameters.  These control how the drivers input translates to motor power.
-        public static final double kMaxOutputForward = 1; // % motor ouput
-        public static final double kMaxOutputForwardSlow = 0.3; // % motor ouput
-        public static final double kMaxOutputRotation = 0.5; // % motor ouput
-        public static final double kMaxOutputRotationSlow = 0.25; // % motor ouput
-        public static final double kDeadbandForward = 0.05; // % motor ouput
-        public static final double kDeadbandRotation = 0.05; // % motor ouput
-        public static final double kRampForward = 0.2; // Seconds to go from min to max motor %
-        public static final double kRampRotation = 0.2; // Seconds to go from min to max motor %
-        public static final double kMinOutputForward = 0; // Minimum % forward power
-        public static final double kMinOutputRotation = 0.2; // Minimum % rotation power
-        public static final double kDriveStraightLeft = 1; // Multiplier on motor power to help drive straight
-        public static final double kDriveStraightRight = 0.98; // Multiplier on motor power to help drive straight
-
-        public static final DCMotor kDriveGearbox = DCMotor.getCIM(2);
-        public static final double kDriveGearing = 10.71;
-
-        // Baseline values for a RAMSETE follower in units of meters and seconds
-        public static final double RAMSETE_B = 2;
-        public static final double RAMSETE_ZETA = 0.7;
-
-        /** Voltage needed to overcome the motor’s static friction. kS */
-        public static final double kS = 1.24; //0.112 // 1.01 pneumatic //.829
-
-        /** Voltage needed to hold (or "cruise") at a given constant velocity. kV */
-        public static final double kV = 2.92; //0.222; //2.93 pneumatic //3.04
-
-        /** Voltage needed to induce a given acceleration in the motor shaft. kA */
-        public static final double kA = 0.474; //0.00128; //0.761 pneumatic //.676
-
-        // Simulation Drivetrain stuff
-        public static final double ksVolts = 0.22;
-        public static final double kvVoltSecondsPerMeter = 1.98;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.2;
-
-        // These two values are "angular" kV and kA
-        public static final double kvVoltSecondsPerRadian = 1.5;
-        public static final double kaVoltSecondsSquaredPerRadian = 0.3;
-
-        public static final LinearSystem<N2, N2, N2> kDrivetrainPlant =
-            LinearSystemId.identifyDrivetrainSystem(kV, kA, kvVoltSecondsPerRadian, kaVoltSecondsSquaredPerRadian);
-        
-        /* LinearSystemId.identifyDrivetrainSystem(kvVoltSecondsPerMeter, kaVoltSecondsSquaredPerMeter,
-                kvVoltSecondsPerRadian, kaVoltSecondsSquaredPerRadian); */
-        
-        public static final int kEncoderCPR = 4096;
-        public static final double kWheelDiameterInches = 8d;
-        public static final double kWheelDiameterMeters = Units.inchesToMeters(kWheelDiameterInches);
-        public static final double kWheelCircumferenceInches = kWheelDiameterInches * Math.PI;
-        public static final double kWheelCircumferenceMeters = Units.inchesToMeters(kWheelDiameterInches) * Math.PI;
-
-        public static final double kTrackWidthMeters = 1.00639; // 0.69;
-        public static final DifferentialDriveKinematics kDriveKinematics =
-            new DifferentialDriveKinematics(kTrackWidthMeters);
-
-        public static final double kEncoderDistancePerPulse =
-            // Assumes the encoders are directly mounted on the wheel shafts
-            kWheelCircumferenceMeters / (double) kEncoderCPR; // .00015585
-
-        /**
-         * This is a property of the Pigeon IMU, and should not be changed.
-         */
-        public final static int kPigeonUnitsPerRotation = 8192;
-
-        /**
-         * Using the configSelectedFeedbackCoefficient() function, scale units to 3600 per rotation.
-         * This is nice as it keeps 0.1 degrees of resolution, and is fairly intuitive.
-         */
-        public final static double kTurnTravelUnitsPerRotation = 3600;
-
-        /**
-         * Set to zero to skip waiting for confirmation.
-         * Set to nonzero to wait and report to DS if action fails.
-         */
-        public final static int kTimeoutMs = 30;
-
-        /**
-         * PID Gains may have to be adjusted based on the responsiveness of control loop.
-         * kF: 1023 represents output value to Talon at 100%, 6800 represents Velocity units at 100% output
-         * Not all set of Gains are used in this project and may be removed as desired.
-         * 
-         * 	                                    			  kP   kI   kD   kF               Iz    PeakOut */
-        public final static Gains kGains_Distanc = new Gains( 0.1, 0.0,  0.0, 0.2,            100,  0.30 );
-        public final static Gains kGains_Turning = new Gains( 0.05, 0.0,  4.0, 100,            200,  0.3 );
-        public final static Gains kGains_Velocit = new Gains( 1.2, 0.0, 0, 1023.0/6800.0,  300,  1.00 ); //0.2 // .00712
-        public final static Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/6800.0,  400,  1.00 );
-        
-        /** ---- Flat constants, you should not need to change these ---- */
-        /* We allow either a 0 or 1 when selecting an ordinal for remote devices [You can have up to 2 devices assigned remotely to a talon/victor] */
-        public final static int REMOTE_0 = 0;
-        public final static int REMOTE_1 = 1;
-        /* We allow either a 0 or 1 when selecting a PID Index, where 0 is primary and 1 is auxiliary */
-        public final static int PID_PRIMARY = 0;
-        public final static int PID_TURN = 1;
-        /* Firmware currently supports slots [0, 3] and can be used for either PID Set */
-        public final static int SLOT_0 = 0;
-        public final static int SLOT_1 = 1;
-        public final static int SLOT_2 = 2;
-        public final static int SLOT_3 = 3;
-        /* ---- Named slots, used to clarify code ---- */
-        public final static int kSlot_Distanc = SLOT_0;
-        public final static int kSlot_Turning = SLOT_1;
-        public final static int kSlot_Velocit = SLOT_2;
-        public final static int kSlot_MotProf = SLOT_3;
-
-        // Everything below is for either Absolute or Relative Turns
-        public static final double kMaxTurnRateDegPerS = 100;
-        public static final double kMaxTurnAccelerationDegPerSSquared = 300;
-
-        public static final double kTurnToleranceDeg = 5;
-        public static final double kTurnRateToleranceDegPerS = 10; // degrees per second
-
-        public static final double kRelTurnP = .1;
-        public static final double kRelTurnI = 0;
-        public static final double kRelTurnD = 0.15;
-        public static final double kRelTurnFriction = 0.5;
-
-        public static final double kMaxRelTurnRateDegPerS = 20;
-        public static final double kMaxRelTurnAccelerationDegPerSSquared = 300;
-
-        public static final double kRelTurnToleranceDeg = 1;
-        public static final double kRelTurnRateToleranceDegPerS = 3; // degrees per second
-
-        // Turn angle constraints
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 2;
-
-        // Turn angle PID
-        public static final double kTurnP = .1;
-        public static final double kTurnI = 0;
-        public static final double kTurnD = 0.15;
-
-        // Drive Straight PID
-        public static final double kStraightP = .1;
-        public static final double kStraightI = 0;
-        public static final double kStraightD = 0;
-
-        // Turn Velocity constraints
-        public static final double kVelocityMaxSpeedMetersPerSecond = 3;
-        public static final double kVelocityMaxAccelerationMetersPerSecondSquared = 2;
-
-        // Turn Velocity PID
-        public static final double kVelocityP = .1;
-        public static final double kVelocityI = 0;
-        public static final double kVelocityD = 0.15;
-    }
-
     public static final class AutoConstants {
         public static final double kAutoTimeoutSeconds = 12;
         public static final double kAutoShootInit = 3;
@@ -313,7 +153,7 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final int kIntakeControllerPort = 5;
+        public static final int kIntakeControllerPort = 4;
         
         public static final int kSolenoid1ControllerPort = 0;
         public static final int kSolenoid2ControllerPort = 1;
@@ -329,7 +169,7 @@ public final class Constants {
 
     public static final class ConveyorConstants {
         public static final int kConveyor1ControllerPort = 6;
-        public static final int kConveyor2ControllerPort = 7;
+        public static final int kConveyor2ControllerPort = 5;
 
         public static final double kConveyorTopMotorSpeed = 1.0;
         public static final double kConveyorBottomMotorSpeed = 0.2;
@@ -337,7 +177,7 @@ public final class Constants {
     }
 
     public static final class ClimbConstants {
-        public static final int kClimbLeftControllerPort = 11;
+        public static final int kClimbLeftControllerPort = 9;
         public static final int kClimbRightControllerPort = 10;
         public static final int kEncoderCPR = 4096;
         public static final double kClimbP = 0.5;
@@ -353,8 +193,7 @@ public final class Constants {
         public static final double SHOOTERCAMERAANGLE = 0; // Degrees
         public static final double BALLCAMERAHEIGHT = .8; // Meters
         public static final double SHOOTERCAMERAHEIGHT = .8; // Meters
-        public static final double BALLTARGEHEIGHT = Units.inchesToMeters(9.5); // Height to top of the ball
-        public static final double SHOOTERTARGEHEIGHT = Units.inchesToMeters(81.19); // Height to bottom of the tape
+        public static final double BALLTARGETHEIGHT = Units.inchesToMeters(9.5); // Height to top of the ball
         // public static final double kMinimumRange = 4; // Meters
         // public static final double kMaximumRange = -9; // Meters
         public static final int LIMELIGHTPIPELINE = 0;
@@ -362,8 +201,8 @@ public final class Constants {
     }
 
     public static final class SHOOTER {
-        public static final int MOTORPORT = 10;
-        public static final int MOTOR2PORT = 11;
+        public static final int MOTORPORT = 7;
+        public static final int MOTOR2PORT = 8;
     
         public static final double TOLERANCERPS = 6.0;
         

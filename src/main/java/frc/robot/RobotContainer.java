@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import io.github.oblarg.oblog.annotations.Log;
@@ -51,7 +52,7 @@ public class RobotContainer {
   @Log
   public final ShooterSubsystem m_shooter = new ShooterSubsystem();
   @Log
-  public final LEDSubsystem m_LED = new LEDSubsystem(m_PhotonVision.m_HD3000);
+  public final LEDSubsystem m_LED;
   @Log
   public final IntakeSubsystem m_intake = new IntakeSubsystem();
   @Log
@@ -81,8 +82,12 @@ public class RobotContainer {
   public RobotContainer() {
     dt = BearSwerveHelper.createBearSwerve();
     m_swerveSubsystem = BearSwerveHelper.createSwerveSubsystem(dt);
+    m_LED = new LEDSubsystem(m_PhotonVision, dt);
 
-    m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> m_scheme.getJoystickSpeeds(), m_swerveSubsystem));
+    m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> dt.setModuleStates(m_scheme.getJoystickSpeeds()), m_swerveSubsystem));
+
+    //FieldObject2d ballTarget = mField.getObject("ballTarget");
+    //FieldObject2d shooterTarget = mField.getObject("shooterTarget");
 
     // Detect if controllers are missing / Stop multiple warnings
     DriverStation.silenceJoystickConnectionWarning(OI.PRACTICE);

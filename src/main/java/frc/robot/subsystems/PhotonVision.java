@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.FieldConstants;
 import frc.robot.Constants.CAMERA;
 
 public class PhotonVision {
@@ -23,35 +24,58 @@ public class PhotonVision {
       m_limePhoton.setPipelineIndex(CAMERA.LIMELIGHTPIPELINE);
       m_HD3000.setPipelineIndex(CAMERA.HD3000PIPELINE);
 
-      double camDiagFOV = 75.0; // degrees
-      Transform2d cameraToRobot = new Transform2d(new Translation2d(0.0, 0.0), new Rotation2d()); // meters
+      double ballcamDiagFOV = 75.0; // degrees
+      double shootercamDiagFOV = 75.0; // degrees
+      Transform2d ballcameraToRobot = new Transform2d(new Translation2d(0.0, 0.0), new Rotation2d()); // meters
+      Transform2d shootercameraToRobot = new Transform2d(new Translation2d(0.0, 0.0), new Rotation2d()); // meters
       double maxLEDRange = 20;          // meters
-      int camResolutionWidth = 640;     // pixels
-      int camResolutionHeight = 480;    // pixels
-      double minTargetArea = 10;        // square pixels
+      int ballcamResolutionWidth = 640;     // pixels
+      int ballcamResolutionHeight = 480;    // pixels
+      double ballminTargetArea = 10;        // square pixels
+      int shootercamResolutionWidth = 640;     // pixels
+      int shootercamResolutionHeight = 480;    // pixels
+      double shooterminTargetArea = 10;        // square pixels
+      
 
       ballvisionSys = new SimVisionSystem("lifecam",
-                                    camDiagFOV,
+                                    ballcamDiagFOV,
                                     CAMERA.BALLCAMERAANGLE,
-                                    cameraToRobot,
+                                    ballcameraToRobot,
                                     CAMERA.BALLCAMERAHEIGHT,
+                                    9000, // does not use LEDs
+                                    ballcamResolutionWidth,
+                                    ballcamResolutionHeight,
+                                    ballminTargetArea);
+
+      shootervisionSys = new SimVisionSystem("limelight",
+                                    shootercamDiagFOV,
+                                    CAMERA.SHOOTERCAMERAANGLE,
+                                    shootercameraToRobot,
+                                    CAMERA.SHOOTERCAMERAHEIGHT,
                                     maxLEDRange,
-                                    camResolutionWidth,
-                                    camResolutionHeight,
-                                    minTargetArea);
+                                    shootercamResolutionWidth,
+                                    shootercamResolutionHeight,
+                                    shooterminTargetArea);
 
       double tgtXPos = Units.feetToMeters(54);
       double tgtYPos = Units.feetToMeters(27 / 2) - Units.inchesToMeters(43.75) - Units.inchesToMeters(48.0 / 2.0);
       var targetPose = new Pose2d(new Translation2d(tgtXPos, tgtYPos), new Rotation2d(0.0)); // meters
-      double targetWidth = Units.inchesToMeters(41.30) - Units.inchesToMeters(6.70);
-      double targetHeight = Units.inchesToMeters(98.19) - Units.inchesToMeters(81.19);
+      double balltargetWidth = Units.inchesToMeters(9.5);
+      double shootertargetWidth = Units.inchesToMeters(36); // Actually 4ft wide but this is a straight replacement for a curved goal
+      double shootertargetHeight = Units.inchesToMeters(2);
       
-      var newTgt = new SimVisionTarget(targetPose,
-                                       CAMERA.BALLTARGEHEIGHT,
-                                       targetWidth,
-                                       targetHeight);
+      var ballTgt = new SimVisionTarget(FieldConstants.cargoD,
+                                       CAMERA.BALLTARGETHEIGHT,
+                                       balltargetWidth,
+                                       balltargetWidth); // same as height
+
+      var shooterTgt = new SimVisionTarget(targetPose,
+                                       FieldConstants.visionTargetHeightLower,
+                                       shootertargetWidth,
+                                       shootertargetHeight);
       
-      ballvisionSys.addSimVisionTarget(newTgt);
+      ballvisionSys.addSimVisionTarget(ballTgt);
+      shootervisionSys.addSimVisionTarget(shooterTgt);
    }
 
    public void lightsOn() {
