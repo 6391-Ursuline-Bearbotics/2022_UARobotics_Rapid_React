@@ -61,7 +61,7 @@ public class RobotContainer {
   @Log
   public final ClimbSubsystem m_climb = ClimbSubsystem.Create();
 
-  private final Center5Ball center5 = new Center5Ball(m_swerveSubsystem);
+  private final Center5Ball center5;
   
   @Log(tabName = "Dashboard")
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -86,6 +86,7 @@ public class RobotContainer {
     dt = BearSwerveHelper.createBearSwerve();
     m_swerveSubsystem = BearSwerveHelper.createSwerveSubsystem(dt);
     m_LED = new LEDSubsystem(m_PhotonVision, dt);
+    center5 = new Center5Ball(m_swerveSubsystem);
 
     m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> dt.setModuleStates(m_scheme.getJoystickSpeeds()), m_swerveSubsystem));
 

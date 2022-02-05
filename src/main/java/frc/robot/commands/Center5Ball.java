@@ -9,7 +9,7 @@ import frc.swervelib.SwerveSubsystem;
 
 public class Center5Ball extends SequentialCommandGroup {
     public Center5Ball(SwerveSubsystem m_swerve) {        
-        PathPlannerTrajectory trajectory1 = PathPlanner.loadPath("MoveForward", 2.0, 3.0);
+        PathPlannerTrajectory trajectory1 = PathPlanner.loadPath("5ball", 2.0, 3.0);
         
         addCommands(
             new InstantCommand(() -> m_swerve.dt.setKnownPose(trajectory1.getInitialPose())),
@@ -19,7 +19,7 @@ public class Center5Ball extends SequentialCommandGroup {
                 m_shooter.enable();}, m_shooter), */
 
             //back up 1 meter
-            m_swerve.dt
+            m_swerve.dt.createCommandForTrajectory(trajectory1, m_swerve)
         );
     }
 }
