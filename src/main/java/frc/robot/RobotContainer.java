@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import io.github.oblarg.oblog.annotations.Log;
+import frc.robot.commands.Center5Ball;
 // Command Imports
 import frc.robot.commands.NextClimbPosition;
 // Subsystem Imports
@@ -59,6 +60,8 @@ public class RobotContainer {
   public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem();
   @Log
   public final ClimbSubsystem m_climb = ClimbSubsystem.Create();
+
+  private final Center5Ball center5 = new Center5Ball(m_swerveSubsystem);
   
   @Log(tabName = "Dashboard")
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -106,6 +109,7 @@ public class RobotContainer {
           .setOutput(Math.max(op.TriggerL(), drv.TriggerL()),
             Math.max(op.TriggerR(), drv.TriggerR())), m_climb));
 
+    autoChooser.setDefaultOption("Center5", center5);
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
