@@ -73,6 +73,9 @@
   },
   "NetworkTables": {
     "Shuffleboard": {
+      "LEDSubsystem": {
+        "open": true
+      },
       "SwerveDt": {
         "open": true
       },

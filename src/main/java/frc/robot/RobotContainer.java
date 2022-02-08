@@ -18,10 +18,10 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
-import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import io.github.oblarg.oblog.annotations.Log;
+import frc.robot.commands.AutoAim;
 import frc.robot.commands.Center5Ball;
 // Command Imports
 import frc.robot.commands.NextClimbPosition;
@@ -69,7 +69,7 @@ public class RobotContainer {
   // The driver's controller
   XboxController6391 drv = new XboxController6391(OI.DRVCONTROLLERPORT, 0.1);
   XboxControllerSim m_driverControllerSim = new XboxControllerSim(OI.DRVCONTROLLERPORT);
-  private final controlscheme m_scheme = new controlscheme(drv.getXboxController());
+  private final ControlScheme m_scheme = new ControlScheme(drv.getXboxController());
 
   // The operator's controller
   XboxController6391 op = new XboxController6391(OI.OPCONTROLLERPORT, 0.1);
@@ -128,13 +128,16 @@ public class RobotContainer {
       }, m_shooter));
 
     // Stop the Shooter when the B button is pressed
-    drv.BButton.or(op.BButton)
+    drv.YButton.or(op.YButton)
       .whenActive(new InstantCommand(() -> {
         m_shooter.setVoltage(0);
       }, m_shooter));
     
-    // While driver holds the Y button Auto Aim to the goal using the left stick for distance control
-    //drv.YButton.whileActiveOnce(new AutoAim(m_robotDrive, m_PhotonVision, m_shooter, () -> -drv.JoystickLY()));
+    // While driver holds the A button Auto Aim to the High Hub using the left stick for distance control
+    drv.AButton.whileActiveOnce(new AutoAim(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
+
+    // While driver holds the B button Auto Aim to the closest ball using the left stick for distance control
+    drv.BButton.whileActiveOnce(new AutoAim(m_swerveSubsystem, m_PhotonVision, false, m_scheme));
 
     // Turn on the conveyor when:
     // the A button is pressed (either controller) and either the top sensor is not blocked or the shooter is up to speed

@@ -4,43 +4,59 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.ControlScheme;
 import frc.robot.FieldConstants;
 import frc.robot.Constants.CAMERA;
+import frc.robot.Constants.DRIVE;
 import frc.robot.subsystems.PhotonVision;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.swervelib.SwerveSubsystem;
 
 public class AutoAim extends CommandBase {
-  /** Creates a new AutoAim. */
   PhotonVision m_PhotonVision;
-  ShooterSubsystem m_shooter;
-  DoubleSupplier m_joystickY;
+  SwerveSubsystem m_swerve;
+  Boolean m_shooter;
+  PhotonPipelineResult result;
+  ControlScheme m_scheme;
+  PIDController m_rotationPID = new PIDController(DRIVE.AIMkP, 0, 0);
 
-  public AutoAim(PhotonVision PhotonVision, ShooterSubsystem shooter, DoubleSupplier joystickY) {
+  public AutoAim(SwerveSubsystem swerve, PhotonVision PhotonVision, Boolean shooter, ControlScheme scheme) {
+    m_swerve = swerve;
     m_PhotonVision = PhotonVision;
     m_shooter = shooter;
-    m_joystickY = joystickY;
-    // Use addRequirements() here to declare subsystem dependencies.
-    //addRequirements(m_robotDrive);
+    m_scheme = scheme;
+    addRequirements(m_swerve);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_PhotonVision.lightsOn();
+    if (m_shooter) {
+      m_PhotonVision.lightsOn();
+    }
+    else {
+      m_PhotonVision.lightsOff();
+    }
+
+    m_rotationPID.setSetpoint(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Get the latest result from the Limelight Camera
-    var result = m_PhotonVision.m_limePhoton.getLatestResult();
+    // Get the latest result from the correct camera
+    if (m_shooter) {
+      result = m_PhotonVision.m_limelight.getLatestResult();
+    }
+    else {
+      result = m_PhotonVision.m_HD3000.getLatestResult();
+    }
 
     // Make sure it has a target we can use
     SmartDashboard.putBoolean("hastargets", result.hasTargets());
@@ -49,26 +65,20 @@ public class AutoAim extends CommandBase {
       var targetAngle = -result.getBestTarget().getYaw();
       SmartDashboard.putNumber("targetangle", targetAngle);
 
-      // Drive with the speed of the joystick to the angle of the best target
-      //m_robotDrive.driveToTarget(m_joystickY.getAsDouble(), targetAngle);
-
       // Get the distance to the Target
       double range = PhotonUtils.calculateDistanceToTargetMeters(CAMERA.SHOOTERCAMERAHEIGHT, FieldConstants.visionTargetHeightLower,
           Units.degreesToRadians(CAMERA.SHOOTERCAMERAANGLE), Units.degreesToRadians(result.getBestTarget().getPitch()));
       SmartDashboard.putNumber("distanceToTarget", Units.metersToFeet(range));
 
-      // this should actually be a conversion from range to speed
-      double speedRPS = m_shooter.getShooterSpeed();
-
-      // set shooter speed to value based on distance
-      //m_shooter.setSetpoint(speedRPS);
-
-      // should already be enabled and up to speed by operator but just in case
-      //m_shooter.enable();
+      // Get the drive inputs we are using
+      var input = m_scheme.getJoystickSpeeds();
+      // Override the rotation input with a PID value seeking centered in the camera
+      input.m_rotation = DRIVE.AIMFF + m_rotationPID.calculate(targetAngle);
+      m_swerve.dt.setModuleStates(input);
     }
     else {
-      // If we don't have a target stop since we don't know where we are going possibly should use regular arcade here?
-      //m_robotDrive.stopmotors();
+      // Just use normal robot controls
+      m_swerve.dt.setModuleStates(m_scheme.getJoystickSpeeds());
     }
   }
 

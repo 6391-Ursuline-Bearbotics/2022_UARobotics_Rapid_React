@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 import org.photonvision.SimVisionSystem;
 import org.photonvision.SimVisionTarget;
 import org.photonvision.common.hardware.VisionLEDMode;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,13 +17,13 @@ import frc.robot.Constants.CAMERA;
 
 public class PhotonVision {
    // Creates a new PhotonCamera.
-   public PhotonCamera m_limePhoton = new PhotonCamera("limelight");
+   public PhotonCamera m_limelight = new PhotonCamera("limelight");
    public PhotonCamera m_HD3000 = new PhotonCamera("lifecam");
    public SimVisionSystem ballvisionSys;
    public SimVisionSystem shootervisionSys;
 
    public PhotonVision() {
-      m_limePhoton.setPipelineIndex(CAMERA.LIMELIGHTPIPELINE);
+      m_limelight.setPipelineIndex(CAMERA.LIMELIGHTPIPELINE);
       m_HD3000.setPipelineIndex(CAMERA.HD3000PIPELINE);
 
       double ballcamDiagFOV = 75.0; // degrees
@@ -79,18 +81,33 @@ public class PhotonVision {
    }
 
    public void lightsOn() {
-      m_limePhoton.setLED(VisionLEDMode.kOn);
+      m_limelight.setLED(VisionLEDMode.kOn);
    }
 
    public void lightsOff() {
-      m_limePhoton.setLED(VisionLEDMode.kOff);
+      m_limelight.setLED(VisionLEDMode.kOff);
    }
 
    public double getYaw() {
-      var result = m_limePhoton.getLatestResult();
+      var result = m_limelight.getLatestResult();
       if (result.hasTargets()) {
          return result.getBestTarget().getYaw();
       }
       return -999.0;
+   }
+
+   // Both of these are dangerous and need "hasTargets" needs to be checked before using
+   public double distanceToBallTarget(PhotonPipelineResult result) {
+      return PhotonUtils.calculateDistanceToTargetMeters(CAMERA.BALLCAMERAHEIGHT,
+                  CAMERA.BALLTARGETHEIGHT,
+                  CAMERA.BALLCAMERAANGLE,
+                  Units.degreesToRadians(result.getBestTarget().getPitch()));
+   }
+
+   public double distanceToShooterTarget(PhotonPipelineResult result) {
+      return PhotonUtils.calculateDistanceToTargetMeters(CAMERA.SHOOTERCAMERAHEIGHT,
+                  FieldConstants.visionTargetHeightLower,
+                  CAMERA.SHOOTERCAMERAANGLE,
+                  Units.degreesToRadians(result.getBestTarget().getPitch()));
    }
 }

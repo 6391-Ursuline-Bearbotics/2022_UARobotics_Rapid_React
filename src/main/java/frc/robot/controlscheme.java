@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.swervelib.SwerveInput;
 
-public class controlscheme {
+public class ControlScheme {
     private final XboxController m_controller;
     private static final SendableChooser<String> driverChooser = new SendableChooser<>();
 
@@ -13,7 +13,7 @@ public class controlscheme {
     private double m_translationY;
     private double m_rotation;
 
-    public controlscheme(XboxController controller) {
+    public ControlScheme(XboxController controller) {
         this.m_controller = controller;
 
         // Control Scheme Chooser

@@ -63,12 +63,12 @@ public final class Constants {
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 41; // FIXME Set back left drive motor ID
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 42; // FIXME Set back left steer motor ID
         public static final int BACK_LEFT_MODULE_STEER_ENCODER = 43; // FIXME Set back left steer encoder ID
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(209.619); // FIXME Measure and set back left steer offset
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(326.777); // FIXME Measure and set back left steer offset
 
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 31; // FIXME Set back right drive motor ID
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 32; // FIXME Set back right steer motor ID
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 33; // FIXME Set back right steer encoder ID
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(328.175); // FIXME Measure and set back right steer offset        
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(209.267); // FIXME Measure and set back right steer offset        
 
         // Drivetrain Performance Mechanical limits
         static public final double MAX_FWD_REV_SPEED_MPS = Units.feetToMeters(12.0);
@@ -85,6 +85,9 @@ public final class Constants {
         static public final int STEER_ENC_COUNTS_PER_MODULE_REV = 4096; // CANCoder
         static public final double WHEEL_ENC_WHEEL_REVS_PER_COUNT  = 1.0/((double)(WHEEL_ENC_COUNTS_PER_WHEEL_REV));
         static public final double steer_ENC_MODULE_REVS_PER_COUNT = 1.0/((double)(STEER_ENC_COUNTS_PER_MODULE_REV));
+
+        public static final double AIMkP = 0.001;
+        public static final double AIMFF = 0.1;
     }
 
     public static final class AUTO {
@@ -143,7 +146,7 @@ public final class Constants {
 
     public static final class LED {
         public static final int PWMPORT = 0;
-        public static final int BUFFERSIZE = 60;
+        public static final int BUFFERSIZE = 120;
     }
     
     public static final class OI {

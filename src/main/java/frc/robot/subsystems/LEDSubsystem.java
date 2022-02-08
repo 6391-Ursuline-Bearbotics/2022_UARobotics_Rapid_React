@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 
@@ -12,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LED;
 import frc.swervelib.SwerveDrivetrainModel;
 
-public class LEDSubsystem extends SubsystemBase {
+public class LEDSubsystem extends SubsystemBase implements Loggable{
   private final AddressableLED m_led = new AddressableLED(LED.PWMPORT);
   private final AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(LED.BUFFERSIZE);
   private int m_rainbowFirstPixelHue;
@@ -20,6 +23,7 @@ public class LEDSubsystem extends SubsystemBase {
   private SwerveDrivetrainModel dt;
   private PhotonVision pv;
   private PhotonCamera ballCamera;
+  private boolean shooter = false;
   private boolean redBall = false;
   private boolean blueBall = false;
   private Timer redTimer = new Timer();
@@ -38,26 +42,45 @@ public class LEDSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-/*     int index = ballCamera.getPipelineIndex();
+    int index = ballCamera.getPipelineIndex();
     PhotonPipelineResult result = ballCamera.getLatestResult();
     if (index == 0) {
-      redBall(result.hasTargets());
+      redBall = result.hasTargets();
       ballCamera.setPipelineIndex(1);
       SmartDashboard.putNumber("Red Timer", redTimer.get() - redTime);
       redTime = redTimer.get();
     }
     else { // should only have pipelines 0 & 1
-      blueBall(result.hasTargets());
+      blueBall = result.hasTargets();
       ballCamera.setPipelineIndex(0);
       SmartDashboard.putNumber("Blue Timer", blueTimer.get() - blueTime);
       blueTime = blueTimer.get();
-    } */
+    }
+
+    shooter = pv.m_limelight.getLatestResult().hasTargets();
+    setLEDs();
   }
 
   @Override
   public void simulationPeriodic() {
     pv.shootervisionSys.processFrame(dt.getCurActPose());
     pv.ballvisionSys.processFrame(dt.getCurActPose());
+  }
+
+  @Log
+  public boolean anyTarget() {
+    return ballCamera.getLatestResult().hasTargets();
+  }
+
+  @Log
+  public double distanceToBall() {
+    PhotonPipelineResult result = ballCamera.getLatestResult();
+    if (result.hasTargets()) {
+      return pv.distanceToBallTarget(result);
+    }
+    else {
+      return 0.0;
+    }
   }
 
   public void rainbow() {
@@ -76,49 +99,58 @@ public class LEDSubsystem extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
-  public void redBall(boolean exists) {
-    redBall = exists;
+  private void setLEDs() {
     setBallLEDs();
-  }
-
-  public void blueBall(boolean exists) {
-    blueBall = exists;
-    setBallLEDs();
+    setShooterLEDs();
+    m_led.setData(m_ledBuffer);
   }
 
   private void setBallLEDs() {
     if (redBall && blueBall) {
-      setHalf();
+      setFrontHalf();
     }
     else if (redBall || blueBall) {
       if (redBall) {
-        setAll(Color.kRed);
+        setFrontAll(Color.kRed);
       }
       if (blueBall) {
-        setAll(Color.kBlue);
+        setFrontAll(Color.kBlue);
       }
     }
     else {
-      setAll(Color.kBlack); // Off
+      setFrontAll(Color.kBlack); // Off
     }
   }
 
-  private void setAll(Color color) {
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+  private void setShooterLEDs() {
+    if (shooter) {
+      setBackAll(Color.kGreen);
+    }
+    else {
+      setBackAll(Color.kBlack); // Off
+    }
+  }
+
+  private void setFrontAll(Color color) {
+    for (var i = 0; i < m_ledBuffer.getLength() / 2; i++) {
       m_ledBuffer.setLED(i, color);
     }
-    m_led.setData(m_ledBuffer);
   }
 
-  public void setHalf() {
-    for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-      if (i < m_ledBuffer.getLength() / 4) { // Divide by 4 to account for bug where each LED is duplicated
+  public void setFrontHalf() {
+    for (int i = 0; i < m_ledBuffer.getLength() / 2; i++) {
+      if (i < m_ledBuffer.getLength() / 2) {
         m_ledBuffer.setLED(i, Color.kBlue);
       }
       else {
         m_ledBuffer.setLED(i, Color.kRed);
       }
     }
-    m_led.setData(m_ledBuffer);
+  }
+
+  public void setBackAll(Color color) {
+    for (var i = m_ledBuffer.getLength() / 2; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setLED(i, color);
+    }
   }
 }
