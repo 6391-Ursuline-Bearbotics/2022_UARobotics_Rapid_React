@@ -124,13 +124,13 @@ public class RobotContainer {
     // Spin up the shooter to far trench speed when the 'X' button is pressed.
     drv.XButton.or(op.XButton)
       .whenActive(new InstantCommand(() -> {
-        m_shooter.setVoltage(3.0);
+        m_shooter.setRPS(3.0);
       }, m_shooter));
 
     // Stop the Shooter when the B button is pressed
     drv.YButton.or(op.YButton)
       .whenActive(new InstantCommand(() -> {
-        m_shooter.setVoltage(0);
+        m_shooter.setRPS(0);
       }, m_shooter));
     
     // While driver holds the A button Auto Aim to the High Hub using the left stick for distance control

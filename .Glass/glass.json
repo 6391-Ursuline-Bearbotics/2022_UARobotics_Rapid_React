@@ -1,0 +1,81 @@
+{
+  "NetworkTables": {
+    "Shuffleboard": {
+      "ShooterSubsystem": {
+        "open": true
+      },
+      "open": true
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
+      "/LiveWindow/Ungrouped/Pigeon IMU [0]": "Gyro",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/Talon FX [11]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [12]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [14]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [15]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [21]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [22]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [31]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [32]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [41]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [42]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon SRX [10]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon SRX [11]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon SRX [9]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Victor SPX [4]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Victor SPX [5]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Victor SPX [6]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Victor SPX [7]": "Motor Controller",
+      "/Shuffleboard/Dashboard/autoChooser": "String Chooser",
+      "/Shuffleboard/RobotContainer/m_LED": "Subsystem",
+      "/Shuffleboard/RobotContainer/m_climb": "Subsystem",
+      "/Shuffleboard/RobotContainer/m_conveyor": "Subsystem",
+      "/Shuffleboard/RobotContainer/m_intake": "Subsystem",
+      "/Shuffleboard/RobotContainer/m_shooter": "Subsystem",
+      "/Shuffleboard/ShooterSubsystem/m_shooterMotor": "Motor Controller",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Driver Chooser": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Orientation Chooser": "String Chooser"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client",
+    "serverTeam": "6391"
+  },
+  "Plots": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "height": 847,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/ShooterSubsystem/Current Shooter Speed (RPS)"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/ShooterSubsystem/getSetpoint"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

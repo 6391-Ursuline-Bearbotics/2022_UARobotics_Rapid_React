@@ -76,8 +76,8 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
     m_shooterMotor.set(ControlMode.Velocity, rps * SHOOTER.RPSTORAW);
   }
 
-  @Config
-  public void setVoltage(double voltage) {
-    m_shooterMotor.setVoltage(voltage);
-  }
+  // @Config
+  // public void setVoltage(double voltage) {
+  //   m_shooterMotor.setVoltage(voltage);
+  // }
 }

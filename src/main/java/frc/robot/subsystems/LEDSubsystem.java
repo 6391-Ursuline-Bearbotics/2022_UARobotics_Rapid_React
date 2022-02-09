@@ -8,8 +8,8 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LED;
@@ -26,10 +26,6 @@ public class LEDSubsystem extends SubsystemBase implements Loggable{
   private boolean shooter = false;
   private boolean redBall = false;
   private boolean blueBall = false;
-  private Timer redTimer = new Timer();
-  private double redTime = 0;
-  private Timer blueTimer = new Timer();
-  private double blueTime = 0;
 
   public LEDSubsystem(PhotonVision pv, SwerveDrivetrainModel dt) {
     this.dt = dt;
@@ -42,23 +38,22 @@ public class LEDSubsystem extends SubsystemBase implements Loggable{
 
   @Override
   public void periodic() {
-    int index = ballCamera.getPipelineIndex();
-    PhotonPipelineResult result = ballCamera.getLatestResult();
-    if (index == 0) {
-      redBall = result.hasTargets();
-      ballCamera.setPipelineIndex(1);
-      SmartDashboard.putNumber("Red Timer", redTimer.get() - redTime);
-      redTime = redTimer.get();
-    }
-    else { // should only have pipelines 0 & 1
-      blueBall = result.hasTargets();
-      ballCamera.setPipelineIndex(0);
-      SmartDashboard.putNumber("Blue Timer", blueTimer.get() - blueTime);
-      blueTime = blueTimer.get();
-    }
+    if (DriverStation.isEnabled()) {
+      Alliance ally = DriverStation.getAlliance();
+      if (ally == Alliance.Red) {
+        ballCamera.setPipelineIndex(0);
+        PhotonPipelineResult result = ballCamera.getLatestResult();
+        redBall = result.hasTargets();
+      }
+      else { // should only have pipelines 0 & 1
+        ballCamera.setPipelineIndex(1);
+        PhotonPipelineResult result = ballCamera.getLatestResult();
+        blueBall = result.hasTargets();
+      }
 
-    shooter = pv.m_limelight.getLatestResult().hasTargets();
-    setLEDs();
+      shooter = pv.m_limelight.getLatestResult().hasTargets();
+      setLEDs();
+    }
   }
 
   @Override
