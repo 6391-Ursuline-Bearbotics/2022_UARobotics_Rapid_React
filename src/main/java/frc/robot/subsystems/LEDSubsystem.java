@@ -40,12 +40,14 @@ public class LEDSubsystem extends SubsystemBase implements Loggable{
   public void periodic() {
     if (DriverStation.isEnabled()) {
       Alliance ally = DriverStation.getAlliance();
-      if (ally == Alliance.Red) {
+      if (ally.equals(Alliance.Red)) {
+        setAllianceLEDS();
         ballCamera.setPipelineIndex(0);
         PhotonPipelineResult result = ballCamera.getLatestResult();
         redBall = result.hasTargets();
       }
-      else { // should only have pipelines 0 & 1
+      else if (ally.equals(Alliance.Blue)) { // should only have pipelines 0 & 1
+        setAllianceLEDS();
         ballCamera.setPipelineIndex(1);
         PhotonPipelineResult result = ballCamera.getLatestResult();
         blueBall = result.hasTargets();
@@ -95,9 +97,23 @@ public class LEDSubsystem extends SubsystemBase implements Loggable{
   }
 
   private void setLEDs() {
-    setBallLEDs();
+    setAllianceLEDS();
+    // setBallLEDs();
     setShooterLEDs();
     m_led.setData(m_ledBuffer);
+  }
+
+  private void setAllianceLEDS() {
+    Alliance ally = DriverStation.getAlliance();
+      if (ally.equals(Alliance.Red)) {
+        setFrontAll(Color.kRed);
+      }
+      else if (ally.equals(Alliance.Blue)) { // should only have pipelines 0 & 1
+        setFrontAll(Color.kBlue);
+      }
+      else {
+        setFrontAll(Color.kPurple);
+      }
   }
 
   private void setBallLEDs() {
