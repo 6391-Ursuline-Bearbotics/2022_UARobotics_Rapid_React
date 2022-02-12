@@ -7,18 +7,18 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
-import com.ctre.phoenix.motorcontrol.VictorSPXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.UA6391.StallDetector;
 
 public class IntakeSubsystem extends SubsystemBase implements Loggable{
-    private final WPI_VictorSPX m_IntakeMotor = new WPI_VictorSPX(IntakeConstants.kIntakeControllerPort);
+    private final WPI_TalonSRX m_IntakeMotor = new WPI_TalonSRX(IntakeConstants.kIntakeControllerPort);
     private final DoubleSolenoid m_intakeSolenoid1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.kSolenoid1ControllerPort, IntakeConstants.kSolenoid2ControllerPort);
     private final DoubleSolenoid m_intakeSolenoid2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.kSolenoid3ControllerPort, IntakeConstants.kSolenoid4ControllerPort);
 
-    VictorSPXSimCollection m_IntakeMotorSim = new VictorSPXSimCollection(m_IntakeMotor);
+    TalonSRXSimCollection m_IntakeMotorSim = new TalonSRXSimCollection(m_IntakeMotor);
 
     StallDetector intakeStall;
     // Since we are using DoubleSolenoids they must be initially set so when they are toggled they 
@@ -57,7 +57,7 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
     @Config
     public void toggleIntakeWheels(boolean enabled) {
         // Only turn it on if intake is down and it is currently off
-        if(m_IntakeMotor.get() == 0 && m_intakeSolenoid1.get() == DoubleSolenoid.Value.kReverse) {
+        if(m_IntakeMotor.get() == 0) { // && m_intakeSolenoid1.get() == DoubleSolenoid.Value.kReverse) {
             setOutput(IntakeConstants.kIntakeMotorSpeed);
         }
         else{

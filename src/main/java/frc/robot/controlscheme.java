@@ -47,7 +47,7 @@ public class ControlScheme {
               double angle = calculateTranslationDirection(m_translationX, m_translationY);
               m_translationX = Math.cos(angle) * m_controller.getRightTriggerAxis();
               m_translationY = Math.sin(angle) * m_controller.getRightTriggerAxis();
-              m_rotation = modifyAxis(m_controller.getRightX());
+              m_rotation = modifyAxis(-m_controller.getRightX());
               break;
         }
         return new SwerveInput(m_translationX, m_translationY, m_rotation);

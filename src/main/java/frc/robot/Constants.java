@@ -48,7 +48,7 @@ public final class Constants {
         public static final double WHEEL_DIAMETER_METERS = 0.10033; // .10033 = ~4 inches
         public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
 
-        public static final int PIGEON_ID = 0; // FIXME Set Pigeon ID
+        public static final int PIGEON_ID = 4; // FIXME Set Pigeon ID
 
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 11; // FIXME Set front left module drive motor ID
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 12; // FIXME Set front left module steer motor ID
@@ -163,7 +163,7 @@ public final class Constants {
         public static final int kSolenoid3ControllerPort = 4;
         public static final int kSolenoid4ControllerPort = 5;
 
-        public static final double kIntakeMotorSpeed = 0.5;
+        public static final double kIntakeMotorSpeed = -0.75;
 
         public static final double kIntakeStallCurrent = 20;
         public static final int kStallTimeMS = 500;
