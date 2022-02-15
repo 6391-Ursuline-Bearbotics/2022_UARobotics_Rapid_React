@@ -6,6 +6,9 @@
       },
       "open": true
     },
+    "SmartDashboard": {
+      "open": true
+    },
     "types": {
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
@@ -14,6 +17,7 @@
       "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
       "/LiveWindow/Ungrouped/Pigeon IMU [0]": "Gyro",
+      "/LiveWindow/Ungrouped/Pigeon IMU [4]": "Gyro",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/LiveWindow/Ungrouped/Talon FX [11]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon FX [12]": "Motor Controller",
@@ -27,6 +31,7 @@
       "/LiveWindow/Ungrouped/Talon FX [42]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [10]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [11]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon SRX [4]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [9]": "Motor Controller",
       "/LiveWindow/Ungrouped/Victor SPX [4]": "Motor Controller",
       "/LiveWindow/Ungrouped/Victor SPX [5]": "Motor Controller",
@@ -62,16 +67,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/Shuffleboard/ShooterSubsystem/Current Shooter Speed (RPS)"
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/Shuffleboard/ShooterSubsystem/getSetpoint"
+              "id": "NT:/SmartDashboard/targetangle"
             }
           ]
         }

@@ -73,7 +73,7 @@ public final class Constants {
         // Drivetrain Performance Mechanical limits
         static public final double MAX_FWD_REV_SPEED_MPS = Units.feetToMeters(12.0);
         static public final double MAX_STRAFE_SPEED_MPS = Units.feetToMeters(12.0);
-        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC = Units.degreesToRadians(360.0);
+        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC = Units.degreesToRadians(180.0);
         static public final double MAX_TRANSLATE_ACCEL_MPS2 = MAX_FWD_REV_SPEED_MPS/0.25; //0-full time of 0.25 second
         static public final double MAX_ROTATE_ACCEL_RAD_PER_SEC_2 = MAX_ROTATE_SPEED_RAD_PER_SEC/0.25; //0-full time of 0.25 second
 
@@ -87,7 +87,7 @@ public final class Constants {
         static public final double steer_ENC_MODULE_REVS_PER_COUNT = 1.0/((double)(STEER_ENC_COUNTS_PER_MODULE_REV));
 
         public static final double AIMkP = 0.001;
-        public static final double AIMFF = 0.1;
+        public static final double AIMFF = 0.05;
     }
 
     public static final class AUTO {

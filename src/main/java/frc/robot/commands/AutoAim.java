@@ -41,7 +41,7 @@ public class AutoAim extends CommandBase {
       m_PhotonVision.lightsOn();
     }
     else {
-      m_PhotonVision.lightsOff();
+      m_PhotonVision.lightsOn();
     }
 
     m_rotationPID.setSetpoint(0);
@@ -62,7 +62,7 @@ public class AutoAim extends CommandBase {
     SmartDashboard.putBoolean("hastargets", result.hasTargets());
     if (result.hasTargets()) {
       // Get the angle of the best target needs to be inverted because Photon is + right
-      var targetAngle = -result.getBestTarget().getYaw();
+      var targetAngle = result.getBestTarget().getYaw();
       SmartDashboard.putNumber("targetangle", targetAngle);
 
       // Get the distance to the Target
@@ -73,7 +73,8 @@ public class AutoAim extends CommandBase {
       // Get the drive inputs we are using
       var input = m_scheme.getJoystickSpeeds();
       // Override the rotation input with a PID value seeking centered in the camera
-      input.m_rotation = DRIVE.AIMFF + m_rotationPID.calculate(targetAngle);
+      var pidAngle = m_rotationPID.calculate(targetAngle);
+      input.m_rotation = Math.copySign(DRIVE.AIMFF + Math.abs(pidAngle), pidAngle);
       m_swerve.dt.setModuleStates(input);
     }
     else {
