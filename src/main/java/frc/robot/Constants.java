@@ -87,7 +87,7 @@ public final class Constants {
         static public final double steer_ENC_MODULE_REVS_PER_COUNT = 1.0/((double)(STEER_ENC_COUNTS_PER_MODULE_REV));
 
         public static final double AIMkP = 0.001;
-        public static final double AIMFF = 0.05;
+        public static final double AIMFF = 0.08;
     }
 
     public static final class AUTO {
