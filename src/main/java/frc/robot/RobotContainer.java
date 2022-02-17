@@ -86,7 +86,7 @@ public class RobotContainer {
     dt = BearSwerveHelper.createBearSwerve();
     m_swerveSubsystem = BearSwerveHelper.createSwerveSubsystem(dt);
     m_LED = new LEDSubsystem(m_PhotonVision, dt);
-    center5 = new Center5Ball(m_swerveSubsystem);
+    center5 = new Center5Ball(m_swerveSubsystem, m_intake);
 
     m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> dt.setModuleStates(m_scheme.getJoystickSpeeds()), m_swerveSubsystem));
 
