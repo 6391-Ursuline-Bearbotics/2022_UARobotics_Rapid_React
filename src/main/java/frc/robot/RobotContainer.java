@@ -90,8 +90,7 @@ public class RobotContainer {
 
     m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> dt.setModuleStates(m_scheme.getJoystickSpeeds()), m_swerveSubsystem));
 
-    //FieldObject2d ballTarget = mField.getObject("ballTarget");
-    //FieldObject2d shooterTarget = mField.getObject("shooterTarget");
+    m_PhotonVision.fieldSetup(m_swerveSubsystem.dt.getField());
 
     // Detect if controllers are missing / Stop multiple warnings
     DriverStation.silenceJoystickConnectionWarning(OI.PRACTICE);

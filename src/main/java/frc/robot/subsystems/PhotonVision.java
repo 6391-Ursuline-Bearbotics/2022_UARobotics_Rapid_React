@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.SimVisionSystem;
@@ -12,6 +15,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import frc.robot.FieldConstants;
 import frc.robot.Constants.CAMERA;
 
@@ -61,23 +66,38 @@ public class PhotonVision {
 
       double tgtXPos = Units.feetToMeters(54);
       double tgtYPos = Units.feetToMeters(27 / 2) - Units.inchesToMeters(43.75) - Units.inchesToMeters(48.0 / 2.0);
-      var targetPose = new Pose2d(new Translation2d(tgtXPos, tgtYPos), new Rotation2d(0.0)); // meters
+      var targetPose = new Pose2d(new Translation2d(tgtXPos, tgtYPos), Rotation2d.fromDegrees(-21.0)); // meters
       double balltargetWidth = Units.inchesToMeters(9.5);
       double shootertargetWidth = Units.inchesToMeters(36); // Actually 4ft wide but this is a straight replacement for a curved goal
       double shootertargetHeight = Units.inchesToMeters(2);
       
-      var ballTgt = new SimVisionTarget(FieldConstants.cargoD,
-                                       CAMERA.BALLTARGETHEIGHT,
+      var ball = new Pose2d(FieldConstants.cargoD.getX(), FieldConstants.cargoD.getY(), new Rotation2d(0));
+      var ballTgt = RectangularSimVisionTarget(ball,
+                                       0,
                                        balltargetWidth,
-                                       balltargetWidth); // same as height
+                                       balltargetWidth, // same as height
+                                       balltargetWidth);
 
-      var shooterTgt = new SimVisionTarget(targetPose,
+      var shooterTgt = RectangularSimVisionTarget(targetPose,
                                        FieldConstants.visionTargetHeightLower,
                                        shootertargetWidth,
-                                       shootertargetHeight);
+                                       shootertargetHeight,
+                                       shootertargetWidth); // width is same as depth since 4ft circle
       
-      ballvisionSys.addSimVisionTarget(ballTgt);
-      shootervisionSys.addSimVisionTarget(shooterTgt);
+      for (int i = 0; i < ballTgt.size(); i++) {
+         ballvisionSys.addSimVisionTarget(ballTgt.get(i));
+      }
+      for (int i = 0; i < shooterTgt.size(); i++) {
+         shootervisionSys.addSimVisionTarget(shooterTgt.get(i));
+      }
+   }
+
+   public void fieldSetup(Field2d field) {
+      var ball = field.getObject("ball");
+      var hub = field.getObject("hub");
+
+      ball.setPose(FieldConstants.cargoD.getX(), FieldConstants.cargoD.getY(), Rotation2d.fromDegrees(0));
+      hub.setPose(FieldConstants.hubCenter.getX(), FieldConstants.hubCenter.getY(), Rotation2d.fromDegrees(-21));
    }
 
    public void lightsOn() {
@@ -109,5 +129,48 @@ public class PhotonVision {
                   FieldConstants.visionTargetHeightLower,
                   CAMERA.SHOOTERCAMERAANGLE,
                   Units.degreesToRadians(result.getBestTarget().getPitch()));
+   }
+
+   public List<SimVisionTarget> RectangularSimVisionTarget(
+         Pose2d targetPos,
+         double targetHeightAboveGroundMeters,
+         double targetWidthMeters,
+         double targetHeightMeters,
+         double targetDepthMeters) {
+      List<SimVisionTarget> targetList = new ArrayList<SimVisionTarget>();
+      
+      var targetPos1 = targetPos.transformBy(new Transform2d(
+         new Translation2d(0, -targetDepthMeters/2).rotateBy(targetPos.getRotation()),
+         Rotation2d.fromDegrees(180.0)));
+   
+      var targetPos2 = targetPos.transformBy(new Transform2d(
+         new Translation2d(-targetWidthMeters/2, 0).rotateBy(targetPos.getRotation()),
+         Rotation2d.fromDegrees(-90.0)));
+
+      var targetPos3 = targetPos.transformBy(new Transform2d(
+         new Translation2d(0, targetDepthMeters/2).rotateBy(targetPos.getRotation()),
+         Rotation2d.fromDegrees(0.0)));
+
+      var targetPos4 = targetPos.transformBy(new Transform2d(
+         new Translation2d(targetWidthMeters/2, 0).rotateBy(targetPos.getRotation()),
+         Rotation2d.fromDegrees(90.0)));
+
+      targetList.add(new SimVisionTarget(targetPos1, // Intial face
+            targetHeightAboveGroundMeters,
+            targetWidthMeters,
+            targetHeightMeters));
+      targetList.add(new SimVisionTarget(targetPos2, // Left face
+            targetHeightAboveGroundMeters,
+            targetDepthMeters, // On the side width is the inital depth
+            targetHeightMeters));
+      targetList.add(new SimVisionTarget(targetPos3, // Back face
+            targetHeightAboveGroundMeters,
+            targetWidthMeters,
+            targetHeightMeters));
+      targetList.add(new SimVisionTarget(targetPos4, // Right face
+            targetHeightAboveGroundMeters,
+            targetDepthMeters, // On the side width is the inital depth
+            targetHeightMeters));
+      return targetList;
    }
 }
