@@ -51,15 +51,15 @@ public class RobotContainer {
   private static SwerveDrivetrainModel dt;
   private static SwerveSubsystem m_swerveSubsystem;
   @Log
-  public final ShooterSubsystem m_shooter = new ShooterSubsystem();
+  //public final ShooterSubsystem m_shooter = new ShooterSubsystem();
   @Log
   public final LEDSubsystem m_LED;
   @Log
   public final IntakeSubsystem m_intake = new IntakeSubsystem();
   @Log
-  public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem();
+  //public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem();
   @Log
-  public final ClimbSubsystem m_climb = ClimbSubsystem.Create();
+  //public final ClimbSubsystem m_climb = ClimbSubsystem.Create();
 
   private final Center5Ball center5;
   
@@ -75,9 +75,9 @@ public class RobotContainer {
   XboxController6391 op = new XboxController6391(OI.OPCONTROLLERPORT, 0.1);
   XboxControllerSim m_operatorControllerSim = new XboxControllerSim(OI.OPCONTROLLERPORT);
 
-  Button frontConveyorSensor = new Button(() -> m_conveyor.getFrontConveyor());
+/*   Button frontConveyorSensor = new Button(() -> m_conveyor.getFrontConveyor());
   Button topConveyorSensor = new Button(() -> m_conveyor.getTopConveyor());
-  Button shooteratsetpoint = new Button(() -> m_shooter.atSetpoint());
+  Button shooteratsetpoint = new Button(() -> m_shooter.atSetpoint()); */
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -102,12 +102,12 @@ public class RobotContainer {
     // Constantly checks to see if the intake motor has stalled
     m_intake.setDefaultCommand(new RunCommand(m_intake::checkStall, m_intake));
 
-    m_climb.setDefaultCommand(
+/*     m_climb.setDefaultCommand(
       // Use right y axis to control the speed of the climber
       new RunCommand(
         () -> m_climb
           .setOutput(Math.max(op.TriggerL(), drv.TriggerL()),
-            Math.max(op.TriggerR(), drv.TriggerR())), m_climb));
+            Math.max(op.TriggerR(), drv.TriggerR())), m_climb)); */
 
     autoChooser.setDefaultOption("Center5", center5);
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -121,7 +121,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Spin up the shooter to far trench speed when the 'X' button is pressed.
-    drv.XButton.or(op.XButton)
+/*     drv.XButton.or(op.XButton)
       .whenActive(new InstantCommand(() -> {
         m_shooter.setRPS(3.0);
       }, m_shooter));
@@ -130,7 +130,7 @@ public class RobotContainer {
     drv.YButton.or(op.YButton)
       .whenActive(new InstantCommand(() -> {
         m_shooter.setRPS(0);
-      }, m_shooter));
+      }, m_shooter)); */
     
     // While driver holds the A button Auto Aim to the High Hub using the left stick for distance control
     drv.AButton.whileActiveOnce(new AutoAim(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
@@ -141,12 +141,12 @@ public class RobotContainer {
     // Turn on the conveyor when:
     // the A button is pressed (either controller) and either the top sensor is not blocked or the shooter is up to speed
     // if the bottom sensor is blocked (ball waiting to go up) unless top sensor blocked (the ball has no place to go)
-    (topConveyorSensor.negate()
+/*     (topConveyorSensor.negate()
       .and(frontConveyorSensor))
     .or(drv.AButton.and(shooteratsetpoint.or(topConveyorSensor.negate())))
     .or(op.AButton.and(shooteratsetpoint.or(topConveyorSensor.negate())))
     .whenActive(new InstantCommand(m_conveyor::turnOn, m_conveyor))
-    .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor));
+    .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor)); */
 
     // When right bumper is pressed raise/lower the intake and stop/start the intake on both controllers
     drv.BumperR.or(op.BumperR).whenActive(new InstantCommand(() -> m_intake.toggleIntakeWheels(true))
@@ -160,11 +160,11 @@ public class RobotContainer {
     //drv.BumperL.whileActiveOnce(m_robotDrive.driveStraight(() -> -drv.JoystickLY()));
 
     // When the back button is pressed run the conveyor backwards until released
-    drv.BackButton.or(op.BackButton).whenActive(new InstantCommand(m_conveyor::turnBackwards, m_conveyor))
-      .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor));
+/*     drv.BackButton.or(op.BackButton).whenActive(new InstantCommand(m_conveyor::turnBackwards, m_conveyor))
+      .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor)); */
     
     // When start button is pressed for at least a second advance to the next climb stage
-    drv.StartButton.or(op.StartButton).whileActiveOnce(new WaitCommand(0.5).andThen(new NextClimbPosition(m_climb).withTimeout(5)));
+    //drv.StartButton.or(op.StartButton).whileActiveOnce(new WaitCommand(0.5).andThen(new NextClimbPosition(m_climb).withTimeout(5)));
 
     // Create "button" from POV Hat in up direction.  Use both of the angles to the left and right also.
     //drv.POVUp.whileActiveOnce(new LStoCP(m_shooter, m_robotDrive, m_intake));
@@ -178,13 +178,13 @@ public class RobotContainer {
     op.POVDown.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter3));
     op.POVLeft.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter4)); */
 
-    op.POVRight.whenActive(new InstantCommand(m_conveyor::CPRightSlow, m_conveyor))
+/*     op.POVRight.whenActive(new InstantCommand(m_conveyor::CPRightSlow, m_conveyor))
       .whenInactive(new InstantCommand(m_conveyor::CPOff, m_conveyor));
   
     op.POVLeft.whenActive(new InstantCommand(m_conveyor::CPLeftSlow, m_conveyor))
       .whenInactive(new InstantCommand(m_conveyor::CPOff, m_conveyor));
 
-    op.POVUp.whenActive(new StartEndCommand(m_conveyor::CPOn, m_conveyor::CPOff, m_conveyor).withTimeout(4));
+    op.POVUp.whenActive(new StartEndCommand(m_conveyor::CPOn, m_conveyor::CPOff, m_conveyor).withTimeout(4)); */
 
     // Create "button" from POV Hat in down direction.  Use both of the angles to the left and right also.
     //drv.POVDown.whileActiveOnce(new CPtoLS(m_shooter, m_robotDrive, m_intake));

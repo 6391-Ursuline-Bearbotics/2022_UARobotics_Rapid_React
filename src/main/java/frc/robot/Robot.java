@@ -102,12 +102,12 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_intake.setOutput(0);
     m_robotContainer.m_intake.extendIntake(false);
-    m_robotContainer.m_conveyor.turnOff();
+/*     m_robotContainer.m_conveyor.turnOff();
     m_robotContainer.m_climb.invertclimber(false);
     m_robotContainer.m_climb.setOutput(0, 0);
     m_robotContainer.m_climb.climbstage = 0;
     m_robotContainer.m_climb.resetEnc(true);
-    m_robotContainer.m_shooter.setRPS(0);
+    m_robotContainer.m_shooter.setRPS(0); */
     m_robotContainer.m_PhotonVision.lightsOff();
 
     // schedule the autonomous command (example)
@@ -136,12 +136,12 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.m_intake.setOutput(0);
     m_robotContainer.m_intake.extendIntake(false);
-    m_robotContainer.m_conveyor.turnOff();
+/*     m_robotContainer.m_conveyor.turnOff();
     m_robotContainer.m_climb.invertclimber(false);
     m_robotContainer.m_climb.setOutput(0, 0);
     m_robotContainer.m_climb.climbstage = 0;
     m_robotContainer.m_climb.resetEnc(true);
-    m_robotContainer.m_shooter.setRPS(0);
+    m_robotContainer.m_shooter.setRPS(0); */
     m_robotContainer.m_PhotonVision.lightsOff();
   }
 

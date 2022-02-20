@@ -36,6 +36,11 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
     flywheelTalonConfig.slot0.kD = SHOOTER.D;
     m_shooterMotor.configAllSettings(flywheelTalonConfig);
 
+    m_shooterMotor.configVoltageCompSaturation(12); // "full output" will now scale to 11 Volts for all control modes when enabled.
+    m_shooterMotor.enableVoltageCompensation(true);
+    m_shooterMotor2.configVoltageCompSaturation(12); // "full output" will now scale to 11 Volts for all control modes when enabled.
+    m_shooterMotor2.enableVoltageCompensation(true);
+
     m_shooterMotor2.follow(m_shooterMotor);
     m_shooterMotor.setInverted(false);
     m_shooterMotor2.setInverted(InvertType.OpposeMaster);
