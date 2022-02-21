@@ -15,8 +15,8 @@ import frc.robot.UA6391.StallDetector;
 
 public class IntakeSubsystem extends SubsystemBase implements Loggable{
     private final WPI_TalonSRX m_IntakeMotor = new WPI_TalonSRX(IntakeConstants.kIntakeControllerPort);
-    private final DoubleSolenoid m_intakeSolenoid1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.kSolenoid1ControllerPort, IntakeConstants.kSolenoid2ControllerPort);
-    private final DoubleSolenoid m_intakeSolenoid2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.kSolenoid3ControllerPort, IntakeConstants.kSolenoid4ControllerPort);
+    //private final DoubleSolenoid m_intakeSolenoid1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.kSolenoid1ControllerPort, IntakeConstants.kSolenoid2ControllerPort);
+    //private final DoubleSolenoid m_intakeSolenoid2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.kSolenoid3ControllerPort, IntakeConstants.kSolenoid4ControllerPort);
 
     TalonSRXSimCollection m_IntakeMotorSim = new TalonSRXSimCollection(m_IntakeMotor);
 
@@ -25,8 +25,8 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
     // know which direction to toggle to as their default state is kOff.
     public IntakeSubsystem() {
         setOutput(0);
-        m_intakeSolenoid1.set(Value.kReverse);
-        m_intakeSolenoid2.set(Value.kReverse);
+        //m_intakeSolenoid1.set(Value.kReverse);
+        //m_intakeSolenoid2.set(Value.kReverse);
         intakeStall = new StallDetector(IntakeConstants.kIntakePDPSlot);
         intakeStall.setMinStallMillis(IntakeConstants.kStallTimeMS);
     }
@@ -36,7 +36,7 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
         this.m_IntakeMotor.set(speed);
     }
 
-    @Config
+/*     @Config
     public void extendIntake(boolean extend) {
         if (extend) {
             m_intakeSolenoid1.set(Value.kForward);
@@ -52,7 +52,7 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
     public void toggleIntakePosition(boolean enabled) {
         m_intakeSolenoid1.toggle();
         m_intakeSolenoid2.toggle();        
-    }
+    } */
 
     @Config
     public void toggleIntakeWheels(boolean enabled) {
@@ -71,7 +71,7 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
         }
     }
 
-    public void deployIntake() {
+/*     public void deployIntake() {
         setOutput(IntakeConstants.kIntakeMotorSpeed);
         extendIntake(true);
     }
@@ -79,5 +79,5 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
     public void retractIntake() {
         extendIntake(false);
         setOutput(0);
-    }
+    } */
 }

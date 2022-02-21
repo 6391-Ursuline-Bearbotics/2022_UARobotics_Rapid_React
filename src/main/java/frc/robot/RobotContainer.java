@@ -149,8 +149,8 @@ public class RobotContainer {
     .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor)); */
 
     // When right bumper is pressed raise/lower the intake and stop/start the intake on both controllers
-    drv.BumperR.or(op.BumperR).whenActive(new InstantCommand(() -> m_intake.toggleIntakeWheels(true))
-      .andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true))));
+    drv.BumperR.or(op.BumperR).whenActive(new InstantCommand(() -> m_intake.toggleIntakeWheels(true)));
+      //.andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true))));
     
     // When the left bumper is pressed on either controller right joystick is super slow turn
     /* drv.BumperL.or(op.BumperL).whileActiveOnce(new InstantCommand(() -> m_robotDrive.setMaxDriveOutput(

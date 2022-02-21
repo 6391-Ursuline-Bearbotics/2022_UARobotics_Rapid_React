@@ -101,7 +101,7 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     m_robotContainer.m_intake.setOutput(0);
-    m_robotContainer.m_intake.extendIntake(false);
+    //m_robotContainer.m_intake.extendIntake(false);
 /*     m_robotContainer.m_conveyor.turnOff();
     m_robotContainer.m_climb.invertclimber(false);
     m_robotContainer.m_climb.setOutput(0, 0);
@@ -135,7 +135,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     m_robotContainer.m_intake.setOutput(0);
-    m_robotContainer.m_intake.extendIntake(false);
+    //m_robotContainer.m_intake.extendIntake(false);
 /*     m_robotContainer.m_conveyor.turnOff();
     m_robotContainer.m_climb.invertclimber(false);
     m_robotContainer.m_climb.setOutput(0, 0);

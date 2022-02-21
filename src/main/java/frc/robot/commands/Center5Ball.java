@@ -23,8 +23,8 @@ public class Center5Ball extends SequentialCommandGroup {
             /* new InstantCommand(() -> {m_shooter.setSetpoint(ShooterConstants.kShooter4);
                 m_shooter.enable();}, m_shooter), */
 
-            new InstantCommand(() -> m_intake.toggleIntakeWheels(true))
-                    .andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true))),
+            new InstantCommand(() -> m_intake.toggleIntakeWheels(true)),
+                    //.andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true))),
             m_swerve.dt.createCommandForTrajectory(trajectory1, m_swerve),
             new WaitCommand(2), // Placeholder for shooting 2
             m_swerve.dt.createCommandForTrajectory(trajectory2, m_swerve),
