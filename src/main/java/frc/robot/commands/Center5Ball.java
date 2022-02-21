@@ -12,7 +12,7 @@ import frc.swervelib.SwerveSubsystem;
 public class Center5Ball extends SequentialCommandGroup {
     public Center5Ball(SwerveSubsystem m_swerve, IntakeSubsystem m_intake) {        
         PathPlannerTrajectory trajectory1 = PathPlanner.loadPath("StartToA", 2.0, 3.0);
-        PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("AToB", 2.0, 3.0);
+        PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("AToBSimple", 2.0, 3.0);
         PathPlannerTrajectory trajectory3 = PathPlanner.loadPath("BToC", 2.0, 3.0);
         PathPlannerTrajectory trajectory4 = PathPlanner.loadPath("CToB", 2.0, 3.0);
         
@@ -27,12 +27,12 @@ public class Center5Ball extends SequentialCommandGroup {
                     //.andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true))),
             m_swerve.dt.createCommandForTrajectory(trajectory1, m_swerve),
             new WaitCommand(2), // Placeholder for shooting 2
-            m_swerve.dt.createCommandForTrajectory(trajectory2, m_swerve),
-            new WaitCommand(1), // Placeholder for shooting 1
+            m_swerve.dt.createCommandForTrajectory(trajectory2, m_swerve)
+            /* new WaitCommand(1), // Placeholder for shooting 1
             m_swerve.dt.createCommandForTrajectory(trajectory3, m_swerve),
             new WaitCommand(.25), // Placeholder for waiting for the second ball
             m_swerve.dt.createCommandForTrajectory(trajectory4, m_swerve),
-            new WaitCommand(2) // Placeholder for shooting 2
+            new WaitCommand(2) // Placeholder for shooting 2 */
         );
     }
 }
