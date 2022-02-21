@@ -2,6 +2,8 @@ package frc.robot;
 
 import java.util.ArrayList;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -94,7 +96,8 @@ public class BearSwerveHelper {
                 DRIVE.BACK_RIGHT_MODULE_STEER_OFFSET, "BR"
         );
     
-        Gyroscope gyro = GyroscopeHelper.createPigeonCAN(DRIVE.PIGEON_ID);
+        TalonSRX gyroTalon = new TalonSRX(DRIVE.PIGEON_ID);
+        Gyroscope gyro = GyroscopeHelper.createPigeonController(gyroTalon);
     
         modules.add(m_frontLeftModule);
         modules.add(m_frontRightModule);

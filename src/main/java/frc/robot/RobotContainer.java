@@ -50,15 +50,15 @@ public class RobotContainer {
   
   private static SwerveDrivetrainModel dt;
   private static SwerveSubsystem m_swerveSubsystem;
-  @Log
+  //@Log
   //public final ShooterSubsystem m_shooter = new ShooterSubsystem();
   @Log
   public final LEDSubsystem m_LED;
   @Log
   public final IntakeSubsystem m_intake = new IntakeSubsystem();
-  @Log
+  //@Log
   //public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem();
-  @Log
+  //@Log
   //public final ClimbSubsystem m_climb = ClimbSubsystem.Create();
 
   private final Center5Ball center5;
