@@ -34,12 +34,12 @@ public class ControlScheme {
             case "Left Stick and Triggers":
               m_translationX = modifyAxis(-m_controller.getLeftY());
               m_translationY = modifyAxis(-m_controller.getLeftX());
-              m_rotation = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
+              m_rotation = m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis();
               break;
             case "Split Sticks and Triggers":
               m_translationX = modifyAxis(-m_controller.getLeftY());
               m_translationY = modifyAxis(-m_controller.getRightX());
-              m_rotation = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
+              m_rotation = m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis();
               break;
             case "Gas Pedal":
               m_translationX = modifyAxis(-m_controller.getLeftY());
