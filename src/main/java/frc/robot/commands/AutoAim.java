@@ -9,6 +9,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.ControlScheme;
@@ -75,7 +76,21 @@ public class AutoAim extends CommandBase {
       // Override the rotation input with a PID value seeking centered in the camera
       var pidAngle = m_rotationPID.calculate(targetAngle);
       input.m_rotation = Math.copySign(DRIVE.AIMFF + Math.abs(pidAngle), pidAngle);
-      m_swerve.dt.setModuleStates(input);
+      
+      // If aiming at a ball we want to use robot relative movement
+      if (m_shooter) {
+        m_swerve.dt.setModuleStates(input);
+      }
+      else {
+        m_swerve.dt.setModuleStates(DRIVE.KINEMATICS.toSwerveModuleStates(
+                        new ChassisSpeeds(
+                                input.m_translationX * DRIVE.MAX_FWD_REV_SPEED_MPS,
+                                input.m_translationY * DRIVE.MAX_STRAFE_SPEED_MPS,
+                                input.m_rotation * DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC
+                        )  
+                )
+        );
+      }
     }
     else {
       // Just use normal robot controls
