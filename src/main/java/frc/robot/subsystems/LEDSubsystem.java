@@ -115,17 +115,6 @@ public class LEDSubsystem extends SubsystemBase implements Loggable{
     else {
       setFrontAll(Color.kBlack); // Off
     }
-
-    Alliance ally = DriverStation.getAlliance();
-      if (ally.equals(Alliance.Red)) {
-        setFrontAll(Color.kRed);
-      }
-      else if (ally.equals(Alliance.Blue)) { // should only have pipelines 0 & 1
-        setFrontAll(Color.kBlue);
-      }
-      else {
-        setFrontAll(Color.kPurple);
-      }
   }
 
   private void setShooterLEDs() {

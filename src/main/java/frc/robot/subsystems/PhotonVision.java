@@ -64,8 +64,8 @@ public class PhotonVision {
                                     shootercamResolutionHeight,
                                     shooterminTargetArea);
 
-      double tgtXPos = Units.feetToMeters(54);
-      double tgtYPos = Units.feetToMeters(27 / 2) - Units.inchesToMeters(43.75) - Units.inchesToMeters(48.0 / 2.0);
+      double tgtXPos = Units.feetToMeters(54 / 2);
+      double tgtYPos = Units.feetToMeters(27 / 2);
       var targetPose = new Pose2d(new Translation2d(tgtXPos, tgtYPos), Rotation2d.fromDegrees(-21.0)); // meters
       double balltargetWidth = Units.inchesToMeters(9.5);
       double shootertargetWidth = Units.inchesToMeters(36); // Actually 4ft wide but this is a straight replacement for a curved goal
