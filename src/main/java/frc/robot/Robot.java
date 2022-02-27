@@ -85,12 +85,14 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     Shuffleboard.selectTab("Dashboard");
     m_robotContainer.m_PhotonVision.lightsOff();
-    m_robotContainer.m_LED.rainbow();
   }
 
   @Override
   public void disabledPeriodic() {
     m_robotContainer.m_PhotonVision.lightsOn();
+    if (m_robotContainer.dt.getGyroReady()) {
+      m_robotContainer.m_LED.rainbow();
+    }
   }
 
   /**

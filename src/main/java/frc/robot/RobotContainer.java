@@ -48,8 +48,8 @@ import frc.robot.UA6391.XboxController6391;
 public class RobotContainer {
   public final PhotonVision m_PhotonVision = new PhotonVision();
   
-  private static SwerveDrivetrainModel dt;
-  private static SwerveSubsystem m_swerveSubsystem;
+  public static SwerveDrivetrainModel dt;
+  public static SwerveSubsystem m_swerveSubsystem;
   //@Log
   //public final ShooterSubsystem m_shooter = new ShooterSubsystem();
   @Log
@@ -159,12 +159,12 @@ public class RobotContainer {
         DriveConstants.kMaxOutputForward, DriveConstants.kMaxOutputRotation))); */
     //drv.BumperL.whileActiveOnce(m_robotDrive.driveStraight(() -> -drv.JoystickLY()));
 
+    // When start button is pressed reorient the field drive to the current heading
+    drv.StartButton.whileActiveOnce(new InstantCommand(() -> dt.zeroGyroscope()));
+
     // When the back button is pressed run the conveyor backwards until released
 /*     drv.BackButton.or(op.BackButton).whenActive(new InstantCommand(m_conveyor::turnBackwards, m_conveyor))
       .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor)); */
-    
-    // When start button is pressed for at least a second advance to the next climb stage
-    //drv.StartButton.or(op.StartButton).whileActiveOnce(new WaitCommand(0.5).andThen(new NextClimbPosition(m_climb).withTimeout(5)));
 
     // Create "button" from POV Hat in up direction.  Use both of the angles to the left and right also.
     //drv.POVUp.whileActiveOnce(new LStoCP(m_shooter, m_robotDrive, m_intake));

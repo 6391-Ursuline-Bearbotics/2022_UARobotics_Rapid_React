@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -24,6 +25,7 @@ public class BearSwerveHelper {
         passConstants();
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
         ArrayList<SwerveModule> modules = new ArrayList<SwerveModule>(QuadSwerveSim.NUM_MODULES);
+        Gyroscope gyro;
 
         // There are 4 methods you can call to create your swerve modules.
         // The method you use depends on what motors you are using.
@@ -96,8 +98,14 @@ public class BearSwerveHelper {
                 DRIVE.BACK_RIGHT_MODULE_STEER_OFFSET, "BR"
         );
     
-        TalonSRX gyroTalon = new TalonSRX(DRIVE.PIGEON_ID);
-        Gyroscope gyro = GyroscopeHelper.createPigeonController(gyroTalon);
+        // This works around a CTRE bug on ribbon cable Pigeons
+        if (RobotBase.isReal()) {
+            TalonSRX gyroTalon = new TalonSRX(DRIVE.PIGEON_ID);
+            gyro = GyroscopeHelper.createPigeonController(gyroTalon);
+        }
+        else {
+            gyro = GyroscopeHelper.createPigeonCAN(0);
+        }
     
         modules.add(m_frontLeftModule);
         modules.add(m_frontRightModule);

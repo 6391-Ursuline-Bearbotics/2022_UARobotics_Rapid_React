@@ -58,8 +58,8 @@ public class LEDSubsystem extends SubsystemBase implements Loggable{
 
   @Override
   public void simulationPeriodic() {
-    pv.shootervisionSys.processFrame(dt.getCurActPose());
-    pv.ballvisionSys.processFrame(dt.getCurActPose());
+    pv.shootervisionSys.processFrame(dt.getPose());
+    pv.ballvisionSys.processFrame(dt.getPose());
   }
 
   @Log

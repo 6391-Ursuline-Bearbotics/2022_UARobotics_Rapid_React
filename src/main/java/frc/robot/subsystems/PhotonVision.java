@@ -15,8 +15,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import frc.robot.FieldConstants;
 import frc.robot.Constants.CAMERA;
 
@@ -90,6 +91,8 @@ public class PhotonVision {
       for (int i = 0; i < shooterTgt.size(); i++) {
          shootervisionSys.addSimVisionTarget(shooterTgt.get(i));
       }
+
+      NetworkTableInstance.getDefault().getTable("photonvision").getEntry("version").setValue("v2022.1.4");
    }
 
    public void fieldSetup(Field2d field) {
