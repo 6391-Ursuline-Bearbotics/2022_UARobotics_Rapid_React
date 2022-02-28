@@ -208,6 +208,7 @@ public final class Constants {
     public static final class SHOOTER {
         public static final int MOTORPORT = 14;
         public static final int MOTOR2PORT = 15;
+        public static final int HOODPORT = 16;
     
         public static final double TOLERANCERPS = 6.0;
         
