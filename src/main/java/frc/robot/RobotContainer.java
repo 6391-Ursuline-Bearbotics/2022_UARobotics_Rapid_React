@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.AutoAim;
+import frc.robot.commands.AutoAimRotate;
 import frc.robot.commands.Center5Ball;
 // Command Imports
 import frc.robot.commands.NextClimbPosition;
@@ -121,14 +122,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Spin up the shooter to far trench speed when the 'X' button is pressed.
-/*     drv.XButton.or(op.XButton)
-      .whenActive(new InstantCommand(() -> {
+/*     op.XButton.whenActive(new InstantCommand(() -> {
         m_shooter.setRPS(3.0);
       }, m_shooter));
 
     // Stop the Shooter when the B button is pressed
-    drv.YButton.or(op.YButton)
-      .whenActive(new InstantCommand(() -> {
+    op.YButton.whenActive(new InstantCommand(() -> {
         m_shooter.setRPS(0);
       }, m_shooter)); */
     
@@ -137,6 +136,10 @@ public class RobotContainer {
 
     // While driver holds the B button Auto Aim to the closest ball using the left stick for distance control
     drv.BButton.whileActiveOnce(new AutoAim(m_swerveSubsystem, m_PhotonVision, false, m_scheme));
+
+    drv.XButton.whileActiveOnce(new AutoAimRotate(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
+
+    drv.YButton.whileActiveOnce(new AutoAimRotate(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
 
     // Turn on the conveyor when:
     // the A button is pressed (either controller) and either the top sensor is not blocked or the shooter is up to speed

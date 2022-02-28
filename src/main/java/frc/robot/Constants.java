@@ -104,6 +104,8 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints THETACONTROLLERCONSTRAINTS =
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+
+        public static final double AIMROTATE = 0.3;
     }
 
     public static final class ROBOT {
