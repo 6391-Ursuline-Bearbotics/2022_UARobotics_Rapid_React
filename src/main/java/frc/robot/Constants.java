@@ -77,6 +77,11 @@ public final class Constants {
         static public final double MAX_TRANSLATE_ACCEL_MPS2 = MAX_FWD_REV_SPEED_MPS/0.25; //0-full time of 0.25 second
         static public final double MAX_ROTATE_ACCEL_RAD_PER_SEC_2 = MAX_ROTATE_SPEED_RAD_PER_SEC/0.25; //0-full time of 0.25 second
 
+        // Fine control speed limits
+        static public final double MAX_FWD_REV_SPEED_MPS_SLOW = Units.feetToMeters(6.0);
+        static public final double MAX_STRAFE_SPEED_MPS_SLOW = Units.feetToMeters(6.0);
+        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW = Units.degreesToRadians(90.0);
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // SENSOR CONSTANTS
         // Sensor-related constants - pulled from datasheets for the sensors and gearboxes
@@ -132,20 +137,6 @@ public final class Constants {
         static public final String PHOTON_CAM_NAME = "MainCamera";
     }
 
-    public static final class AutoConstants {
-        public static final double kAutoTimeoutSeconds = 12;
-        public static final double kAutoShootInit = 3;
-        public static final double kAutoShootRest = 6;
-
-        public static final double kAutoShootRPS = 112;
-        
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-
-        // %of Picutre the Ball should fill if Red 0-100% = 0-1
-        public static final double kBallArea = 0.5;
-    }
-
     public static final class LED {
         public static final int PWMPORT = 0;
         public static final int BUFFERSIZE = 120;
@@ -157,41 +148,32 @@ public final class Constants {
         public static final boolean PRACTICE = true;
     }
 
-    public static final class IntakeConstants {
-        public static final int kIntakeControllerPort = 4;
+    public static final class INTAKE {
+        public static final int CANID = 4;
         
-        public static final int kSolenoid1ControllerPort = 0;
-        public static final int kSolenoid2ControllerPort = 1;
-        public static final int kSolenoid3ControllerPort = 4;
-        public static final int kSolenoid4ControllerPort = 5;
+        public static final int SOLENOID1FWD = 0;
+        public static final int SOLENOID1REV = 1;
+        public static final int SOLENOID2FWD = 4;
+        public static final int SOLENOID2REV = 5;
 
-        public static final double kIntakeMotorSpeed = -0.75;
+        public static final double SPEED = -0.75;
 
-        public static final double kIntakeStallCurrent = 20;
-        public static final int kStallTimeMS = 500;
-        public static final int kIntakePDPSlot = 7;
+        public static final double STALLCURRENT = 20;
+        public static final int STALLTIME = 500;
+        public static final int PDPSLOT = 7;
     }
 
-    public static final class ConveyorConstants {
-        public static final int kConveyor1ControllerPort = 6;
-        public static final int kConveyor2ControllerPort = 5;
+    public static final class CONVEYOR {
+        public static final int CANID = 6;
 
-        public static final double kConveyorTopMotorSpeed = 1.0;
-        public static final double kConveyorBottomMotorSpeed = 0.2;
-        public static final double kConveyorBackSpeed = -0.5;
+        public static final int FRONTSENSORPORT = 0;
+        public static final int TOPSENSORPORT = 1;
+
+        public static final double SPEED = 1.0;
+        public static final double BACKSPEED = -0.5;
     }
 
-    public static final class ClimbConstants {
-        public static final int kClimbLeftControllerPort = 9;
-        public static final int kClimbRightControllerPort = 10;
-        public static final int kEncoderCPR = 4096;
-        public static final double kClimbP = 0.5;
-        public static final double kErrorTolerance = 800;
-
-        public static final int kFullUpEncoderCount = 42000;
-        public static final int kOnBarEncoderCount = 53000;
-        public static final int kHangingEncoderCount = 63000;
-    }
+    public static final class CLIMB {}
 
     public static final class CAMERA {
         public static final double BALLCAMERAANGLE = 0; // Degrees
@@ -228,5 +210,10 @@ public final class Constants {
         public static final double kSVOLTS = 1;//0.87; // .05 original / .92 comp
         public static final double kVVOLTSECONDSPERROTATION = 0.0774; // 12 / .0764 comp
         public static final double kA = 0.00003; //.0429 comp
+
+        public static final double SETPOINT1 = 1.0;
+        public static final double SETPOINT2 = 2.0;
+        public static final double SETPOINT3 = 3.0;
+        public static final double SETPOINT4 = 4.0;
     }
 }

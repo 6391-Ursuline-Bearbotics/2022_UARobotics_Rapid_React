@@ -24,8 +24,6 @@ import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoAimRotate;
 import frc.robot.commands.Center5Ball;
-// Command Imports
-import frc.robot.commands.NextClimbPosition;
 // Subsystem Imports
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.swervelib.SwerveDrivetrainModel;
@@ -35,8 +33,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ConveyorSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.PhotonVision;
+import frc.robot.Constants.DRIVE;
 // Constant Imports
 import frc.robot.Constants.OI;
+import frc.robot.Constants.SHOOTER;
 // Special Imports
 import frc.robot.UA6391.XboxController6391;
 
@@ -51,14 +51,14 @@ public class RobotContainer {
   
   public static SwerveDrivetrainModel dt;
   public static SwerveSubsystem m_swerveSubsystem;
-  //@Log
-  //public final ShooterSubsystem m_shooter = new ShooterSubsystem();
+  @Log
+  public final ShooterSubsystem m_shooter = new ShooterSubsystem();
   @Log
   public final LEDSubsystem m_LED;
   @Log
   public final IntakeSubsystem m_intake = new IntakeSubsystem();
-  //@Log
-  //public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem();
+  @Log
+  public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem();
   //@Log
   //public final ClimbSubsystem m_climb = ClimbSubsystem.Create();
 
@@ -76,9 +76,9 @@ public class RobotContainer {
   XboxController6391 op = new XboxController6391(OI.OPCONTROLLERPORT, 0.1);
   XboxControllerSim m_operatorControllerSim = new XboxControllerSim(OI.OPCONTROLLERPORT);
 
-/*   Button frontConveyorSensor = new Button(() -> m_conveyor.getFrontConveyor());
+  Button frontConveyorSensor = new Button(() -> m_conveyor.getFrontConveyor());
   Button topConveyorSensor = new Button(() -> m_conveyor.getTopConveyor());
-  Button shooteratsetpoint = new Button(() -> m_shooter.atSetpoint()); */
+  Button shooteratsetpoint = new Button(() -> m_shooter.atSetpoint());
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -120,17 +120,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
-    // Spin up the shooter to far trench speed when the 'X' button is pressed.
-/*     op.XButton.whenActive(new InstantCommand(() -> {
-        m_shooter.setRPS(3.0);
-      }, m_shooter));
-
-    // Stop the Shooter when the B button is pressed
-    op.YButton.whenActive(new InstantCommand(() -> {
-        m_shooter.setRPS(0);
-      }, m_shooter)); */
-    
+  private void configureButtonBindings() {    
     // While driver holds the A button Auto Aim to the High Hub using the left stick for distance control
     drv.AButton.whileActiveOnce(new AutoAim(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
 
@@ -141,45 +131,54 @@ public class RobotContainer {
 
     drv.YButton.whileActiveOnce(new AutoAimRotate(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
 
+    // When the left bumper is pressed on either controller right joystick is super slow turn
+    drv.BumperL.whileActiveOnce(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
+        DRIVE.MAX_FWD_REV_SPEED_MPS_SLOW, DRIVE.MAX_STRAFE_SPEED_MPS_SLOW, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW)))
+      .whenInactive(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
+        DRIVE.MAX_FWD_REV_SPEED_MPS, DRIVE.MAX_STRAFE_SPEED_MPS, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC)));
+  
+    // When start button is pressed reorient the field drive to the current heading
+    drv.StartButton.whileActiveOnce(new InstantCommand(() -> dt.zeroGyroscope()));
+
     // Turn on the conveyor when:
     // the A button is pressed (either controller) and either the top sensor is not blocked or the shooter is up to speed
     // if the bottom sensor is blocked (ball waiting to go up) unless top sensor blocked (the ball has no place to go)
-/*     (topConveyorSensor.negate()
+    (topConveyorSensor.negate()
       .and(frontConveyorSensor))
     .or(drv.AButton.and(shooteratsetpoint.or(topConveyorSensor.negate())))
     .or(op.AButton.and(shooteratsetpoint.or(topConveyorSensor.negate())))
     .whenActive(new InstantCommand(m_conveyor::turnOn, m_conveyor))
-    .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor)); */
+    .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor));
 
     // When right bumper is pressed raise/lower the intake and stop/start the intake on both controllers
-    drv.BumperR.or(op.BumperR).whenActive(new InstantCommand(() -> m_intake.toggleIntakeWheels(true)));
-      //.andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true))));
-    
-    // When the left bumper is pressed on either controller right joystick is super slow turn
-    /* drv.BumperL.or(op.BumperL).whileActiveOnce(new InstantCommand(() -> m_robotDrive.setMaxDriveOutput(
-        DriveConstants.kMaxOutputForwardSlow, DriveConstants.kMaxOutputRotationSlow)))
-      .whenInactive(new InstantCommand(() -> m_robotDrive.setMaxDriveOutput(
-        DriveConstants.kMaxOutputForward, DriveConstants.kMaxOutputRotation))); */
-    //drv.BumperL.whileActiveOnce(m_robotDrive.driveStraight(() -> -drv.JoystickLY()));
+    op.BumperR.whenActive(new InstantCommand(() -> m_intake.toggleIntakeWheels(true))
+      .andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true))));
 
-    // When start button is pressed reorient the field drive to the current heading
-    drv.StartButton.whileActiveOnce(new InstantCommand(() -> dt.zeroGyroscope()));
+    // Spin up the shooter to far trench speed when the 'X' button is pressed.
+    op.XButton.whenActive(new InstantCommand(() -> {
+      m_shooter.setRPS(3.0);
+    }, m_shooter));
+  
+    // Stop the Shooter when the B button is pressed
+    op.YButton.whenActive(new InstantCommand(() -> {
+        m_shooter.setRPS(0);
+      }, m_shooter));
 
     // When the back button is pressed run the conveyor backwards until released
-/*     drv.BackButton.or(op.BackButton).whenActive(new InstantCommand(m_conveyor::turnBackwards, m_conveyor))
-      .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor)); */
+    op.BackButton.whenActive(new InstantCommand(m_conveyor::turnBackwards, m_conveyor))
+      .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor));
 
-    // Create "button" from POV Hat in up direction.  Use both of the angles to the left and right also.
+    
     //drv.POVUp.whileActiveOnce(new LStoCP(m_shooter, m_robotDrive, m_intake));
 /*     drv.POVUp.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter1));
     drv.POVRight.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter2));
     drv.POVDown.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter3));
     drv.POVLeft.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter4));
-
-    op.POVUp.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter1));
-    op.POVRight.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter2));
-    op.POVDown.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter3));
-    op.POVLeft.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter4)); */
+      */
+    op.POVUp.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT1));
+    op.POVRight.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT2));
+    op.POVDown.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT3));
+    op.POVLeft.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT4));
 
 /*     op.POVRight.whenActive(new InstantCommand(m_conveyor::CPRightSlow, m_conveyor))
       .whenInactive(new InstantCommand(m_conveyor::CPOff, m_conveyor));

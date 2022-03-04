@@ -2,7 +2,7 @@ package frc.robot.UA6391;
 
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.INTAKE;
 
 public class StallDetector {
     private int minStallMillis;
@@ -27,7 +27,7 @@ public class StallDetector {
         long nowMillis = System.currentTimeMillis();
         long elapsed = nowMillis - lastRunMillis;
 
-        if (currentCurrent >= IntakeConstants.kIntakeStallCurrent) {
+        if (currentCurrent >= INTAKE.STALLCURRENT) {
             stallMillis += elapsed;
         } else {
             stallMillis = Math.max(stallMillis - elapsed, 0);

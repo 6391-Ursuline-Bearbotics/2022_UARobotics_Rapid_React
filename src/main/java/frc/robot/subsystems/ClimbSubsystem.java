@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
-import frc.robot.Constants.ClimbConstants;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,7 +23,7 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
     public int setpoint = 4200;
 
     public ClimbSubsystem(WPI_TalonSRX m_LeftClimbMotor, WPI_TalonSRX m_RightClimbMotor) {
-        this.m_LeftClimbMotor = m_LeftClimbMotor;
+/*         this.m_LeftClimbMotor = m_LeftClimbMotor;
         this.m_RightClimbMotor = m_RightClimbMotor;
 
         setOutput(0,0);
@@ -134,5 +133,6 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
         }else{
             return true;
         }
-    }
+    } */
+}
 }
