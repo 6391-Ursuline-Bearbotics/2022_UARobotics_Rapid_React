@@ -33,6 +33,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ConveyorSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.PhotonVision;
+import frc.robot.Constants.CONVEYOR;
 import frc.robot.Constants.DRIVE;
 // Constant Imports
 import frc.robot.Constants.OI;
@@ -47,14 +48,14 @@ import frc.robot.UA6391.XboxController6391;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  public final PhotonVision m_PhotonVision = new PhotonVision();
+  //public final PhotonVision m_PhotonVision = new PhotonVision();
   
   public static SwerveDrivetrainModel dt;
   public static SwerveSubsystem m_swerveSubsystem;
   @Log
   public final ShooterSubsystem m_shooter = new ShooterSubsystem();
-  @Log
-  public final LEDSubsystem m_LED;
+  //@Log
+  //public final LEDSubsystem m_LED;
   @Log
   public final IntakeSubsystem m_intake = new IntakeSubsystem();
   @Log
@@ -86,12 +87,12 @@ public class RobotContainer {
   public RobotContainer() {
     dt = BearSwerveHelper.createBearSwerve();
     m_swerveSubsystem = BearSwerveHelper.createSwerveSubsystem(dt);
-    m_LED = new LEDSubsystem(m_PhotonVision, dt);
+    //m_LED = new LEDSubsystem(m_PhotonVision, dt);
     center5 = new Center5Ball(m_swerveSubsystem, m_intake);
 
     m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> dt.setModuleStates(m_scheme.getJoystickSpeeds()), m_swerveSubsystem));
 
-    m_PhotonVision.fieldSetup(m_swerveSubsystem.dt.getField());
+    //m_PhotonVision.fieldSetup(m_swerveSubsystem.dt.getField());
 
     // Detect if controllers are missing / Stop multiple warnings
     DriverStation.silenceJoystickConnectionWarning(OI.PRACTICE);
@@ -101,7 +102,7 @@ public class RobotContainer {
 
     // Configure default commands
     // Constantly checks to see if the intake motor has stalled
-    m_intake.setDefaultCommand(new RunCommand(m_intake::checkStall, m_intake));
+    //m_intake.setDefaultCommand(new RunCommand(m_intake::checkStall, m_intake));
 
 /*     m_climb.setDefaultCommand(
       // Use right y axis to control the speed of the climber
@@ -122,14 +123,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {    
     // While driver holds the A button Auto Aim to the High Hub using the left stick for distance control
-    drv.AButton.whileActiveOnce(new AutoAim(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
+    //drv.AButton.whileActiveOnce(new AutoAim(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
 
     // While driver holds the B button Auto Aim to the closest ball using the left stick for distance control
-    drv.BButton.whileActiveOnce(new AutoAim(m_swerveSubsystem, m_PhotonVision, false, m_scheme));
+    //drv.BButton.whileActiveOnce(new AutoAim(m_swerveSubsystem, m_PhotonVision, false, m_scheme));
 
-    drv.XButton.whileActiveOnce(new AutoAimRotate(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
+    //drv.XButton.whileActiveOnce(new AutoAimRotate(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
 
-    drv.YButton.whileActiveOnce(new AutoAimRotate(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
+    //drv.YButton.whileActiveOnce(new AutoAimRotate(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
 
     // When the left bumper is pressed on either controller right joystick is super slow turn
     drv.BumperL.whileActiveOnce(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
@@ -143,12 +144,16 @@ public class RobotContainer {
     // Turn on the conveyor when:
     // the A button is pressed (either controller) and either the top sensor is not blocked or the shooter is up to speed
     // if the bottom sensor is blocked (ball waiting to go up) unless top sensor blocked (the ball has no place to go)
-    (topConveyorSensor.negate()
-      .and(frontConveyorSensor))
-    .or(drv.AButton.and(shooteratsetpoint.or(topConveyorSensor.negate())))
-    .or(op.AButton.and(shooteratsetpoint.or(topConveyorSensor.negate())))
-    .whenActive(new InstantCommand(m_conveyor::turnOn, m_conveyor))
+    (topConveyorSensor.and(frontConveyorSensor.negate()))
+    .whenActive(new InstantCommand(() -> m_conveyor.on(CONVEYOR.SPEED), m_conveyor))
     .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor));
+      
+    op.AButton.and(shooteratsetpoint.or(topConveyorSensor.negate()))
+    .whenActive(new InstantCommand(() -> m_conveyor.on(CONVEYOR.SHOOTSPEED), m_conveyor))
+    .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor));
+
+    op.BButton.whenActive(new InstantCommand(() -> m_conveyor.on(CONVEYOR.BACKSPEED), m_conveyor))
+        .whenInactive(new InstantCommand(() -> m_conveyor.turnOff(), m_conveyor));
 
     // When right bumper is pressed raise/lower the intake and stop/start the intake on both controllers
     op.BumperR.whenActive(new InstantCommand(() -> m_intake.toggleIntakeWheels(true))
@@ -156,7 +161,7 @@ public class RobotContainer {
 
     // Spin up the shooter to far trench speed when the 'X' button is pressed.
     op.XButton.whenActive(new InstantCommand(() -> {
-      m_shooter.setRPS(3.0);
+      m_shooter.setRPS(39.0);
     }, m_shooter));
   
     // Stop the Shooter when the B button is pressed

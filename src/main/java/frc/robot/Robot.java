@@ -70,10 +70,10 @@ public class Robot extends TimedRobot {
     Logger.updateEntries();
 
     if (RobotController.getUserButton() && !userButton) {
-      m_robotContainer.m_PhotonVision.m_HD3000.takeInputSnapshot();
+      /* m_robotContainer.m_PhotonVision.m_HD3000.takeInputSnapshot();
       m_robotContainer.m_PhotonVision.m_HD3000.takeOutputSnapshot();
       m_robotContainer.m_PhotonVision.m_limelight.takeInputSnapshot();
-      m_robotContainer.m_PhotonVision.m_limelight.takeOutputSnapshot();
+      m_robotContainer.m_PhotonVision.m_limelight.takeOutputSnapshot(); */
     }
     userButton = RobotController.getUserButton();
   }
@@ -84,15 +84,15 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     Shuffleboard.selectTab("Dashboard");
-    m_robotContainer.m_PhotonVision.lightsOff();
+    //m_robotContainer.m_PhotonVision.lightsOff();
   }
 
   @Override
   public void disabledPeriodic() {
-    m_robotContainer.m_PhotonVision.lightsOn();
+/*     m_robotContainer.m_PhotonVision.lightsOn();
     if (m_robotContainer.dt.getGyroReady()) {
       m_robotContainer.m_LED.rainbow();
-    }
+    } */
   }
 
   /**
@@ -104,13 +104,13 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_intake.setOutput(0);
     //m_robotContainer.m_intake.extendIntake(false);
-/*     m_robotContainer.m_conveyor.turnOff();
-    m_robotContainer.m_climb.invertclimber(false);
+    m_robotContainer.m_conveyor.turnOff();
+/*     m_robotContainer.m_climb.invertclimber(false);
     m_robotContainer.m_climb.setOutput(0, 0);
     m_robotContainer.m_climb.climbstage = 0;
-    m_robotContainer.m_climb.resetEnc(true);
-    m_robotContainer.m_shooter.setRPS(0); */
-    m_robotContainer.m_PhotonVision.lightsOff();
+    m_robotContainer.m_climb.resetEnc(true); */
+    m_robotContainer.m_shooter.setRPS(0);
+    //m_robotContainer.m_PhotonVision.lightsOff();
 
     // schedule the autonomous command (example)
     //move this down
@@ -138,13 +138,13 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.m_intake.setOutput(0);
     //m_robotContainer.m_intake.extendIntake(false);
-/*     m_robotContainer.m_conveyor.turnOff();
-    m_robotContainer.m_climb.invertclimber(false);
+    m_robotContainer.m_conveyor.turnOff();
+/*     m_robotContainer.m_climb.invertclimber(false);
     m_robotContainer.m_climb.setOutput(0, 0);
     m_robotContainer.m_climb.climbstage = 0;
-    m_robotContainer.m_climb.resetEnc(true);
-    m_robotContainer.m_shooter.setRPS(0); */
-    m_robotContainer.m_PhotonVision.lightsOff();
+    m_robotContainer.m_climb.resetEnc(true); */
+    m_robotContainer.m_shooter.setRPS(0);
+    //m_robotContainer.m_PhotonVision.lightsOff();
   }
 
   /**

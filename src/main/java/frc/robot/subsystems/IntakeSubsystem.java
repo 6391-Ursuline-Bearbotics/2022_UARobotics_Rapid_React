@@ -20,15 +20,15 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
 
     TalonSRXSimCollection m_IntakeMotorSim = new TalonSRXSimCollection(m_IntakeMotor);
 
-    StallDetector intakeStall;
+    //StallDetector intakeStall;
     // Since we are using DoubleSolenoids they must be initially set so when they are toggled they 
     // know which direction to toggle to as their default state is kOff.
     public IntakeSubsystem() {
         setOutput(0);
         m_intakeSolenoid1.set(Value.kReverse);
         m_intakeSolenoid2.set(Value.kReverse);
-        intakeStall = new StallDetector(INTAKE.PDPSLOT);
-        intakeStall.setMinStallMillis(INTAKE.STALLTIME);
+        //intakeStall = new StallDetector(INTAKE.PDPSLOT);
+        //intakeStall.setMinStallMillis(INTAKE.STALLTIME);
     }
 
     @Config
@@ -65,11 +65,11 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
         }
     }
 
-    public void checkStall() {
+/*     public void checkStall() {
         if (intakeStall.getStallStatus().isStalled) {
             setOutput(0);
         }
-    }
+    } */
 
     public void deployIntake() {
         setOutput(INTAKE.SPEED);

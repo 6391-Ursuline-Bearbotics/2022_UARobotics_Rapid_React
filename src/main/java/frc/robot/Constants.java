@@ -149,14 +149,14 @@ public final class Constants {
     }
 
     public static final class INTAKE {
-        public static final int CANID = 4;
+        public static final int CANID = 5;
         
         public static final int SOLENOID1FWD = 0;
         public static final int SOLENOID1REV = 1;
         public static final int SOLENOID2FWD = 4;
         public static final int SOLENOID2REV = 5;
 
-        public static final double SPEED = -0.75;
+        public static final double SPEED = 0.75;
 
         public static final double STALLCURRENT = 20;
         public static final int STALLTIME = 500;
@@ -164,12 +164,13 @@ public final class Constants {
     }
 
     public static final class CONVEYOR {
-        public static final int CANID = 6;
+        public static final int CANID = 10;
 
         public static final int FRONTSENSORPORT = 0;
         public static final int TOPSENSORPORT = 1;
 
-        public static final double SPEED = 1.0;
+        public static final double SPEED = 0.2;
+        public static final double SHOOTSPEED = 1.0;
         public static final double BACKSPEED = -0.5;
     }
 

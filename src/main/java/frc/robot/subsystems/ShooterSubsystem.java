@@ -90,7 +90,8 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
   @Log
   @Log(tabName = "Dashboard", name = "Good to Shoot?")
   public boolean atSetpoint() {
-    return m_bangBangController.atSetpoint() && getSetpoint() > 0;
+    //return m_bangBangController.atSetpoint() && getSetpoint() > 0;
+    return true;
   }
 
   @Config
