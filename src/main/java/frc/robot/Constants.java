@@ -150,6 +150,7 @@ public final class Constants {
 
     public static final class INTAKE {
         public static final int CANID = 5;
+        public static final int CANID2 = 10;
         
         public static final int SOLENOID1FWD = 0;
         public static final int SOLENOID1REV = 1;
@@ -164,7 +165,7 @@ public final class Constants {
     }
 
     public static final class CONVEYOR {
-        public static final int CANID = 10;
+        public static final int CANID = 9; //10
 
         public static final int FRONTSENSORPORT = 0;
         public static final int TOPSENSORPORT = 1;

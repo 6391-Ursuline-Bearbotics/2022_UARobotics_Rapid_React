@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -15,6 +16,7 @@ import frc.robot.UA6391.StallDetector;
 
 public class IntakeSubsystem extends SubsystemBase implements Loggable{
     private final WPI_TalonSRX m_IntakeMotor = new WPI_TalonSRX(INTAKE.CANID);
+    private final WPI_TalonSRX m_IntakeMotor2 = new WPI_TalonSRX(INTAKE.CANID2);
     private final DoubleSolenoid m_intakeSolenoid1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE.SOLENOID1FWD, INTAKE.SOLENOID1REV);
     private final DoubleSolenoid m_intakeSolenoid2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE.SOLENOID2FWD, INTAKE.SOLENOID2REV);
 
@@ -29,11 +31,13 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
         m_intakeSolenoid2.set(Value.kReverse);
         //intakeStall = new StallDetector(INTAKE.PDPSLOT);
         //intakeStall.setMinStallMillis(INTAKE.STALLTIME);
+        m_IntakeMotor2.follow(m_IntakeMotor);
+        m_IntakeMotor2.setInverted(InvertType.OpposeMaster);
     }
 
     @Config
     public void setOutput(double speed) {
-        this.m_IntakeMotor.set(speed);
+        m_IntakeMotor.set(speed);
     }
 
     @Config
