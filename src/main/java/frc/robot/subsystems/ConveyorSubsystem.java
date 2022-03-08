@@ -20,7 +20,10 @@ public class ConveyorSubsystem extends SubsystemBase implements Loggable{
     DigitalInput topconveyor = new DigitalInput(CONVEYOR.TOPSENSORPORT);
 
     // The averaging here is so that supurious noise spikes don't trip the sensors.
-    public ConveyorSubsystem() {}
+    public ConveyorSubsystem() {
+        m_ConveyorMotor.setStatusFramePeriod(1, 255);
+        m_ConveyorMotor.setStatusFramePeriod(2, 255);
+    }
 
     @Config
     public void turnOff() {

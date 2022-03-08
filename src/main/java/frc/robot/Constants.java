@@ -48,27 +48,27 @@ public final class Constants {
         public static final double WHEEL_DIAMETER_METERS = 0.10033; // .10033 = ~4 inches
         public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
 
-        public static final int PIGEON_ID = 4; // FIXME Set Pigeon ID
+        public static final int PIGEON_ID = 5; // FIXME Set Pigeon ID
 
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 11; // FIXME Set front left module drive motor ID
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 12; // FIXME Set front left module steer motor ID
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 13; // FIXME Set front left steer encoder ID
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(189.492); // FIXME Measure and set front left steer offset
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(28.531); // 189.492FIXME Measure and set front left steer offset
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 21; // FIXME Set front right drive motor ID
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 22; // FIXME Set front right steer motor ID
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 23; // FIXME Set front right steer encoder ID
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(175.781); // FIXME Measure and set front right steer offset
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(354.638); // 137FIXME Measure and set front right steer offset
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 41; // FIXME Set back left drive motor ID
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 42; // FIXME Set back left steer motor ID
         public static final int BACK_LEFT_MODULE_STEER_ENCODER = 43; // FIXME Set back left steer encoder ID
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(326.777); // FIXME Measure and set back left steer offset
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(99.492); // 326.777177.803FIXME Measure and set back left steer offset
 
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 31; // FIXME Set back right drive motor ID
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 32; // FIXME Set back right steer motor ID
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 33; // FIXME Set back right steer encoder ID
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(209.267); // FIXME Measure and set back right steer offset        
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0); // 300FIXME Measure and set back right steer offset        
 
         // Drivetrain Performance Mechanical limits
         static public final double MAX_FWD_REV_SPEED_MPS = Units.feetToMeters(12.0);
@@ -150,14 +150,14 @@ public final class Constants {
 
     public static final class INTAKE {
         public static final int CANID = 5;
-        public static final int CANID2 = 10;
+        public static final int CANID2 = 6;
         
         public static final int SOLENOID1FWD = 0;
         public static final int SOLENOID1REV = 1;
         public static final int SOLENOID2FWD = 4;
         public static final int SOLENOID2REV = 5;
 
-        public static final double SPEED = 0.75;
+        public static final double SPEED = -0.75;
 
         public static final double STALLCURRENT = 20;
         public static final int STALLTIME = 500;
@@ -165,13 +165,13 @@ public final class Constants {
     }
 
     public static final class CONVEYOR {
-        public static final int CANID = 9; //10
+        public static final int CANID = 10;
 
         public static final int FRONTSENSORPORT = 0;
         public static final int TOPSENSORPORT = 1;
 
         public static final double SPEED = 0.2;
-        public static final double SHOOTSPEED = 1.0;
+        public static final double SHOOTSPEED = 0.4;
         public static final double BACKSPEED = -0.5;
     }
 
@@ -194,6 +194,10 @@ public final class Constants {
         public static final int MOTOR2PORT = 15;
         public static final int HOODPORT = 16;
     
+        public static final double HOODkP = 0.01;
+        public static final int HOODDOWN = 0; //75665;
+        public static final int HOODUP = 67000; //-278;
+
         public static final double TOLERANCERPS = 6.0;
         
         public static final double WHEELDIAMETERINCHES = 4;
@@ -204,14 +208,16 @@ public final class Constants {
         // Multiply by encoder CPR to get raw counts per second.  Divide by 10 to get per decisecond
         public static final double RPSTORAW = (double) ENCODERCPR / 10;
 
-        public static final double P = 999999999999999.0;
+        public static final double FENDERFF = 0.42; //.38 for low energy shot
+        public static final double CIRCLEFF = 0.45;
+        public static final double P = 0;//999999999999999.0;
         public static final double D = 0;
     
         // On a real robot the feedforward constants should be empirically determined; these are
         // reasonable guesses.
-        public static final double kSVOLTS = 1;//0.87; // .05 original / .92 comp
-        public static final double kVVOLTSECONDSPERROTATION = 0.0774; // 12 / .0764 comp
-        public static final double kA = 0.00003; //.0429 comp
+        public static final double kSVOLTS = 0.73856;
+        public static final double kVVOLTSECONDSPERROTATION = 0.11106;
+        public static final double kA = 0.0028227;
 
         public static final double SETPOINT1 = 1.0;
         public static final double SETPOINT2 = 2.0;

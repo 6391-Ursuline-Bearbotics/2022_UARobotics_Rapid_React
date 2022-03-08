@@ -133,20 +133,25 @@ public class RobotContainer {
     //drv.YButton.whileActiveOnce(new AutoAimRotate(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
 
     // When the left bumper is pressed on either controller right joystick is super slow turn
-    drv.BumperL.whileActiveOnce(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
+/*     drv.BumperL.whileActiveOnce(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
         DRIVE.MAX_FWD_REV_SPEED_MPS_SLOW, DRIVE.MAX_STRAFE_SPEED_MPS_SLOW, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW)))
       .whenInactive(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
-        DRIVE.MAX_FWD_REV_SPEED_MPS, DRIVE.MAX_STRAFE_SPEED_MPS, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC)));
+        DRIVE.MAX_FWD_REV_SPEED_MPS, DRIVE.MAX_STRAFE_SPEED_MPS, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC))); */
   
     // When start button is pressed reorient the field drive to the current heading
     drv.StartButton.whileActiveOnce(new InstantCommand(() -> dt.zeroGyroscope()));
 
-    // Turn on the conveyor when:
-    // the A button is pressed (either controller) and either the top sensor is not blocked or the shooter is up to speed
-    // if the bottom sensor is blocked (ball waiting to go up) unless top sensor blocked (the ball has no place to go)
+    // Turn on the conveyor when the bottom sensor is blocked (ball waiting to go up)
+    // unless top sensor blocked (the ball has no place to go)
     (topConveyorSensor.and(frontConveyorSensor.negate()))
-    .whenActive(new InstantCommand(() -> m_conveyor.on(CONVEYOR.SPEED), m_conveyor))
-    .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor));
+    .whenActive(new InstantCommand(() -> {
+          m_conveyor.on(CONVEYOR.SPEED);
+          drv.setLeftRumble(0.3);
+          drv.setRightRumble(0.3);}, m_conveyor))
+    .whenInactive(new InstantCommand(() -> {
+          m_conveyor.turnOff();
+          drv.setLeftRumble(0);
+          drv.setRightRumble(0);}, m_conveyor));
       
     op.AButton.and(shooteratsetpoint.or(topConveyorSensor.negate()))
     .whenActive(new InstantCommand(() -> m_conveyor.on(CONVEYOR.SHOOTSPEED), m_conveyor))
@@ -161,51 +166,25 @@ public class RobotContainer {
 
     // Spin up the shooter to far trench speed when the 'X' button is pressed.
     op.XButton.whenActive(new InstantCommand(() -> {
-      m_shooter.setRPS(39.0);
+      m_shooter.setRPS(39.0, SHOOTER.FENDERFF);
     }, m_shooter));
   
     // Stop the Shooter when the B button is pressed
     op.YButton.whenActive(new InstantCommand(() -> {
-        m_shooter.setRPS(0);
+        m_shooter.setRPS(0, 0);
       }, m_shooter));
 
     // When the back button is pressed run the conveyor backwards until released
     op.BackButton.whenActive(new InstantCommand(m_conveyor::turnBackwards, m_conveyor))
       .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor));
 
+    op.BumperL.whenActive(new InstantCommand(() -> m_shooter.setHoodPosition(SHOOTER.HOODUP)))
+      .whenInactive(new InstantCommand(() -> m_shooter.setHoodPosition(SHOOTER.HOODDOWN)));
     
-    //drv.POVUp.whileActiveOnce(new LStoCP(m_shooter, m_robotDrive, m_intake));
-/*     drv.POVUp.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter1));
-    drv.POVRight.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter2));
-    drv.POVDown.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter3));
-    drv.POVLeft.whenActive(() -> m_shooter.setRPS(ShooterConstants.kShooter4));
-      */
-    op.POVUp.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT1));
-    op.POVRight.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT2));
-    op.POVDown.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT3));
-    op.POVLeft.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT4));
-
-/*     op.POVRight.whenActive(new InstantCommand(m_conveyor::CPRightSlow, m_conveyor))
-      .whenInactive(new InstantCommand(m_conveyor::CPOff, m_conveyor));
-  
-    op.POVLeft.whenActive(new InstantCommand(m_conveyor::CPLeftSlow, m_conveyor))
-      .whenInactive(new InstantCommand(m_conveyor::CPOff, m_conveyor));
-
-    op.POVUp.whenActive(new StartEndCommand(m_conveyor::CPOn, m_conveyor::CPOff, m_conveyor).withTimeout(4)); */
-
-    // Create "button" from POV Hat in down direction.  Use both of the angles to the left and right also.
-    //drv.POVDown.whileActiveOnce(new CPtoLS(m_shooter, m_robotDrive, m_intake));
-
-    // POV Up Direction on Operator Controller relatively increases the current setpoint of the shooter
-    //op.POVUpish.whenActive(new InstantCommand(() -> {m_shooter.setRPS(m_shooter.getSetpoint() + 1);}));
-
-    // POV Down Direction on Operator Controller relatively increases the current setpoint of the shooter
-    //op.POVDownish.whenActive(new InstantCommand(() -> {m_shooter.setRPS(m_shooter.getSetpoint() - 1);}));
-
-    // Add a light rumble when there is a ball at the bottom of the conveyor moving up.
-    /* topConveyorSensor.negate().and(frontConveyorSensor)
-        .whenActive(() -> {drv.setLeftRumble(0.3); drv.setRightRumble(0.3);})
-        .whenInactive(() -> {drv.setLeftRumble(0); drv.setRightRumble(0);}); */
+    op.POVUp.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT1, SHOOTER.CIRCLEFF));
+    op.POVRight.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT2, SHOOTER.CIRCLEFF));
+    op.POVDown.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT3, SHOOTER.CIRCLEFF));
+    op.POVLeft.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT4, SHOOTER.CIRCLEFF));
   }
 
   /**
@@ -214,7 +193,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
     return autoChooser.getSelected();
   }
 }

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
@@ -41,7 +42,7 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
   // The shooter subsystem for the robot.
   public ShooterSubsystem() {
     TalonFXConfiguration flywheelTalonConfig = new TalonFXConfiguration();
-    flywheelTalonConfig.peakOutputForward = 0.5; // Only for initial testing
+    flywheelTalonConfig.peakOutputForward = 1; // Only for initial testing
     flywheelTalonConfig.peakOutputReverse = 0;
     flywheelTalonConfig.slot0.kP = SHOOTER.P;
     flywheelTalonConfig.slot0.kD = SHOOTER.D;
@@ -59,10 +60,19 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
     m_shooterMotor2.setInverted(InvertType.OpposeMaster);
     m_shooterMotor.setNeutralMode(NeutralMode.Coast);
 		m_shooterMotor2.setNeutralMode(NeutralMode.Coast);
+    m_shooterMotor2.setStatusFramePeriod(1, 255);
+    m_shooterMotor2.setStatusFramePeriod(2, 255);
 
+    TalonSRXConfiguration hoodConfig = new TalonSRXConfiguration();
     m_hood.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
-    m_hood.config_kP(0, 0.0001);
+    hoodConfig.slot0.kP = SHOOTER.HOODkP;
+    hoodConfig.peakOutputForward = 0.25;
+    hoodConfig.peakOutputReverse = -0.25;
+    m_hood.setInverted(true);
     m_hood.setSensorPhase(false);
+    m_hood.setStatusFramePeriod(1, 255);
+    m_hood.setStatusFramePeriod(2, 255);
+    m_hood.configAllSettings(hoodConfig);
   }
 
   @Log(name = "Current Shooter Speed (RPS)")
@@ -95,9 +105,13 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
   }
 
   @Config
-  public void setRPS(double rps) {
-    var ff = m_shooterFeedforward.calculate(rps);
-    m_shooterMotor.set(ControlMode.Velocity, rps * SHOOTER.RPSTORAW, DemandType.ArbitraryFeedForward, ff);
+  public void setRPS(double rps, double ff) {
+    if (rps > 0) {
+      m_shooterMotor.set(ControlMode.Velocity, rps * SHOOTER.RPSTORAW, DemandType.ArbitraryFeedForward, ff);
+    }
+    else {
+      m_shooterMotor.set(0);
+    }
   }
 
   // @Config
