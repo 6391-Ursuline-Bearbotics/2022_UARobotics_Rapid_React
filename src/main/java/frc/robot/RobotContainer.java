@@ -152,11 +152,13 @@ public class RobotContainer {
           m_conveyor.turnOff();
           drv.setLeftRumble(0);
           drv.setRightRumble(0);}, m_conveyor));
-      
+    
+    // Turn on the conveyor while held then off
     op.AButton.and(shooteratsetpoint.or(topConveyorSensor.negate()))
     .whenActive(new InstantCommand(() -> m_conveyor.on(CONVEYOR.SHOOTSPEED), m_conveyor))
     .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor));
 
+    // Spin the conveyor backwards when held
     op.BButton.whenActive(new InstantCommand(() -> m_conveyor.on(CONVEYOR.BACKSPEED), m_conveyor))
         .whenInactive(new InstantCommand(() -> m_conveyor.turnOff(), m_conveyor));
 
@@ -164,27 +166,27 @@ public class RobotContainer {
     op.BumperR.whenActive(new InstantCommand(() -> m_intake.toggleIntakeWheels(true))
       .andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true))));
 
-    // Spin up the shooter to far trench speed when the 'X' button is pressed.
+    // Spin up the shooter for the fender shot when the 'X' button is pressed.
     op.XButton.whenActive(new InstantCommand(() -> {
       m_shooter.setRPS(39.0, SHOOTER.FENDERFF);
+      m_shooter.setHoodPosition(0);
     }, m_shooter));
   
-    // Stop the Shooter when the B button is pressed
+    // Stop the Shooter when the Y button is pressed
     op.YButton.whenActive(new InstantCommand(() -> {
         m_shooter.setRPS(0, 0);
       }, m_shooter));
-
-    // When the back button is pressed run the conveyor backwards until released
-    op.BackButton.whenActive(new InstantCommand(m_conveyor::turnBackwards, m_conveyor))
-      .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor));
-
-    op.BumperL.whenActive(new InstantCommand(() -> m_shooter.setHoodPosition(SHOOTER.HOODUP)))
-      .whenInactive(new InstantCommand(() -> m_shooter.setHoodPosition(SHOOTER.HOODDOWN)));
     
-    op.POVUp.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT1, SHOOTER.CIRCLEFF));
-    op.POVRight.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT2, SHOOTER.CIRCLEFF));
-    op.POVDown.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT3, SHOOTER.CIRCLEFF));
-    op.POVLeft.whenActive(() -> m_shooter.setRPS(SHOOTER.SETPOINT4, SHOOTER.CIRCLEFF));
+    // Set the hood and shooter speed for the distance from the circle of balls around the hub
+    op.POVRight.whenActive(() -> {m_shooter.setRPS(SHOOTER.SETPOINT2, SHOOTER.CIRCLEFF);
+          m_shooter.setHoodPosition(SHOOTER.HOODCIRCLE);});
+    // Set the hood and shooter speed for a low goal shot against the fender.
+    op.POVLeft.whenActive(() -> {m_shooter.setRPS(SHOOTER.SETPOINT4, SHOOTER.LOWFF);
+          m_shooter.setHoodPosition(SHOOTER.HOODLOW);});
+
+    // Change the speed up or down of the current shot
+    op.POVUp.whenActive(() -> m_shooter.relativeSpeedChange(SHOOTER.SPEEDCHANGE));
+    op.POVDown.whenActive(() -> m_shooter.relativeSpeedChange(-SHOOTER.SPEEDCHANGE));
   }
 
   /**

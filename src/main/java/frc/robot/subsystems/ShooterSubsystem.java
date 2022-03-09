@@ -37,7 +37,8 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
 
   private final BangBangController m_bangBangController = new BangBangController(SHOOTER.TOLERANCERPS);
 
-  private double rpsAdjustment = 0.0;
+  private double adjustment = 0.0;
+  private double hoodStart = 0.0;
 
   // The shooter subsystem for the robot.
   public ShooterSubsystem() {
@@ -64,15 +65,16 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
     m_shooterMotor2.setStatusFramePeriod(2, 255);
 
     TalonSRXConfiguration hoodConfig = new TalonSRXConfiguration();
-    m_hood.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
+    m_hood.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     hoodConfig.slot0.kP = SHOOTER.HOODkP;
     hoodConfig.peakOutputForward = 0.25;
     hoodConfig.peakOutputReverse = -0.25;
-    m_hood.setInverted(true);
+    m_hood.setInverted(false);
     m_hood.setSensorPhase(false);
     m_hood.setStatusFramePeriod(1, 255);
     m_hood.setStatusFramePeriod(2, 255);
     m_hood.configAllSettings(hoodConfig);
+    hoodStart = m_hood.getSensorCollection().getPulseWidthPosition();
   }
 
   @Log(name = "Current Shooter Speed (RPS)")
@@ -107,7 +109,7 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
   @Config
   public void setRPS(double rps, double ff) {
     if (rps > 0) {
-      m_shooterMotor.set(ControlMode.Velocity, rps * SHOOTER.RPSTORAW, DemandType.ArbitraryFeedForward, ff);
+      m_shooterMotor.set(ControlMode.Velocity, rps * SHOOTER.RPSTORAW, DemandType.ArbitraryFeedForward, ff + adjustment);
     }
     else {
       m_shooterMotor.set(0);
@@ -121,7 +123,7 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
 
   @Config
   public void setHoodPosition(double encoderPosition) {
-    m_hood.set(ControlMode.Position, encoderPosition);
+    m_hood.set(ControlMode.Position, hoodStart + encoderPosition);
   }
 
   @Log
@@ -129,8 +131,7 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
     return m_hood.getSelectedSensorPosition();
   }
 
-/*   @Log
-  public boolean getBallShot() {
-    return m_shooterMotor.getSupplyCurrent() //maybe should just use top prox?
-  } */
+  public void relativeSpeedChange(double changeAmount) {
+    adjustment += changeAmount;
+  }
 }
