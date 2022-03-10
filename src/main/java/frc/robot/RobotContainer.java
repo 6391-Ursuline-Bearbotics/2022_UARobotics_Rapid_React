@@ -24,6 +24,7 @@ import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoAimRotate;
 import frc.robot.commands.Center5Ball;
+import frc.robot.commands.SemiCircle;
 // Subsystem Imports
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.swervelib.SwerveDrivetrainModel;
@@ -64,6 +65,7 @@ public class RobotContainer {
   //public final ClimbSubsystem m_climb = ClimbSubsystem.Create();
 
   private final Center5Ball center5;
+  private final SemiCircle semicircle;
   
   @Log(tabName = "Dashboard")
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -88,7 +90,8 @@ public class RobotContainer {
     dt = BearSwerveHelper.createBearSwerve();
     m_swerveSubsystem = BearSwerveHelper.createSwerveSubsystem(dt);
     //m_LED = new LEDSubsystem(m_PhotonVision, dt);
-    center5 = new Center5Ball(m_swerveSubsystem, m_intake);
+    center5 = new Center5Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
+    semicircle = new SemiCircle(m_swerveSubsystem);
 
     m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> dt.setModuleStates(m_scheme.getJoystickSpeeds()), m_swerveSubsystem));
 
@@ -112,6 +115,7 @@ public class RobotContainer {
             Math.max(op.TriggerR(), drv.TriggerR())), m_climb)); */
 
     autoChooser.setDefaultOption("Center5", center5);
+    autoChooser.addOption("SemiCircle", semicircle);
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
