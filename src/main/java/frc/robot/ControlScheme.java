@@ -17,10 +17,10 @@ public class ControlScheme {
         this.m_controller = controller;
 
         // Control Scheme Chooser
-        driverChooser.setDefaultOption("Both Sticks", "Both Sticks");
+        driverChooser.addOption("Both Sticks", "Both Sticks");
         driverChooser.addOption("Left Stick and Triggers", "Left Stick and Triggers");
         driverChooser.addOption("Split Sticks and Triggers", "Split Sticks and Triggers");
-        driverChooser.addOption("Gas Pedal", "Gas Pedal");
+        driverChooser.setDefaultOption("Gas Pedal", "Gas Pedal");
         SmartDashboard.putData("Driver Chooser", driverChooser);
     }
 
