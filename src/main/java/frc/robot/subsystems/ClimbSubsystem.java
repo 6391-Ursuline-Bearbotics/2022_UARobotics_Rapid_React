@@ -30,7 +30,6 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
         m_climbMotor.setInverted(false);
         m_climbMotor.setSensorPhase(true);
         m_climbMotor.config_kP(0, CLIMB.P);
-        m_climbMotor.configPeakOutputReverse(0);
     }
 
     public static ClimbSubsystem Create() {
@@ -58,19 +57,6 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
     public void resetEnc(boolean enabled) {
         m_climbMotor.setSelectedSensorPosition(0);
         climbstage = 0;
-    }
-
-    // This is very important for resetting the climber.  This should only be done in the pits with extreme care!
-    @Config.ToggleButton
-    public void invertclimber(boolean enabled) {
-        if (enabled) {
-            climbinvert = -1;
-            m_climbMotor.configPeakOutputReverse(-1);
-        }
-        else {
-            climbinvert = 1;
-            m_climbMotor.configPeakOutputReverse(0);
-        }
     }
 
     // There are 3 "stages" that we go to.  While lining up we go to the first stage which raise

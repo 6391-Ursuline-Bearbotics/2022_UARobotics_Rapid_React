@@ -115,7 +115,7 @@ public class RobotContainer {
       // Use right y axis to control the speed of the climber
       new RunCommand(
         () -> m_climb
-          .setOutput(op.JoystickLY() * 0.3), m_climb));
+          .setOutput(op.JoystickLY()), m_climb));
 
     autoChooser.setDefaultOption("Lower5", lower5);
     autoChooser.addOption("Center3", center3);
