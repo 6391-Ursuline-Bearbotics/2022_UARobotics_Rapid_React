@@ -58,7 +58,7 @@ public final class Constants {
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 21; // FIXME Set front right drive motor ID
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 22; // FIXME Set front right steer motor ID
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 23; // FIXME Set front right steer encoder ID
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(354.638); // 137FIXME Measure and set front right steer offset
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(174.638); // 137FIXME Measure and set front right steer offset
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 41; // FIXME Set back left drive motor ID
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 42; // FIXME Set back left steer motor ID
@@ -68,7 +68,7 @@ public final class Constants {
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 31; // FIXME Set back right drive motor ID
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 32; // FIXME Set back right steer motor ID
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 33; // FIXME Set back right steer encoder ID
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0); // 300FIXME Measure and set back right steer offset        
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(238); // 300FIXME Measure and set back right steer offset        
 
         // Drivetrain Performance Mechanical limits
         static public final double MAX_FWD_REV_SPEED_MPS = Units.feetToMeters(12.0);
@@ -152,10 +152,8 @@ public final class Constants {
         public static final int CANID = 5;
         public static final int CANID2 = 6;
         
-        public static final int SOLENOID1FWD = 0;
-        public static final int SOLENOID1REV = 1;
-        public static final int SOLENOID2FWD = 4;
-        public static final int SOLENOID2REV = 5;
+        public static final int SOLENOID1FWD = 3;
+        public static final int SOLENOID1REV = 2;
 
         public static final double SPEED = 0.75;
 
@@ -175,7 +173,12 @@ public final class Constants {
         public static final double BACKSPEED = -0.5;
     }
 
-    public static final class CLIMB {}
+    public static final class CLIMB {
+        public static final int CANID = 8;
+
+        public static final double P = 0.01;
+        public static final double TOLERANCE = 0.01;
+    }
 
     public static final class CAMERA {
         public static final double BALLCAMERAANGLE = 0; // Degrees

@@ -18,8 +18,7 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
     private final WPI_TalonSRX m_IntakeMotor = new WPI_TalonSRX(INTAKE.CANID);
     private final WPI_TalonSRX m_IntakeMotor2 = new WPI_TalonSRX(INTAKE.CANID2);
     private final DoubleSolenoid m_intakeSolenoid1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE.SOLENOID1FWD, INTAKE.SOLENOID1REV);
-    private final DoubleSolenoid m_intakeSolenoid2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE.SOLENOID2FWD, INTAKE.SOLENOID2REV);
-
+    
     TalonSRXSimCollection m_IntakeMotorSim = new TalonSRXSimCollection(m_IntakeMotor);
 
     //StallDetector intakeStall;
@@ -27,8 +26,7 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
     // know which direction to toggle to as their default state is kOff.
     public IntakeSubsystem() {
         setOutput(0);
-        m_intakeSolenoid1.set(Value.kReverse);
-        m_intakeSolenoid2.set(Value.kReverse);
+        m_intakeSolenoid1.set(Value.kForward);
         //intakeStall = new StallDetector(INTAKE.PDPSLOT);
         //intakeStall.setMinStallMillis(INTAKE.STALLTIME);
         m_IntakeMotor2.follow(m_IntakeMotor);
@@ -48,18 +46,15 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
     public void extendIntake(boolean extend) {
         if (extend) {
             m_intakeSolenoid1.set(Value.kForward);
-            m_intakeSolenoid2.set(Value.kForward);
         }
         else {
             m_intakeSolenoid1.set(Value.kReverse);
-            m_intakeSolenoid2.set(Value.kReverse);
         }
     }
 
     @Config
     public void toggleIntakePosition(boolean enabled) {
-        m_intakeSolenoid1.toggle();
-        m_intakeSolenoid2.toggle();        
+        m_intakeSolenoid1.toggle();       
     }
 
     @Config

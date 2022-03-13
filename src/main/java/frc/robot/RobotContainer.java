@@ -37,6 +37,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.Constants.CONVEYOR;
 import frc.robot.Constants.DRIVE;
+import frc.robot.Constants.INTAKE;
 // Constant Imports
 import frc.robot.Constants.OI;
 import frc.robot.Constants.SHOOTER;
@@ -62,8 +63,8 @@ public class RobotContainer {
   public final IntakeSubsystem m_intake = new IntakeSubsystem();
   @Log
   public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem();
-  //@Log
-  //public final ClimbSubsystem m_climb = ClimbSubsystem.Create();
+  @Log
+  public final ClimbSubsystem m_climb = ClimbSubsystem.Create();
 
   private final Lower5Ball lower5;
   private final Center3Ball center3;
@@ -110,12 +111,11 @@ public class RobotContainer {
     // Constantly checks to see if the intake motor has stalled
     //m_intake.setDefaultCommand(new RunCommand(m_intake::checkStall, m_intake));
 
-/*     m_climb.setDefaultCommand(
+    m_climb.setDefaultCommand(
       // Use right y axis to control the speed of the climber
       new RunCommand(
         () -> m_climb
-          .setOutput(Math.max(op.TriggerL(), drv.TriggerL()),
-            Math.max(op.TriggerR(), drv.TriggerR())), m_climb)); */
+          .setOutput(op.JoystickLY() * 0.3), m_climb));
 
     autoChooser.setDefaultOption("Lower5", lower5);
     autoChooser.addOption("Center3", center3);
@@ -147,11 +147,11 @@ public class RobotContainer {
         DRIVE.MAX_FWD_REV_SPEED_MPS, DRIVE.MAX_STRAFE_SPEED_MPS, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC))); */
   
     // When start button is pressed reorient the field drive to the current heading
-    drv.StartButton.whileActiveOnce(new InstantCommand(() -> dt.zeroGyroscope()));
+    drv.StartButton.whenActive(new InstantCommand(() -> dt.zeroGyroscope()));
 
     // Turn on the conveyor when the bottom sensor is blocked (ball waiting to go up)
     // unless top sensor blocked (the ball has no place to go)
-    (topConveyorSensor.and(frontConveyorSensor.negate()))
+    (topConveyorSensor.and(frontConveyorSensor.negate()).and(op.BButton.negate()))
     .whenActive(new InstantCommand(() -> {
           m_conveyor.on(CONVEYOR.SPEED);
           drv.setLeftRumble(0.3);
@@ -167,8 +167,8 @@ public class RobotContainer {
     .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor));
 
     // Spin the conveyor backwards when held
-    op.BButton.whenActive(new InstantCommand(() -> m_conveyor.on(CONVEYOR.BACKSPEED), m_conveyor))
-        .whenInactive(new InstantCommand(() -> m_conveyor.turnOff(), m_conveyor));
+    op.BButton.whenActive(() -> {m_conveyor.on(CONVEYOR.BACKSPEED); m_intake.retractIntake(); m_intake.setOutput(-INTAKE.SPEED);})
+        .whenInactive(() -> {m_conveyor.turnOff(); m_intake.setOutput(0);});
 
     // When right bumper is pressed raise/lower the intake and stop/start the intake on both controllers
     op.BumperR.whenActive(new InstantCommand(() -> m_intake.toggleIntakeWheels(true))

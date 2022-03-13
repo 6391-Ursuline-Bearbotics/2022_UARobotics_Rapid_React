@@ -3,15 +3,16 @@ package frc.robot.subsystems;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CLIMB;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class ClimbSubsystem extends SubsystemBase implements Loggable{
-    private WPI_TalonSRX m_LeftClimbMotor;
-    
-    private WPI_TalonSRX m_RightClimbMotor;
+    private WPI_TalonFX m_climbMotor;
 
     @Log
     private int climbinvert = 1;
@@ -22,59 +23,40 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
     @Log
     public int setpoint = 4200;
 
-    public ClimbSubsystem(WPI_TalonSRX m_LeftClimbMotor, WPI_TalonSRX m_RightClimbMotor) {
-/*         this.m_LeftClimbMotor = m_LeftClimbMotor;
-        this.m_RightClimbMotor = m_RightClimbMotor;
+    public ClimbSubsystem(WPI_TalonFX m_climbMotor) {
+        this.m_climbMotor = m_climbMotor;
 
-        setOutput(0,0);
-        m_LeftClimbMotor.setInverted(true);
-        m_LeftClimbMotor.setSensorPhase(true);
-        m_RightClimbMotor.setInverted(false);
-        m_RightClimbMotor.setSensorPhase(true);
-        m_LeftClimbMotor.config_kP(0, ClimbConstants.kClimbP);
-        m_RightClimbMotor.config_kP(0, ClimbConstants.kClimbP);
-        m_LeftClimbMotor.configPeakOutputReverse(0);
-        m_RightClimbMotor.configPeakOutputReverse(0);
+        setOutput(0);
+        m_climbMotor.setInverted(false);
+        m_climbMotor.setSensorPhase(true);
+        m_climbMotor.config_kP(0, CLIMB.P);
+        m_climbMotor.configPeakOutputReverse(0);
     }
 
     public static ClimbSubsystem Create() {
-        WPI_TalonSRX m_LeftClimbMotor = new WPI_TalonSRX(ClimbConstants.kClimbLeftControllerPort);
-        WPI_TalonSRX m_RightClimbMotor = new WPI_TalonSRX(ClimbConstants.kClimbRightControllerPort);
-        return new ClimbSubsystem(m_LeftClimbMotor, m_RightClimbMotor);
+        WPI_TalonFX m_climbMotor = new WPI_TalonFX(CLIMB.CANID);
+        return new ClimbSubsystem(m_climbMotor);
     }
 
     // This is the open loop control of the climber when the "triggers" are used to manually control it
-    public void setOutput(double leftMotorPercent, double rightMotorPercent) {
-        this.m_LeftClimbMotor.set(leftMotorPercent * climbinvert);
-        this.m_RightClimbMotor.set(rightMotorPercent * climbinvert);
-
-        // As soon as we start raising the hooks switch the camera so the hook view is larger
-        if(leftMotorPercent > .5 || rightMotorPercent > .5) {
-            NetworkTableInstance.getDefault().getTable("limelight").getEntry("stream").setNumber(2);
-        }
+    public void setOutput(double rightMotorPercent) {
+        this.m_climbMotor.set(rightMotorPercent * climbinvert);
     }
 
     // This is the closed loop position control of the climber
     @Config
     public void setPosition(double position) {
-        m_RightClimbMotor.set(ControlMode.Position, position);
-        m_LeftClimbMotor.set(ControlMode.Position, position + 1000); // Left side seems to be lagging behind
+        m_climbMotor.set(ControlMode.Position, position);
     }
 
     @Log
     public double getRightPosition() {
-        return m_RightClimbMotor.getSelectedSensorPosition();
-    }
-
-    @Log
-    public double getLeftPosition() {
-        return m_LeftClimbMotor.getSelectedSensorPosition();
+        return m_climbMotor.getSelectedSensorPosition();
     } 
 
     @Config.ToggleButton
     public void resetEnc(boolean enabled) {
-        m_LeftClimbMotor.setSelectedSensorPosition(0);
-        m_RightClimbMotor.setSelectedSensorPosition(0);
+        m_climbMotor.setSelectedSensorPosition(0);
         climbstage = 0;
     }
 
@@ -83,13 +65,11 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
     public void invertclimber(boolean enabled) {
         if (enabled) {
             climbinvert = -1;
-            m_LeftClimbMotor.configPeakOutputReverse(-1);
-            m_RightClimbMotor.configPeakOutputReverse(-1);
+            m_climbMotor.configPeakOutputReverse(-1);
         }
         else {
             climbinvert = 1;
-            m_LeftClimbMotor.configPeakOutputReverse(0);
-            m_RightClimbMotor.configPeakOutputReverse(0);
+            m_climbMotor.configPeakOutputReverse(0);
         }
     }
 
@@ -97,7 +77,7 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
     // the climbers all the way up.  Once we move forward and touch the bar we bring them down
     // to the point they are on the bar but not actually pulling allowing teammates to get on but
     // it they were to pull ahead of time we would raise too.  Then the actual hang.
-    @Config.ToggleButton
+/*     @Config.ToggleButton
     public void nextClimbStage(boolean enabled) {
         climbstage = climbstage + 1;
         switch(climbstage) {
@@ -115,24 +95,22 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
                 break;
             default:
         }
-    }
+    } */
 
     // Determines if the talon is at the desired position
     @Log
     public boolean atposition() {
-        return inRange(m_LeftClimbMotor.getSelectedSensorPosition(), setpoint)
-        && inRange(m_RightClimbMotor.getSelectedSensorPosition(), setpoint)
-        && m_RightClimbMotor.getSelectedSensorPosition() > 100;
+        return inRange(m_climbMotor.getSelectedSensorPosition(), setpoint)
+        && m_climbMotor.getSelectedSensorPosition() > 100;
     }
 
     public Boolean inRange(double position, double setpoint){
-        if(position > setpoint + ClimbConstants.kErrorTolerance){
+        if(position > setpoint + CLIMB.TOLERANCE){
             return false;
-        }else if(position < setpoint - ClimbConstants.kErrorTolerance){
+        }else if(position < setpoint - CLIMB.TOLERANCE){
             return false;
         }else{
             return true;
         }
-    } */
-}
+    }
 }
