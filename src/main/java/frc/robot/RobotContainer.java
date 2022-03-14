@@ -107,12 +107,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    // Configure default commands
-    // Constantly checks to see if the intake motor has stalled
-    //m_intake.setDefaultCommand(new RunCommand(m_intake::checkStall, m_intake));
-
     m_climb.setDefaultCommand(
-      // Use right y axis to control the speed of the climber
+      // Use left y axis to control the speed of the climber
       new RunCommand(
         () -> m_climb
           .setOutput(op.JoystickLY()), m_climb));
