@@ -148,14 +148,14 @@ public class RobotContainer {
     // Turn on the conveyor when the bottom sensor is blocked (ball waiting to go up)
     // unless top sensor blocked (the ball has no place to go)
     (topConveyorSensor.and(frontConveyorSensor.negate()).and(op.BButton.negate()))
-    .whenActive(new InstantCommand(() -> {
+    .whenActive(() -> {
           m_conveyor.on(CONVEYOR.SPEED);
-          drv.setLeftRumble(0.3);
-          drv.setRightRumble(0.3);}, m_conveyor))
-    .whenInactive(new InstantCommand(() -> {
+          drv.setRumble(0.8);
+          op.setRumble(0.8);}, m_conveyor)
+    .whenInactive(() -> {
           m_conveyor.turnOff();
-          drv.setLeftRumble(0);
-          drv.setRightRumble(0);}, m_conveyor));
+          drv.setRumble(0);
+          op.setRumble(0);}, m_conveyor);
     
     // Turn on the conveyor while held then off
     op.AButton.and(shooteratsetpoint.or(topConveyorSensor.negate()))

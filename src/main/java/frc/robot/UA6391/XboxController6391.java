@@ -99,6 +99,11 @@ public class XboxController6391 {
       m_Xbox6391Controller.setRumble(GenericHID.RumbleType.kRightRumble, value);
    }
 
+   public void setRumble(double value) {
+      m_Xbox6391Controller.setRumble(GenericHID.RumbleType.kLeftRumble, value);
+      m_Xbox6391Controller.setRumble(GenericHID.RumbleType.kRightRumble, value);
+   }
+
    public XboxController getXboxController() {
       return m_Xbox6391Controller;
    }
