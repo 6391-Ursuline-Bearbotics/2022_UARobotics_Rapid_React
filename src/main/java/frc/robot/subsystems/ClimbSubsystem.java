@@ -59,6 +59,11 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
         climbstage = 0;
     }
 
+    @Config.ToggleButton
+    public void chirp(double freq) {
+        m_climbMotor.set(ControlMode.MusicTone, freq);
+    }
+
     // There are 3 "stages" that we go to.  While lining up we go to the first stage which raise
     // the climbers all the way up.  Once we move forward and touch the bar we bring them down
     // to the point they are on the bar but not actually pulling allowing teammates to get on but

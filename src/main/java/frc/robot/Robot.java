@@ -26,6 +26,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private boolean userButton = false;
+  private int chirp = 0;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -89,10 +90,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-/*     m_robotContainer.m_PhotonVision.lightsOn();
-    if (m_robotContainer.dt.getGyroReady()) {
-      m_robotContainer.m_LED.rainbow();
-    } */
+    //m_robotContainer.m_PhotonVision.lightsOn();
+    if (m_robotContainer.dt.getGyroReady() && chirp <= 100) {
+      chirp += 1;
+      m_robotContainer.m_climb.chirp(500);
+      //m_robotContainer.m_LED.rainbow();
+    }
+    if (chirp > 100) {
+      m_robotContainer.m_climb.chirp(0);
+    }
   }
 
   /**
