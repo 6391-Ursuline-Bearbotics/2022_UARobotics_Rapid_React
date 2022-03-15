@@ -17,10 +17,10 @@ public class ControlScheme {
         this.m_controller = controller;
 
         // Control Scheme Chooser
-        driverChooser.addOption("Both Sticks", "Both Sticks");
+        driverChooser.setDefaultOption("Both Sticks", "Both Sticks");
         driverChooser.addOption("Left Stick and Triggers", "Left Stick and Triggers");
         driverChooser.addOption("Split Sticks and Triggers", "Split Sticks and Triggers");
-        driverChooser.setDefaultOption("Gas Pedal", "Gas Pedal");
+        driverChooser.addOption("Gas Pedal", "Gas Pedal");
         SmartDashboard.putData("Driver Chooser", driverChooser);
     }
 
@@ -69,6 +69,6 @@ public class ControlScheme {
   private double calculateTranslationDirection(double x, double y) {
     // Calculate the angle.
     // Swapping x/y and inverting y because our coordinate system has +x forwards and -y right
-    return Math.atan2(x, -y);
+    return Math.atan2(y, x);
   }
 }

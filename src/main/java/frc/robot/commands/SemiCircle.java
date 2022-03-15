@@ -13,7 +13,7 @@ import frc.swervelib.SwerveSubsystem;
 
 public class SemiCircle extends SequentialCommandGroup {  
   public SemiCircle(SwerveSubsystem m_swerve) {
-    PathPlannerTrajectory trajectory1 = PathPlanner.loadPath("SemiCircle", 2.0, 3.0);
+    PathPlannerTrajectory trajectory1 = PathPlanner.loadPath("MoveForward", 2.0, 3.0);
 
     addCommands(
       new InstantCommand(() -> m_swerve.dt.setKnownPose(trajectory1.getInitialPose())),

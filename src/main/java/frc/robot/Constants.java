@@ -155,7 +155,7 @@ public final class Constants {
         public static final int SOLENOID1FWD = 3;
         public static final int SOLENOID1REV = 2;
 
-        public static final double SPEED = 0.5;
+        public static final double SPEED = 0.75;
 
         public static final double STALLCURRENT = 20;
         public static final int STALLTIME = 500;
