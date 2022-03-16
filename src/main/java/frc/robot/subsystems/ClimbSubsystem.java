@@ -59,7 +59,7 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
         climbstage = 0;
     }
 
-    @Config.ToggleButton
+    @Config
     public void chirp(double freq) {
         m_climbMotor.set(ControlMode.MusicTone, freq);
     }

@@ -20,7 +20,7 @@ public class Center3Ball extends SequentialCommandGroup {
         PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("AToB", 2.0, 3.0);
         
         addCommands(
-            new InstantCommand(() -> m_swerve.dt.setKnownPose(trajectory1.getInitialPose())),
+            new InstantCommand(() -> m_swerve.dt.setKnownState(trajectory1.getInitialState())),
 
             // shooter speed and adjust hood angle for circle shot
             new InstantCommand(() -> {m_shooter.setRPS(SHOOTER.SETPOINT2, SHOOTER.CIRCLEFF);

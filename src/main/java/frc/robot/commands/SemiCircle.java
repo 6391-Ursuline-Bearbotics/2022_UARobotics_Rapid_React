@@ -16,7 +16,7 @@ public class SemiCircle extends SequentialCommandGroup {
     PathPlannerTrajectory trajectory1 = PathPlanner.loadPath("MoveForward", 2.0, 3.0);
 
     addCommands(
-      new InstantCommand(() -> m_swerve.dt.setKnownPose(trajectory1.getInitialPose())),
+      new InstantCommand(() -> m_swerve.dt.setKnownState(trajectory1.getInitialState())),
 
       m_swerve.dt.createCommandForTrajectory(trajectory1, m_swerve)
     );

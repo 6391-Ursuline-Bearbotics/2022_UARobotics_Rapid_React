@@ -101,9 +101,9 @@ public final class Constants {
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-        public static final double TRAJECTORYXkP = 1;
+        public static final double TRAJECTORYXkP = 10;
         public static final double TRAJECTORYYkP = 1;
-        public static final double THETACONTROLLERkP = 1;
+        public static final double THETACONTROLLERkP = -1;
 
         // Constraint for the motion profilied robot angle controller
         public static final TrapezoidProfile.Constraints THETACONTROLLERCONSTRAINTS =
