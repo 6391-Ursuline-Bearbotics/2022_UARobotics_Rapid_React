@@ -103,7 +103,7 @@ public final class Constants {
 
         public static final double TRAJECTORYXkP = 10;
         public static final double TRAJECTORYYkP = 1;
-        public static final double THETACONTROLLERkP = -1;
+        public static final double THETACONTROLLERkP = 1;
 
         // Constraint for the motion profilied robot angle controller
         public static final TrapezoidProfile.Constraints THETACONTROLLERCONSTRAINTS =
@@ -165,8 +165,8 @@ public final class Constants {
     public static final class CONVEYOR {
         public static final int CANID = 10;
 
-        public static final int FRONTSENSORPORT = 0;
-        public static final int TOPSENSORPORT = 1;
+        public static final int FRONTSENSORPORT = 1;
+        public static final int TOPSENSORPORT = 0;
 
         public static final double SPEED = 0.2;
         public static final double SHOOTSPEED = 0.4;
@@ -198,7 +198,7 @@ public final class Constants {
         public static final int HOODPORT = 16;
     
         public static final double HOODkP = 0.01;
-        public static final int HOODCIRCLE = -55500;
+        public static final int HOODCIRCLE = -58500;
         public static final int HOODLOW = -30000;
 
         public static final double TOLERANCERPS = 6.0;
@@ -213,7 +213,7 @@ public final class Constants {
 
         public static final double LOWFF = 0.24;
         public static final double FENDERFF = 0.42; //.38 for low energy shot
-        public static final double CIRCLEFF = 0.45;
+        public static final double CIRCLEFF = 0.52;
         public static final double P = 0;//999999999999999.0;
         public static final double D = 0;
     

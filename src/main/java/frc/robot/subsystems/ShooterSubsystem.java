@@ -37,6 +37,7 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
 
   private final BangBangController m_bangBangController = new BangBangController(SHOOTER.TOLERANCERPS);
 
+  @Log
   private double adjustment = 0.0;
   private double hoodStart = 0.0;
 

@@ -15,9 +15,9 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.swervelib.SwerveSubsystem;
 import frc.swervelib.TrajectoryLogging;
 
-public class Lower5Ball extends SequentialCommandGroup {
-    public Lower5Ball(SwerveSubsystem m_swerve, IntakeSubsystem m_intake, ConveyorSubsystem m_conveyor, ShooterSubsystem m_shooter) {        
-        PathPlannerTrajectory trajectory1 = PathPlanner.loadPath("LowerFenderToA", 2.0, 3.0);
+public class HighFender extends SequentialCommandGroup {
+    public HighFender(SwerveSubsystem m_swerve, IntakeSubsystem m_intake, ConveyorSubsystem m_conveyor, ShooterSubsystem m_shooter) {        
+        PathPlannerTrajectory trajectory1 = PathPlanner.loadPath("FenderToD", 2.0, 3.0);
         PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("AToB", 2.0, 3.0);
         PathPlannerTrajectory trajectory3 = PathPlanner.loadPath("BToC", 2.0, 3.0);
         PathPlannerTrajectory trajectory4 = PathPlanner.loadPath("CToB", 2.0, 3.0);
@@ -44,7 +44,14 @@ public class Lower5Ball extends SequentialCommandGroup {
 
             // Shoot the A ball
             new RunCommand(() -> m_conveyor.on(CONVEYOR.SHOOTSPEED), m_conveyor).withTimeout(2)
-                .andThen(new InstantCommand(m_conveyor::turnOff, m_conveyor))            
+                .andThen(new InstantCommand(m_conveyor::turnOff, m_conveyor)),
+            
+            // Stop shooter
+            new InstantCommand(() -> m_shooter.setRPS(0, 0)),
+
+            // Raise Intake
+            new InstantCommand(() -> m_intake.toggleIntakeWheels(true))
+                .andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true)))
         );
     }
 }

@@ -24,6 +24,7 @@ import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoAimRotate;
 import frc.robot.commands.Center3Ball;
+import frc.robot.commands.HighFender;
 import frc.robot.commands.Lower5Ball;
 import frc.robot.commands.SemiCircle;
 import frc.robot.commands.Simple2Ball;
@@ -71,6 +72,7 @@ public class RobotContainer {
   private final Center3Ball center3;
   private final SemiCircle semicircle;
   private final Simple2Ball simple2;
+  private final HighFender highFender;
   
   @Log(tabName = "Dashboard")
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -99,6 +101,7 @@ public class RobotContainer {
     center3 = new Center3Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
     semicircle = new SemiCircle(m_swerveSubsystem);
     simple2 = new Simple2Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
+    highFender = new HighFender(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
 
     m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> dt.setModuleStates(m_scheme.getJoystickSpeeds()), m_swerveSubsystem));
 
@@ -116,9 +119,10 @@ public class RobotContainer {
         () -> m_climb
           .setOutput(op.JoystickLY()), m_climb));
 
-    autoChooser.setDefaultOption("Lower5", lower5);
+    autoChooser.setDefaultOption("Low Fender", lower5);
+    autoChooser.addOption("High Fender", highFender);
     autoChooser.addOption("Center3", center3);
-    autoChooser.addOption("SemiCircle", semicircle);
+    autoChooser.addOption("SemiCircle", simple2);
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -150,7 +154,7 @@ public class RobotContainer {
 
     // Turn on the conveyor when the bottom sensor is blocked (ball waiting to go up)
     // unless top sensor blocked (the ball has no place to go)
-    (topConveyorSensor.and(frontConveyorSensor.negate()).and(op.BButton.negate()))
+    (topConveyorSensor.negate().and(frontConveyorSensor).and(op.BButton.negate()))
     .whenActive(() -> {
           m_conveyor.on(CONVEYOR.SPEED);
           drv.setRumble(0.8);
