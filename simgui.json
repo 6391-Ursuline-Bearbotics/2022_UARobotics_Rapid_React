@@ -4,6 +4,18 @@
       "window": {
         "visible": true
       }
+    },
+    "Other Devices": {
+      "Talon FX[11]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[12]": {
+        "header": {
+          "open": true
+        }
+      }
     }
   },
   "NTProvider": {

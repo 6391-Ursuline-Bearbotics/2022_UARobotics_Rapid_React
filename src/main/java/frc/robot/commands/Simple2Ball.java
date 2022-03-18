@@ -1,13 +1,9 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.ControlScheme;
 import frc.robot.Constants.CONVEYOR;
 import frc.robot.Constants.SHOOTER;
 import frc.robot.subsystems.ConveyorSubsystem;
@@ -28,16 +24,21 @@ public class Simple2Ball extends SequentialCommandGroup {
             new InstantCommand(() -> m_intake.toggleIntakeWheels(true))
                 .andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true))),
 
-            // Pickup the A ball
-            new RunCommand(() -> m_swerve.dt.goToPose(m_swerve.dt.getPose().transformBy(new Transform2d(
-                    new Translation2d(1, 0), Rotation2d.fromDegrees(0.0))),
-                    m_swerve.dt.getGyroscopeRotation().getDegrees())).withTimeout(2),
+            // Pickup the ball directly in front of us, moving at 0.5 meters per second for 2 seconds
+            new RunCommand(() -> m_swerve.dt.setModuleStates(new ChassisSpeeds(0.5, 0, 0)), m_swerve).withTimeout(2),
 
             //new AutoAim(m_swerve, pv, true, new ControlScheme(new XboxController(0))),
 
-            // Shoot the preload and A ball
+            // Shoot the preload and picked up ball
             new RunCommand(() -> m_conveyor.on(CONVEYOR.SHOOTSPEED), m_conveyor).withTimeout(2)
-                .andThen(new InstantCommand(m_conveyor::turnOff, m_conveyor))
+                .andThen(new InstantCommand(m_conveyor::turnOff, m_conveyor)),
+
+            // Turn shooter off
+            new InstantCommand(() -> m_shooter.setRPS(0, 0)),
+
+            // Retract Intake
+            new InstantCommand(() -> m_intake.toggleIntakeWheels(true))
+                .andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true)))
         );
     }
 }
