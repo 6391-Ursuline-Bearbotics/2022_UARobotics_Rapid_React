@@ -212,7 +212,7 @@ public final class Constants {
         public static final double RPSTORAW = (double) ENCODERCPR / 10;
 
         public static final double LOWFF = 0.24;
-        public static final double FENDERFF = 0.42; //.38 for low energy shot
+        public static final double FENDERFF = 0.45; //.38 for low energy shot
         public static final double CIRCLEFF = 0.52;
         public static final double P = 0;//999999999999999.0;
         public static final double D = 0;

@@ -19,7 +19,7 @@ public class FenderDelay extends SequentialCommandGroup {
             new InstantCommand(() -> {m_shooter.setRPS(SHOOTER.SETPOINT2, SHOOTER.FENDERFF);
                 m_shooter.setHoodPosition(0);}, m_shooter),
 
-            new WaitCommand(1),
+            new WaitCommand(3),
 
             // Shoot the preload
             new RunCommand(() -> m_conveyor.on(CONVEYOR.SHOOTSPEED), m_conveyor).withTimeout(1)
@@ -28,10 +28,12 @@ public class FenderDelay extends SequentialCommandGroup {
             // Turn shooter off
             new InstantCommand(() -> m_shooter.setRPS(0, 0)),
 
-            new WaitCommand(5),
+            new WaitCommand(4),
 
             // Drive forwards at .5 meters per second
-            new RunCommand(() -> m_swerve.dt.setModuleStates(new ChassisSpeeds(0.5, 0, 0)), m_swerve)
+            new RunCommand(() -> m_swerve.dt.setModuleStates(new ChassisSpeeds(0.5, 0, 0)), m_swerve).withTimeout(6),
+
+            new RunCommand(() -> m_swerve.dt.setModuleStates(new ChassisSpeeds(0, 0, 0)), m_swerve)
         );
     }
 }
