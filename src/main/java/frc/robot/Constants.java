@@ -169,7 +169,7 @@ public final class Constants {
         public static final int TOPSENSORPORT = 0;
 
         public static final double SPEED = 0.2;
-        public static final double SHOOTSPEED = 0.4;
+        public static final double SHOOTSPEED = 0.5;
         public static final double BACKSPEED = -0.2;
     }
 

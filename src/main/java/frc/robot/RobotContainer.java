@@ -64,8 +64,6 @@ public class RobotContainer {
   @Log
   public final IntakeSubsystem m_intake = new IntakeSubsystem();
   @Log
-  public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem();
-  @Log
   public final ClimbSubsystem m_climb = ClimbSubsystem.Create();
 
   private final Lower5Ball lower5;
@@ -86,9 +84,13 @@ public class RobotContainer {
   XboxController6391 op = new XboxController6391(OI.OPCONTROLLERPORT, 0.1);
   XboxControllerSim m_operatorControllerSim = new XboxControllerSim(OI.OPCONTROLLERPORT);
 
+  @Log
+  public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem();
+
   Button frontConveyorSensor = new Button(() -> m_conveyor.getFrontConveyor());
   Button topConveyorSensor = new Button(() -> m_conveyor.getTopConveyor());
   Button shooteratsetpoint = new Button(() -> m_shooter.atSetpoint());
+  Button auto = new Button(() -> DriverStation.isAutonomous());
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -142,18 +144,18 @@ public class RobotContainer {
 
     //drv.YButton.whileActiveOnce(new AutoAimRotate(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
 
-    // When the left bumper is pressed on either controller right joystick is super slow turn
-/*     drv.BumperL.whileActiveOnce(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
+    // When the left bumper is pressed on driver controller controls are slower
+    drv.BumperL.whileActiveOnce(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
         DRIVE.MAX_FWD_REV_SPEED_MPS_SLOW, DRIVE.MAX_STRAFE_SPEED_MPS_SLOW, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW)))
       .whenInactive(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
-        DRIVE.MAX_FWD_REV_SPEED_MPS, DRIVE.MAX_STRAFE_SPEED_MPS, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC))); */
+        DRIVE.MAX_FWD_REV_SPEED_MPS, DRIVE.MAX_STRAFE_SPEED_MPS, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC)));
   
     // When start button is pressed reorient the field drive to the current heading
-    drv.StartButton.whenActive(new InstantCommand(() -> dt.zeroGyroscope()));
+    drv.StartButton.whenActive(() -> dt.zeroGyroscope());
 
     // Turn on the conveyor when the bottom sensor is blocked (ball waiting to go up)
     // unless top sensor blocked (the ball has no place to go)
-    (topConveyorSensor.negate().and(frontConveyorSensor).and(op.BButton.negate()))
+    (topConveyorSensor.negate().and(frontConveyorSensor).and(op.BButton.negate()).and(auto.negate()))
     .whenActive(() -> {
           m_conveyor.on(CONVEYOR.SPEED);
           drv.setRumble(0.8);
@@ -173,8 +175,7 @@ public class RobotContainer {
         .whenInactive(() -> {m_conveyor.turnOff(); m_intake.setOutput(0);});
 
     // When right bumper is pressed raise/lower the intake and stop/start the intake on both controllers
-    op.BumperR.whenActive(new InstantCommand(() -> m_intake.toggleIntakeWheels(true))
-      .andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true))));
+    op.BumperR.whenActive(() -> m_intake.toggleIntake(true));
 
     // Spin up the shooter for the fender shot when the 'X' button is pressed.
     op.XButton.whenActive(new InstantCommand(() -> {
@@ -206,5 +207,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
+  }
+
+  @Log
+  public boolean getAuto() {
+    return auto.get();
   }
 }

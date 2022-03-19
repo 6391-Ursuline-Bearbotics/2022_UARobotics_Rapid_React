@@ -58,12 +58,14 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
     }
 
     @Config
-    public void toggleIntakeWheels(boolean enabled) {
+    public void toggleIntake(boolean enabled) {
         // Only turn it on if intake is down and it is currently off
         if(m_IntakeMotor.get() == 0 && m_intakeSolenoid1.get() == DoubleSolenoid.Value.kReverse) {
+            extendIntake(true);
             setOutput(INTAKE.SPEED);
         }
         else{
+            retractIntake();
             setOutput(0);
         }
     }

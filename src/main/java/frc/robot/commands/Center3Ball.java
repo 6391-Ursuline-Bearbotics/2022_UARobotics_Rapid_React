@@ -31,7 +31,7 @@ public class Center3Ball extends SequentialCommandGroup {
                 .andThen(new InstantCommand(m_conveyor::turnOff, m_conveyor)),
         
             // Lower and turn on the intake
-            new InstantCommand(() -> m_intake.toggleIntakeWheels(true))
+            new InstantCommand(() -> m_intake.toggleIntake(true))
                 .andThen(new InstantCommand(() -> m_intake.toggleIntakePosition(true))),
 
             // Pickup the A ball
