@@ -71,9 +71,9 @@ public final class Constants {
         public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(238); // 300FIXME Measure and set back right steer offset        
 
         // Drivetrain Performance Mechanical limits
-        static public final double MAX_FWD_REV_SPEED_MPS = Units.feetToMeters(12.0);
-        static public final double MAX_STRAFE_SPEED_MPS = Units.feetToMeters(12.0);
-        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC = Units.degreesToRadians(180.0);
+        static public final double MAX_FWD_REV_SPEED_MPS = Units.feetToMeters(6.0);
+        static public final double MAX_STRAFE_SPEED_MPS = Units.feetToMeters(6.0);
+        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC = Units.degreesToRadians(90.0);
         static public final double MAX_TRANSLATE_ACCEL_MPS2 = MAX_FWD_REV_SPEED_MPS/0.25; //0-full time of 0.25 second
         static public final double MAX_ROTATE_ACCEL_RAD_PER_SEC_2 = MAX_ROTATE_SPEED_RAD_PER_SEC/0.25; //0-full time of 0.25 second
 
@@ -169,7 +169,8 @@ public final class Constants {
         public static final int TOPSENSORPORT = 0;
 
         public static final double SPEED = 0.2;
-        public static final double SHOOTSPEED = 0.5;
+        public static final double SHOOTSPEED = 0.4;
+        public static final double AUTOSPEED = 0.25;
         public static final double BACKSPEED = -0.2;
     }
 
@@ -198,7 +199,7 @@ public final class Constants {
         public static final int HOODPORT = 16;
     
         public static final double HOODkP = 0.01;
-        public static final int HOODCIRCLE = -58500;
+        public static final int HOODCIRCLE = -55500;
         public static final int HOODLOW = -30000;
 
         public static final double TOLERANCERPS = 6.0;
@@ -213,7 +214,7 @@ public final class Constants {
 
         public static final double LOWFF = 0.24;
         public static final double FENDERFF = 0.45; //.38 for low energy shot
-        public static final double CIRCLEFF = 0.52;
+        public static final double CIRCLEFF = 0.5;
         public static final double P = 0;//999999999999999.0;
         public static final double D = 0;
     

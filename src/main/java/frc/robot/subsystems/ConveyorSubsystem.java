@@ -5,8 +5,8 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.PowerDistribution;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import frc.robot.Constants.CONVEYOR;
@@ -14,13 +14,12 @@ import frc.robot.Constants.CONVEYOR;
 public class ConveyorSubsystem extends SubsystemBase implements Loggable{
     private final WPI_TalonSRX m_ConveyorMotor = new WPI_TalonSRX(CONVEYOR.CANID);
 
-    //PowerDistribution m_PDP = new PowerDistribution();
-
     DigitalInput frontconveyor = new DigitalInput(CONVEYOR.FRONTSENSORPORT);
     DigitalInput topconveyor = new DigitalInput(CONVEYOR.TOPSENSORPORT);
 
-    // The averaging here is so that supurious noise spikes don't trip the sensors.
     public ConveyorSubsystem() {
+        m_ConveyorMotor.setNeutralMode(NeutralMode.Brake);
+
         m_ConveyorMotor.setStatusFramePeriod(1, 255);
         m_ConveyorMotor.setStatusFramePeriod(2, 255);
     }

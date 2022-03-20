@@ -11,6 +11,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -107,6 +108,8 @@ public class RobotContainer {
 
     m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> dt.setModuleStates(m_scheme.getJoystickSpeeds()), m_swerveSubsystem));
 
+    //LiveWindow.disableAllTelemetry();
+
     //m_PhotonVision.fieldSetup(m_swerveSubsystem.dt.getField());
 
     // Detect if controllers are missing / Stop multiple warnings
@@ -145,7 +148,7 @@ public class RobotContainer {
     //drv.YButton.whileActiveOnce(new AutoAimRotate(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
 
     // When the left bumper is pressed on driver controller controls are slower
-    drv.BumperL.whileActiveOnce(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
+    drv.BumperL.whenActive(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
         DRIVE.MAX_FWD_REV_SPEED_MPS_SLOW, DRIVE.MAX_STRAFE_SPEED_MPS_SLOW, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW)))
       .whenInactive(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
         DRIVE.MAX_FWD_REV_SPEED_MPS, DRIVE.MAX_STRAFE_SPEED_MPS, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC)));

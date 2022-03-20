@@ -31,7 +31,15 @@ public class Simple2Ball extends SequentialCommandGroup {
 
             //new AutoAim(m_swerve, pv, true, new ControlScheme(new XboxController(0))),
 
-            new RunCommand(() -> m_conveyor.on(CONVEYOR.SHOOTSPEED), m_conveyor).withTimeout(2),
+            new RunCommand(() -> m_conveyor.on(CONVEYOR.AUTOSPEED), m_conveyor).withTimeout(0.5),
+
+            new WaitCommand(1),
+
+            new RunCommand(() -> m_conveyor.on(CONVEYOR.AUTOSPEED), m_conveyor).withTimeout(0.5),
+
+            new WaitCommand(1),
+
+            new RunCommand(() -> m_conveyor.on(CONVEYOR.AUTOSPEED), m_conveyor).withTimeout(2),
 
             // Turn shooter off
             new InstantCommand(() -> m_shooter.setRPS(0, 0)),
