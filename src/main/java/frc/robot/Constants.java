@@ -78,9 +78,9 @@ public final class Constants {
         static public final double MAX_ROTATE_ACCEL_RAD_PER_SEC_2 = MAX_ROTATE_SPEED_RAD_PER_SEC/0.25; //0-full time of 0.25 second
 
         // Fine control speed limits
-        static public final double MAX_FWD_REV_SPEED_MPS_SLOW = Units.feetToMeters(6.0);
-        static public final double MAX_STRAFE_SPEED_MPS_SLOW = Units.feetToMeters(6.0);
-        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW = Units.degreesToRadians(90.0);
+        static public final double MAX_FWD_REV_SPEED_MPS_SLOW = Units.feetToMeters(3.0);
+        static public final double MAX_STRAFE_SPEED_MPS_SLOW = Units.feetToMeters(3.0);
+        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW = Units.degreesToRadians(45.0);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // SENSOR CONSTANTS
