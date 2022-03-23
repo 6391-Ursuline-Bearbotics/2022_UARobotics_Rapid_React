@@ -91,14 +91,14 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     //m_robotContainer.m_PhotonVision.lightsOn();
-    if (m_robotContainer.dt.getGyroReady() && chirp <= 100) {
+/*     if (m_robotContainer.dt.getGyroReady() && chirp <= 100) {
       chirp += 1;
       m_robotContainer.m_climb.chirp(500);
       //m_robotContainer.m_LED.rainbow();
     }
     if (chirp > 100) {
       m_robotContainer.m_climb.chirp(0);
-    }
+    } */
   }
 
   /**
@@ -108,14 +108,14 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    m_robotContainer.m_intake.setOutput(0);
+    //m_robotContainer.m_intake.setOutput(0);
     //m_robotContainer.m_intake.extendIntake(false);
-    m_robotContainer.m_conveyor.turnOff();
+    //m_robotContainer.m_conveyor.turnOff();
 /*     m_robotContainer.m_climb.invertclimber(false);
     m_robotContainer.m_climb.setOutput(0, 0);
     m_robotContainer.m_climb.climbstage = 0;
     m_robotContainer.m_climb.resetEnc(true); */
-    m_robotContainer.m_shooter.setRPS(0, 0);
+    //m_robotContainer.m_shooter.setRPS(0, 0);
     //m_robotContainer.m_PhotonVision.lightsOff();
 
     // schedule the autonomous command (example)
@@ -142,14 +142,14 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    m_robotContainer.m_intake.setOutput(0);
+    //m_robotContainer.m_intake.setOutput(0);
     //m_robotContainer.m_intake.extendIntake(false);
-    m_robotContainer.m_conveyor.turnOff();
+    //m_robotContainer.m_conveyor.turnOff();
 /*     m_robotContainer.m_climb.invertclimber(false);
     m_robotContainer.m_climb.setOutput(0, 0);
     m_robotContainer.m_climb.climbstage = 0;
     m_robotContainer.m_climb.resetEnc(true); */
-    m_robotContainer.m_shooter.setRPS(0, 0);
+    //m_robotContainer.m_shooter.setRPS(0, 0);
     //m_robotContainer.m_PhotonVision.lightsOff();
   }
 

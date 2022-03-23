@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -8,6 +9,10 @@ import frc.swervelib.SwerveInput;
 public class ControlScheme {
     private final XboxController m_controller;
     private static final SendableChooser<String> driverChooser = new SendableChooser<>();
+
+    private SlewRateLimiter slewX = new SlewRateLimiter(2);
+    private SlewRateLimiter slewY = new SlewRateLimiter(2);
+    private SlewRateLimiter slewRot = new SlewRateLimiter(2);
 
     private double m_translationX;
     private double m_translationY;
@@ -27,27 +32,27 @@ public class ControlScheme {
     public SwerveInput getJoystickSpeeds() {
         switch (driverChooser.getSelected()) {
             case "Both Sticks":
-              m_translationX = modifyAxis(-m_controller.getLeftY());
-              m_translationY = modifyAxis(-m_controller.getLeftX());
-              m_rotation = modifyAxis(-m_controller.getRightX());
+              m_translationX = slewX.calculate(modifyAxis(-m_controller.getLeftY()));
+              m_translationY = slewY.calculate(modifyAxis(-m_controller.getLeftX()));
+              m_rotation = slewRot.calculate(modifyAxis(-m_controller.getRightX()));
               break;
             case "Left Stick and Triggers":
-              m_translationX = modifyAxis(-m_controller.getLeftY());
-              m_translationY = modifyAxis(-m_controller.getLeftX());
-              m_rotation = m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis();
+              m_translationX = slewX.calculate(modifyAxis(-m_controller.getLeftY()));
+              m_translationY = slewY.calculate(modifyAxis(-m_controller.getLeftX()));
+              m_rotation = slewRot.calculate(m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis());
               break;
             case "Split Sticks and Triggers":
-              m_translationX = modifyAxis(-m_controller.getLeftY());
-              m_translationY = modifyAxis(-m_controller.getRightX());
-              m_rotation = m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis();
+              m_translationX = slewX.calculate(modifyAxis(-m_controller.getLeftY()));
+              m_translationY = slewY.calculate(modifyAxis(-m_controller.getRightX()));
+              m_rotation = slewRot.calculate(m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis());
               break;
             case "Gas Pedal":
               m_translationX = modifyAxis(-m_controller.getLeftY());
               m_translationY = modifyAxis(-m_controller.getLeftX());
               double angle = calculateTranslationDirection(m_translationX, m_translationY);
-              m_translationX = Math.cos(angle) * m_controller.getRightTriggerAxis();
-              m_translationY = Math.sin(angle) * m_controller.getRightTriggerAxis();
-              m_rotation = modifyAxis(-m_controller.getRightX());
+              m_translationX = slewX.calculate(Math.cos(angle) * m_controller.getRightTriggerAxis());
+              m_translationY = slewY.calculate(Math.sin(angle) * m_controller.getRightTriggerAxis());
+              m_rotation = slewRot.calculate(modifyAxis(-m_controller.getRightX()));
               break;
         }
         return new SwerveInput(m_translationX, m_translationY, m_rotation);
