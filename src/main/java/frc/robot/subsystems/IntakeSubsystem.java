@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import frc.robot.Constants.INTAKE;
 import frc.robot.UA6391.StallDetector;
+import frc.robot.UA6391.StatusFrameHelper;
 
 public class IntakeSubsystem extends SubsystemBase implements Loggable{
     private final WPI_TalonSRX m_IntakeMotor = new WPI_TalonSRX(INTAKE.CANID);
@@ -31,10 +32,8 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
         //intakeStall.setMinStallMillis(INTAKE.STALLTIME);
         m_IntakeMotor2.follow(m_IntakeMotor);
         m_IntakeMotor2.setInverted(InvertType.OpposeMaster);
-        m_IntakeMotor.setStatusFramePeriod(1, 255);
-        m_IntakeMotor.setStatusFramePeriod(2, 255);
-        m_IntakeMotor2.setStatusFramePeriod(1, 255);
-        m_IntakeMotor2.setStatusFramePeriod(2, 255);
+        StatusFrameHelper.statusFrameOff(m_IntakeMotor);
+        StatusFrameHelper.statusFrameOff(m_IntakeMotor2);
     }
 
     @Config

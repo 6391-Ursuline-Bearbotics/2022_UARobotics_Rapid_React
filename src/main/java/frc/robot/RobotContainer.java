@@ -58,20 +58,20 @@ public class RobotContainer {
   
   public static SwerveDrivetrainModel dt;
   public static SwerveSubsystem m_swerveSubsystem;
-/*   @Log
-  public final ShooterSubsystem m_shooter = new ShooterSubsystem(); */
+  @Log
+  public final ShooterSubsystem m_shooter = new ShooterSubsystem();
   //@Log
   //public final LEDSubsystem m_LED;
-/*   @Log
+  @Log
   public final IntakeSubsystem m_intake = new IntakeSubsystem();
   @Log
-  public final ClimbSubsystem m_climb = ClimbSubsystem.Create(); */
+  public final ClimbSubsystem m_climb = ClimbSubsystem.Create();
 
-/*   private final Lower5Ball lower5;
+  private final Lower5Ball lower5;
   private final Center3Ball center3;
   private final SemiCircle semicircle;
   private final Simple2Ball simple2;
-  private final FenderDelay fenderDelay; */
+  private final FenderDelay fenderDelay;
   
   @Log(tabName = "Dashboard")
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -85,13 +85,13 @@ public class RobotContainer {
   XboxController6391 op = new XboxController6391(OI.OPCONTROLLERPORT, 0.1);
   XboxControllerSim m_operatorControllerSim = new XboxControllerSim(OI.OPCONTROLLERPORT);
 
-  /* @Log
-  public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem(); */
+  @Log
+  public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem();
 
-/*   Button frontConveyorSensor = new Button(() -> m_conveyor.getFrontConveyor());
+  Button frontConveyorSensor = new Button(() -> m_conveyor.getFrontConveyor());
   Button topConveyorSensor = new Button(() -> m_conveyor.getTopConveyor());
   Button shooteratsetpoint = new Button(() -> m_shooter.atSetpoint());
-  Button auto = new Button(() -> DriverStation.isAutonomous()); */
+  Button auto = new Button(() -> DriverStation.isAutonomous());
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -100,11 +100,11 @@ public class RobotContainer {
     dt = BearSwerveHelper.createBearSwerve();
     m_swerveSubsystem = BearSwerveHelper.createSwerveSubsystem(dt);
     //m_LED = new LEDSubsystem(m_PhotonVision, dt);
-/*     lower5 = new Lower5Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
+    lower5 = new Lower5Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
     center3 = new Center3Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
     semicircle = new SemiCircle(m_swerveSubsystem);
     simple2 = new Simple2Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
-    fenderDelay = new FenderDelay(m_swerveSubsystem, m_intake, m_conveyor, m_shooter); */
+    fenderDelay = new FenderDelay(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
 
     m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> dt.setModuleStates(m_scheme.getJoystickSpeeds()), m_swerveSubsystem));
 
@@ -113,7 +113,7 @@ public class RobotContainer {
     //m_PhotonVision.fieldSetup(m_swerveSubsystem.dt.getField());
 
     // Detect if controllers are missing / Stop multiple warnings
-/*     DriverStation.silenceJoystickConnectionWarning(OI.PRACTICE);
+    DriverStation.silenceJoystickConnectionWarning(OI.PRACTICE);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -122,11 +122,11 @@ public class RobotContainer {
       // Use left y axis to control the speed of the climber
       new RunCommand(
         () -> m_climb
-          .setOutput(op.JoystickLY()), m_climb)); */
+          .setOutput(op.JoystickLY()), m_climb));
 
-/*     autoChooser.addOption("Fender Delay", fenderDelay);
+    autoChooser.addOption("Fender Delay", fenderDelay);
     autoChooser.setDefaultOption("CircleShot", simple2);
-    autoChooser.addOption("SemiCircle", semicircle); */
+    autoChooser.addOption("SemiCircle", semicircle);
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -152,7 +152,7 @@ public class RobotContainer {
         DRIVE.MAX_FWD_REV_SPEED_MPS_SLOW, DRIVE.MAX_STRAFE_SPEED_MPS_SLOW, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW)))
       .whenInactive(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
         DRIVE.MAX_FWD_REV_SPEED_MPS, DRIVE.MAX_STRAFE_SPEED_MPS, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC)));
-  /*
+  
     // When start button is pressed reorient the field drive to the current heading
     drv.StartButton.whenActive(() -> dt.zeroGyroscope());
 
@@ -200,7 +200,7 @@ public class RobotContainer {
 
     // Change the speed up or down of the current shot
     op.POVUp.whenActive(() -> m_shooter.relativeSpeedChange(SHOOTER.SPEEDCHANGE));
-    op.POVDown.whenActive(() -> m_shooter.relativeSpeedChange(-SHOOTER.SPEEDCHANGE)); */
+    op.POVDown.whenActive(() -> m_shooter.relativeSpeedChange(-SHOOTER.SPEEDCHANGE));
   }
 
   /**

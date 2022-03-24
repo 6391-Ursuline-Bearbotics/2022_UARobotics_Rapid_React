@@ -17,6 +17,7 @@ import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SHOOTER;
+import frc.robot.UA6391.StatusFrameHelper;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
@@ -62,8 +63,7 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
     m_shooterMotor2.setInverted(InvertType.OpposeMaster);
     m_shooterMotor.setNeutralMode(NeutralMode.Coast);
 		m_shooterMotor2.setNeutralMode(NeutralMode.Coast);
-    m_shooterMotor2.setStatusFramePeriod(1, 255);
-    m_shooterMotor2.setStatusFramePeriod(2, 255);
+    StatusFrameHelper.statusFrameOff(m_shooterMotor2);
 
     TalonSRXConfiguration hoodConfig = new TalonSRXConfiguration();
     m_hood.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
@@ -72,8 +72,7 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
     hoodConfig.peakOutputReverse = -0.25;
     m_hood.setInverted(false);
     m_hood.setSensorPhase(false);
-    m_hood.setStatusFramePeriod(1, 255);
-    m_hood.setStatusFramePeriod(2, 255);
+    StatusFrameHelper.statusFrameOff(m_hood);
     m_hood.configAllSettings(hoodConfig);
     hoodStart = m_hood.getSensorCollection().getPulseWidthPosition();
   }

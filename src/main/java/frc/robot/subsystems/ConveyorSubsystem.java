@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import frc.robot.Constants.CONVEYOR;
+import frc.robot.UA6391.StatusFrameHelper;
 
 public class ConveyorSubsystem extends SubsystemBase implements Loggable{
     private final WPI_TalonSRX m_ConveyorMotor = new WPI_TalonSRX(CONVEYOR.CANID);
@@ -20,8 +21,7 @@ public class ConveyorSubsystem extends SubsystemBase implements Loggable{
     public ConveyorSubsystem() {
         m_ConveyorMotor.setNeutralMode(NeutralMode.Brake);
 
-        m_ConveyorMotor.setStatusFramePeriod(1, 255);
-        m_ConveyorMotor.setStatusFramePeriod(2, 255);
+        StatusFrameHelper.statusFrameOff(m_ConveyorMotor);
     }
 
     @Config
