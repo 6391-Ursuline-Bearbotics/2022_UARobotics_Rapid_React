@@ -10,9 +10,13 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CLIMB;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class ClimbSubsystem extends SubsystemBase implements Loggable{
     private WPI_TalonFX m_climbMotor;
+    private DoubleSolenoid m_arms = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, CLIMB.ARMSFWD, CLIMB.ARMSREV);
 
     @Log
     private int climbinvert = 1;
@@ -26,6 +30,7 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
     public ClimbSubsystem(WPI_TalonFX m_climbMotor) {
         this.m_climbMotor = m_climbMotor;
 
+        m_arms.set(Value.kForward);
         setOutput(0);
         m_climbMotor.setInverted(false);
         m_climbMotor.setSensorPhase(true);
@@ -103,5 +108,9 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
         }else{
             return true;
         }
+    }
+
+    public void toggleArms() {
+        m_arms.toggle();
     }
 }

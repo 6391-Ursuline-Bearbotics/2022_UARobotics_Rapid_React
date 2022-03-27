@@ -80,7 +80,7 @@ public final class Constants {
         // Fine control speed limits
         static public final double MAX_FWD_REV_SPEED_MPS_FAST = 0.5; // Percent of output power
         static public final double MAX_STRAFE_SPEED_MPS_FAST = 0.5;
-        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC_FAST = 0.5;
+        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC_FAST = 0.35;
         static public final double MAX_FWD_REV_SPEED_MPS_SLOW = 0.25; // Percent of output power
         static public final double MAX_STRAFE_SPEED_MPS_SLOW = 0.25;
         static public final double MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW = 0.25;
@@ -95,7 +95,7 @@ public final class Constants {
         static public final double steer_ENC_MODULE_REVS_PER_COUNT = 1.0/((double)(STEER_ENC_COUNTS_PER_MODULE_REV));
 
         public static final double AIMkP = 0.001;
-        public static final double AIMFF = 0.08;
+        public static final double AIMFF = 0.07;
     }
 
     public static final class AUTO {
@@ -182,6 +182,9 @@ public final class Constants {
 
         public static final double P = 0.01;
         public static final double TOLERANCE = 0.01;
+
+        public static final int ARMSFWD = 4;
+        public static final int ARMSREV = 5;
     }
 
     public static final class CAMERA {
@@ -217,7 +220,8 @@ public final class Constants {
 
         public static final double LOWFF = 0.24;
         public static final double FENDERFF = 0.45; //.38 for low energy shot
-        public static final double CIRCLEFF = 0.5;
+        public static final double CIRCLEFF = 0.5;//.5
+        public static final double LAUNCHFF = 0.55;
         public static final double P = 0;//999999999999999.0;
         public static final double D = 0;
     

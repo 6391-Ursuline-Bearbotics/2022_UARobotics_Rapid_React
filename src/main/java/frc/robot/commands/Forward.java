@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.swervelib.SwerveSubsystem;
 
-public class SemiCircle extends SequentialCommandGroup {  
-  public SemiCircle(SwerveSubsystem m_swerve) {
-    PathPlannerTrajectory trajectory1 = PathPlanner.loadPath("SemiCircle", 0.5, 3.0);
+public class Forward extends SequentialCommandGroup {  
+  public Forward(SwerveSubsystem m_swerve) {
+    PathPlannerTrajectory trajectory1 = PathPlanner.loadPath("MoveForward", 0.5, 3.0);
 
     addCommands(
       new InstantCommand(() -> m_swerve.dt.setKnownState(trajectory1.getInitialState())),

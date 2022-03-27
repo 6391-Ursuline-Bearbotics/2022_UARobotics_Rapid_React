@@ -10,9 +10,9 @@ public class ControlScheme {
     private final XboxController m_controller;
     private static final SendableChooser<String> driverChooser = new SendableChooser<>();
 
-    private SlewRateLimiter slewX = new SlewRateLimiter(2);
-    private SlewRateLimiter slewY = new SlewRateLimiter(2);
-    private SlewRateLimiter slewRot = new SlewRateLimiter(2);
+    private SlewRateLimiter slewX = new SlewRateLimiter(10);
+    private SlewRateLimiter slewY = new SlewRateLimiter(10);
+    private SlewRateLimiter slewRot = new SlewRateLimiter(10);
 
     private double m_translationX;
     private double m_translationY;

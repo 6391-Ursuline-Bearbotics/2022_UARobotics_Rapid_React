@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -26,9 +27,11 @@ import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoAimRotate;
 import frc.robot.commands.Center3Ball;
 import frc.robot.commands.FenderDelay;
+import frc.robot.commands.Forward;
 import frc.robot.commands.Lower5Ball;
 import frc.robot.commands.SemiCircle;
 import frc.robot.commands.Simple2Ball;
+import frc.robot.commands.Straight;
 // Subsystem Imports
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.swervelib.SwerveDrivetrainModel;
@@ -54,7 +57,7 @@ import frc.robot.UA6391.XboxController6391;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  //public final PhotonVision m_PhotonVision = new PhotonVision();
+  public final PhotonVision m_PhotonVision = new PhotonVision();
   
   public static SwerveDrivetrainModel dt;
   public static SwerveSubsystem m_swerveSubsystem;
@@ -72,6 +75,10 @@ public class RobotContainer {
   private final SemiCircle semicircle;
   private final Simple2Ball simple2;
   private final FenderDelay fenderDelay;
+  private final Straight straight;
+  private final Forward forward;
+
+  private boolean fast = false;
   
   @Log(tabName = "Dashboard")
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -105,12 +112,14 @@ public class RobotContainer {
     semicircle = new SemiCircle(m_swerveSubsystem);
     simple2 = new Simple2Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
     fenderDelay = new FenderDelay(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
+    straight = new Straight(m_swerveSubsystem);
+    forward = new Forward(m_swerveSubsystem);
 
     m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> dt.setModuleStates(m_scheme.getJoystickSpeeds()), m_swerveSubsystem));
 
     //LiveWindow.disableAllTelemetry();
 
-    //m_PhotonVision.fieldSetup(m_swerveSubsystem.dt.getField());
+    m_PhotonVision.fieldSetup(m_swerveSubsystem.dt.getField());
 
     // Detect if controllers are missing / Stop multiple warnings
     DriverStation.silenceJoystickConnectionWarning(OI.PRACTICE);
@@ -127,6 +136,8 @@ public class RobotContainer {
     autoChooser.addOption("Fender Delay", fenderDelay);
     autoChooser.setDefaultOption("CircleShot", simple2);
     autoChooser.addOption("SemiCircle", semicircle);
+    autoChooser.addOption("Straight", straight);
+    autoChooser.addOption("Forward", forward);
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -138,7 +149,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {    
     // While driver holds the A button Auto Aim to the High Hub using the left stick for distance control
-    //drv.AButton.whileActiveOnce(new AutoAim(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
+    drv.AButton.whileActiveOnce(new AutoAim(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
 
     // While driver holds the B button Auto Aim to the closest ball using the left stick for distance control
     //drv.BButton.whileActiveOnce(new AutoAim(m_swerveSubsystem, m_PhotonVision, false, m_scheme));
@@ -148,10 +159,13 @@ public class RobotContainer {
     //drv.YButton.whileActiveOnce(new AutoAimRotate(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
 
     // When the left bumper is pressed on driver controller controls are slower
-    drv.BumperL.whenActive(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
-        DRIVE.MAX_FWD_REV_SPEED_MPS_SLOW, DRIVE.MAX_STRAFE_SPEED_MPS_SLOW, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW)))
-      .whenInactive(new InstantCommand(() -> m_swerveSubsystem.dt.setMaxSpeeds(
-        DRIVE.MAX_FWD_REV_SPEED_MPS, DRIVE.MAX_STRAFE_SPEED_MPS, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC)));
+    drv.BumperL.whenActive(new ConditionalCommand(new InstantCommand(() -> {m_swerveSubsystem.dt.setMaxSpeeds(
+        DRIVE.MAX_FWD_REV_SPEED_MPS_SLOW, DRIVE.MAX_STRAFE_SPEED_MPS_SLOW, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW);
+        fast = false;}),
+      new InstantCommand(() -> {m_swerveSubsystem.dt.setMaxSpeeds(
+        DRIVE.MAX_FWD_REV_SPEED_MPS, DRIVE.MAX_STRAFE_SPEED_MPS, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC);
+        fast = true;}),
+      () -> fast));
   
     // When start button is pressed reorient the field drive to the current heading
     drv.StartButton.whenActive(() -> dt.zeroGyroscope());
@@ -179,6 +193,8 @@ public class RobotContainer {
 
     // When right bumper is pressed raise/lower the intake and stop/start the intake on both controllers
     op.BumperR.whenActive(() -> m_intake.toggleIntake(true));
+
+    op.BumperL.whenActive(() -> m_climb.toggleArms());
 
     // Spin up the shooter for the fender shot when the 'X' button is pressed.
     op.XButton.whenActive(new InstantCommand(() -> {
