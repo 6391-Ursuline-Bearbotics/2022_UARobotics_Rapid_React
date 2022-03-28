@@ -86,9 +86,9 @@ public class AutoAimRotate extends CommandBase {
       else {
         m_swerve.dt.setModuleStates(DRIVE.KINEMATICS.toSwerveModuleStates(
                         new ChassisSpeeds(
-                                input.m_translationX * DRIVE.MAX_FWD_REV_SPEED_MPS,
-                                input.m_translationY * DRIVE.MAX_STRAFE_SPEED_MPS,
-                                input.m_rotation * DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC
+                                input.m_translationX * DRIVE.MAX_FWD_REV_SPEED_MPS_EST,
+                                input.m_translationY * DRIVE.MAX_FWD_REV_SPEED_MPS_EST,
+                                input.m_rotation * DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC_EST
                         )  
                 )
         );

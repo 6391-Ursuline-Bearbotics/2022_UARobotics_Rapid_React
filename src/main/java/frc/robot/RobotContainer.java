@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 // WPI Imports
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -28,7 +29,8 @@ import frc.robot.commands.AutoAimRotate;
 import frc.robot.commands.Center3Ball;
 import frc.robot.commands.FenderDelay;
 import frc.robot.commands.Forward;
-import frc.robot.commands.Lower5Ball;
+import frc.robot.commands.Mid4Ball;
+import frc.robot.commands.Right5Ball;
 import frc.robot.commands.SemiCircle;
 import frc.robot.commands.Simple2Ball;
 import frc.robot.commands.Straight;
@@ -70,15 +72,15 @@ public class RobotContainer {
   @Log
   public final ClimbSubsystem m_climb = ClimbSubsystem.Create();
 
-  private final Lower5Ball lower5;
-  private final Center3Ball center3;
+  private final Right5Ball right5;
+  private final Mid4Ball mid4;
   private final SemiCircle semicircle;
   private final Simple2Ball simple2;
   private final FenderDelay fenderDelay;
   private final Straight straight;
   private final Forward forward;
 
-  private boolean fast = false;
+  private boolean fast = true;
   
   @Log(tabName = "Dashboard")
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -107,8 +109,8 @@ public class RobotContainer {
     dt = BearSwerveHelper.createBearSwerve();
     m_swerveSubsystem = BearSwerveHelper.createSwerveSubsystem(dt);
     //m_LED = new LEDSubsystem(m_PhotonVision, dt);
-    lower5 = new Lower5Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
-    center3 = new Center3Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
+    right5 = new Right5Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
+    mid4 = new Mid4Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
     semicircle = new SemiCircle(m_swerveSubsystem);
     simple2 = new Simple2Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
     fenderDelay = new FenderDelay(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
@@ -135,6 +137,8 @@ public class RobotContainer {
 
     autoChooser.addOption("Fender Delay", fenderDelay);
     autoChooser.setDefaultOption("CircleShot", simple2);
+    autoChooser.addOption("Right5Ball", right5);
+    autoChooser.addOption("Mid4Ball", mid4);
     autoChooser.addOption("SemiCircle", semicircle);
     autoChooser.addOption("Straight", straight);
     autoChooser.addOption("Forward", forward);
@@ -160,10 +164,10 @@ public class RobotContainer {
 
     // When the left bumper is pressed on driver controller controls are slower
     drv.BumperL.whenActive(new ConditionalCommand(new InstantCommand(() -> {m_swerveSubsystem.dt.setMaxSpeeds(
-        DRIVE.MAX_FWD_REV_SPEED_MPS_SLOW, DRIVE.MAX_STRAFE_SPEED_MPS_SLOW, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW);
+        DRIVE.MAX_FWD_REV_SPEED_SLOW, DRIVE.MAX_STRAFE_SPEED_SLOW, DRIVE.MAX_ROTATE_SPEED_SLOW);
         fast = false;}),
       new InstantCommand(() -> {m_swerveSubsystem.dt.setMaxSpeeds(
-        DRIVE.MAX_FWD_REV_SPEED_MPS, DRIVE.MAX_STRAFE_SPEED_MPS, DRIVE.MAX_ROTATE_SPEED_RAD_PER_SEC);
+        DRIVE.MAX_FWD_REV_SPEED_FAST, DRIVE.MAX_STRAFE_SPEED_FAST, DRIVE.MAX_ROTATE_SPEED_FAST);
         fast = true;}),
       () -> fast));
   
@@ -228,8 +232,8 @@ public class RobotContainer {
     return autoChooser.getSelected();
   }
 
-/*   @Log
-  public boolean getAuto() {
-    return auto.get();
-  } */
+  @Log
+  public String getPose() {
+    return dt.getPose().toString();
+  }
 }

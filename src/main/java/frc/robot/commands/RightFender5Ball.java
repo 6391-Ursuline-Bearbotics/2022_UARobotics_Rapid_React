@@ -15,8 +15,8 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.swervelib.SwerveSubsystem;
 import frc.swervelib.TrajectoryLogging;
 
-public class Lower5Ball extends SequentialCommandGroup {
-    public Lower5Ball(SwerveSubsystem m_swerve, IntakeSubsystem m_intake, ConveyorSubsystem m_conveyor, ShooterSubsystem m_shooter) {        
+public class RightFender5Ball extends SequentialCommandGroup {
+    public RightFender5Ball(SwerveSubsystem m_swerve, IntakeSubsystem m_intake, ConveyorSubsystem m_conveyor, ShooterSubsystem m_shooter) {        
         PathPlannerTrajectory trajectory1 = PathPlanner.loadPath("LowerFenderToA", 2.0, 3.0);
         PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("AToB", 2.0, 3.0);
         PathPlannerTrajectory trajectory3 = PathPlanner.loadPath("BToC", 2.0, 3.0);

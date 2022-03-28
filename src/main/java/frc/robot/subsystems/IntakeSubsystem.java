@@ -27,7 +27,7 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
     // know which direction to toggle to as their default state is kOff.
     public IntakeSubsystem() {
         setOutput(0);
-        m_intakeSolenoid1.set(Value.kForward);
+        raiseIntake();
         //intakeStall = new StallDetector(INTAKE.PDPSLOT);
         //intakeStall.setMinStallMillis(INTAKE.STALLTIME);
         m_IntakeMotor2.follow(m_IntakeMotor);
@@ -42,13 +42,13 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
     }
 
     @Config
-    public void extendIntake(boolean extend) {
-        if (extend) {
-            m_intakeSolenoid1.set(Value.kForward);
-        }
-        else {
-            m_intakeSolenoid1.set(Value.kReverse);
-        }
+    public void lowerIntake() {
+        m_intakeSolenoid1.set(Value.kForward);
+    }
+
+    @Config
+    public void raiseIntake() {
+        m_intakeSolenoid1.set(Value.kReverse);
     }
 
     @Config
@@ -60,28 +60,20 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
     public void toggleIntake(boolean enabled) {
         // Only turn it on if intake is down and it is currently off
         if(m_IntakeMotor.get() == 0 && m_intakeSolenoid1.get() == DoubleSolenoid.Value.kReverse) {
-            extendIntake(true);
-            setOutput(INTAKE.SPEED);
+            deployIntake();
         }
         else{
             retractIntake();
-            setOutput(0);
         }
     }
-
-/*     public void checkStall() {
-        if (intakeStall.getStallStatus().isStalled) {
-            setOutput(0);
-        }
-    } */
 
     public void deployIntake() {
         setOutput(INTAKE.SPEED);
-        extendIntake(true);
+        lowerIntake();
     }
 
     public void retractIntake() {
-        extendIntake(false);
+        raiseIntake();
         setOutput(0);
     }
 }

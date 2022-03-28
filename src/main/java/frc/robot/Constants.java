@@ -14,6 +14,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.swervelib.Mk4ModuleConfiguration;
+import frc.swervelib.SdsModuleConfigurations;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -71,19 +73,19 @@ public final class Constants {
         public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(238); // 300FIXME Measure and set back right steer offset        
 
         // Drivetrain Performance Mechanical limits
-        static public final double MAX_FWD_REV_SPEED_MPS = Units.feetToMeters(6.0);
-        static public final double MAX_STRAFE_SPEED_MPS = Units.feetToMeters(6.0);
-        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC = Units.degreesToRadians(90.0);
-        static public final double MAX_TRANSLATE_ACCEL_MPS2 = MAX_FWD_REV_SPEED_MPS/0.25; //0-full time of 0.25 second
-        static public final double MAX_ROTATE_ACCEL_RAD_PER_SEC_2 = MAX_ROTATE_SPEED_RAD_PER_SEC/0.25; //0-full time of 0.25 second
+        static public final double MAX_FWD_REV_SPEED_MPS = Units.feetToMeters(13.5); // Measured
+        static public final double MAX_FWD_REV_SPEED_MPS_EST = 6380.0 / 60.0 * SdsModuleConfigurations.MK4_L1.getDriveReduction() * SdsModuleConfigurations.MK4_L1.getWheelDiameter() * Math.PI;
+        static public final double MAX_STRAFE_SPEED_MPS = Units.feetToMeters(13.5); // Unused
+        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC = Units.degreesToRadians(500); // Measured
+        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC_EST = MAX_FWD_REV_SPEED_MPS_EST / Math.hypot(TRACKWIDTH_METERS / 2.0, WHEELBASE_METERS / 2.0);
 
         // Fine control speed limits
-        static public final double MAX_FWD_REV_SPEED_MPS_FAST = 0.5; // Percent of output power
-        static public final double MAX_STRAFE_SPEED_MPS_FAST = 0.5;
-        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC_FAST = 0.35;
-        static public final double MAX_FWD_REV_SPEED_MPS_SLOW = 0.25; // Percent of output power
-        static public final double MAX_STRAFE_SPEED_MPS_SLOW = 0.25;
-        static public final double MAX_ROTATE_SPEED_RAD_PER_SEC_SLOW = 0.25;
+        static public final double MAX_FWD_REV_SPEED_FAST = 0.5; // Percent of output power
+        static public final double MAX_STRAFE_SPEED_FAST = 0.5;
+        static public final double MAX_ROTATE_SPEED_FAST = 0.35;
+        static public final double MAX_FWD_REV_SPEED_SLOW = 0.25; // Percent of output power
+        static public final double MAX_STRAFE_SPEED_SLOW = 0.25;
+        static public final double MAX_ROTATE_SPEED_SLOW = 0.25;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // SENSOR CONSTANTS
@@ -105,13 +107,16 @@ public final class Constants {
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
         public static final double TRAJECTORYXkP = 10;
-        public static final double TRAJECTORYYkP = 1;
-        public static final double THETACONTROLLERkP = 1;
+        public static final double TRAJECTORYYkP = 10;
+        public static final double THETACONTROLLERkP = 10;
 
         // Constraint for the motion profilied robot angle controller
         public static final TrapezoidProfile.Constraints THETACONTROLLERCONSTRAINTS =
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+
+        public static final double TWOBALLTIME = 1.5;
+        public static final double ONEBALLTIME = .75;
 
         public static final double AIMROTATE = 0.3;
     }
