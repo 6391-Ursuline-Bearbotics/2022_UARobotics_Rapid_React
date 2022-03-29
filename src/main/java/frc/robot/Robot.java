@@ -26,7 +26,6 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private boolean userButton = false;
-  private int chirp = 0;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -71,10 +70,10 @@ public class Robot extends TimedRobot {
     Logger.updateEntries();
 
     if (RobotController.getUserButton() && !userButton) {
-      /* m_robotContainer.m_PhotonVision.m_HD3000.takeInputSnapshot();
+      m_robotContainer.m_PhotonVision.m_HD3000.takeInputSnapshot();
       m_robotContainer.m_PhotonVision.m_HD3000.takeOutputSnapshot();
       m_robotContainer.m_PhotonVision.m_limelight.takeInputSnapshot();
-      m_robotContainer.m_PhotonVision.m_limelight.takeOutputSnapshot(); */
+      m_robotContainer.m_PhotonVision.m_limelight.takeOutputSnapshot();
     }
     userButton = RobotController.getUserButton();
   }
@@ -89,17 +88,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {
-    //m_robotContainer.m_PhotonVision.lightsOn();
-/*     if (m_robotContainer.dt.getGyroReady() && chirp <= 100) {
-      chirp += 1;
-      m_robotContainer.m_climb.chirp(500);
-      //m_robotContainer.m_LED.rainbow();
-    }
-    if (chirp > 100) {
-      m_robotContainer.m_climb.chirp(0);
-    } */
-  }
+  public void disabledPeriodic() {}
 
   /**
    * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
@@ -110,12 +99,8 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_intake.retractIntake();
     m_robotContainer.m_conveyor.turnOff();
-/*     m_robotContainer.m_climb.invertclimber(false);
-    m_robotContainer.m_climb.setOutput(0, 0);
-    m_robotContainer.m_climb.climbstage = 0;
-    m_robotContainer.m_climb.resetEnc(true); */
     m_robotContainer.m_shooter.setRPS(0, 0);
-    //m_robotContainer.m_PhotonVision.lightsOff();
+    m_robotContainer.m_PhotonVision.lightsOff();
 
     // schedule the autonomous command (example)
     //move this down
@@ -143,12 +128,8 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.m_intake.retractIntake();
     m_robotContainer.m_conveyor.turnOff();
-/*     m_robotContainer.m_climb.invertclimber(false);
-    m_robotContainer.m_climb.setOutput(0, 0);
-    m_robotContainer.m_climb.climbstage = 0;
-    m_robotContainer.m_climb.resetEnc(true); */
     m_robotContainer.m_shooter.setRPS(0, 0);
-    //m_robotContainer.m_PhotonVision.lightsOff();
+    m_robotContainer.m_PhotonVision.lightsOff();
   }
 
   /**

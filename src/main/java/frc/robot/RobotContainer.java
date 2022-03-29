@@ -29,7 +29,9 @@ import frc.robot.commands.AutoAimRotate;
 import frc.robot.commands.Center3Ball;
 import frc.robot.commands.FenderDelay;
 import frc.robot.commands.Forward;
+import frc.robot.commands.Left2BallD;
 import frc.robot.commands.Mid4Ball;
+import frc.robot.commands.Mid5Ball;
 import frc.robot.commands.Right5Ball;
 import frc.robot.commands.SemiCircle;
 import frc.robot.commands.Simple2Ball;
@@ -74,6 +76,8 @@ public class RobotContainer {
 
   private final Right5Ball right5;
   private final Mid4Ball mid4;
+  private final Mid5Ball mid5;
+  private final Left2BallD left2;
   private final SemiCircle semicircle;
   private final Simple2Ball simple2;
   private final FenderDelay fenderDelay;
@@ -95,7 +99,7 @@ public class RobotContainer {
   XboxControllerSim m_operatorControllerSim = new XboxControllerSim(OI.OPCONTROLLERPORT);
 
   @Log
-  public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem();
+  public final ConveyorSubsystem m_conveyor = new ConveyorSubsystem(drv, op);
 
   Button frontConveyorSensor = new Button(() -> m_conveyor.getFrontConveyor());
   Button topConveyorSensor = new Button(() -> m_conveyor.getTopConveyor());
@@ -111,6 +115,8 @@ public class RobotContainer {
     //m_LED = new LEDSubsystem(m_PhotonVision, dt);
     right5 = new Right5Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
     mid4 = new Mid4Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
+    mid5 = new Mid5Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
+    left2 = new Left2BallD(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
     semicircle = new SemiCircle(m_swerveSubsystem);
     simple2 = new Simple2Ball(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
     fenderDelay = new FenderDelay(m_swerveSubsystem, m_intake, m_conveyor, m_shooter);
@@ -135,10 +141,13 @@ public class RobotContainer {
         () -> m_climb
           .setOutput(op.JoystickLY()), m_climb));
 
-    autoChooser.addOption("Fender Delay", fenderDelay);
-    autoChooser.setDefaultOption("CircleShot", simple2);
-    autoChooser.addOption("Right5Ball", right5);
+    
+    autoChooser.setDefaultOption("Right5Ball", right5);
+    autoChooser.addOption("Mid5Ball", mid5);
+    autoChooser.addOption("Left2BallD", left2);
     autoChooser.addOption("Mid4Ball", mid4);
+    autoChooser.addOption("Fender Delay", fenderDelay);
+    autoChooser.addOption("CircleShot", simple2);
     autoChooser.addOption("SemiCircle", semicircle);
     autoChooser.addOption("Straight", straight);
     autoChooser.addOption("Forward", forward);
@@ -173,26 +182,13 @@ public class RobotContainer {
   
     // When start button is pressed reorient the field drive to the current heading
     drv.StartButton.whenActive(() -> dt.zeroGyroscope());
-
-    // Turn on the conveyor when the bottom sensor is blocked (ball waiting to go up)
-    // unless top sensor blocked (the ball has no place to go)
-    (topConveyorSensor.negate().and(frontConveyorSensor).and(op.BButton.negate()).and(auto.negate()))
-    .whenActive(() -> {
-          m_conveyor.on(CONVEYOR.SPEED);
-          drv.setRumble(0.8);
-          op.setRumble(0.8);}, m_conveyor)
-    .whenInactive(() -> {
-          m_conveyor.turnOff();
-          drv.setRumble(0);
-          op.setRumble(0);}, m_conveyor);
     
     // Turn on the conveyor while held then off
-    op.AButton.and(shooteratsetpoint.or(topConveyorSensor.negate()))
-    .whenActive(new InstantCommand(() -> m_conveyor.on(CONVEYOR.SHOOTSPEED), m_conveyor))
-    .whenInactive(new InstantCommand(m_conveyor::turnOff, m_conveyor));
+    op.AButton.whenActive(() -> m_conveyor.on(CONVEYOR.SHOOTSPEED))
+    .whenInactive(() -> m_conveyor.turnOff());
 
     // Spin the conveyor backwards when held
-    op.BButton.whenActive(() -> {m_conveyor.on(CONVEYOR.BACKSPEED); m_intake.retractIntake(); m_intake.setOutput(-INTAKE.SPEED);})
+    op.BButton.whenActive(() -> {m_conveyor.turnBackwards(); m_intake.retractIntake(); m_intake.setOutput(-INTAKE.SPEED);})
         .whenInactive(() -> {m_conveyor.turnOff(); m_intake.setOutput(0);});
 
     // When right bumper is pressed raise/lower the intake and stop/start the intake on both controllers

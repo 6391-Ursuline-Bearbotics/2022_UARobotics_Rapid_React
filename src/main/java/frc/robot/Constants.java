@@ -116,7 +116,8 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
         public static final double TWOBALLTIME = 1.5;
-        public static final double ONEBALLTIME = .75;
+        public static final double ONEBALLTIME = 0.75;
+        public static final double THREEBALLTIME = 2.0;
 
         public static final double AIMROTATE = 0.3;
     }

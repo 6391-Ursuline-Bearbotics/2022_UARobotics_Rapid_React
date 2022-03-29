@@ -6,8 +6,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 
-import java.time.Period;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -115,11 +113,6 @@ public class ShooterSubsystem extends SubsystemBase implements Loggable {
       m_shooterMotor.set(0);
     }
   }
-
-  // @Config
-  // public void setVoltage(double voltage) {
-  //   m_shooterMotor.setVoltage(voltage);
-  // }
 
   @Config
   public void setHoodPosition(double encoderPosition) {

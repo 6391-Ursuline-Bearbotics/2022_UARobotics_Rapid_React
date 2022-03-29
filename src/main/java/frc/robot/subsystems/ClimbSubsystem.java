@@ -5,11 +5,9 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CLIMB;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -68,30 +66,6 @@ public class ClimbSubsystem extends SubsystemBase implements Loggable{
     public void chirp(double freq) {
         m_climbMotor.set(ControlMode.MusicTone, freq);
     }
-
-    // There are 3 "stages" that we go to.  While lining up we go to the first stage which raise
-    // the climbers all the way up.  Once we move forward and touch the bar we bring them down
-    // to the point they are on the bar but not actually pulling allowing teammates to get on but
-    // it they were to pull ahead of time we would raise too.  Then the actual hang.
-/*     @Config.ToggleButton
-    public void nextClimbStage(boolean enabled) {
-        climbstage = climbstage + 1;
-        switch(climbstage) {
-            case 1:
-                setpoint = ClimbConstants.kFullUpEncoderCount;
-                setPosition(ClimbConstants.kFullUpEncoderCount);
-                break;
-            case 2:
-                setpoint = ClimbConstants.kOnBarEncoderCount;
-                setPosition(ClimbConstants.kOnBarEncoderCount);
-                break;
-            case 3:
-                setpoint = ClimbConstants.kHangingEncoderCount;
-                setPosition(ClimbConstants.kHangingEncoderCount);
-                break;
-            default:
-        }
-    } */
 
     // Determines if the talon is at the desired position
     @Log

@@ -12,7 +12,6 @@ import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import frc.robot.Constants.INTAKE;
-import frc.robot.UA6391.StallDetector;
 import frc.robot.UA6391.StatusFrameHelper;
 
 public class IntakeSubsystem extends SubsystemBase implements Loggable{
