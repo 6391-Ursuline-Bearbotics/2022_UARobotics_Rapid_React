@@ -104,7 +104,7 @@ public class RobotContainer {
   Button frontConveyorSensor = new Button(() -> m_conveyor.getFrontConveyor());
   Button topConveyorSensor = new Button(() -> m_conveyor.getTopConveyor());
   Button shooteratsetpoint = new Button(() -> m_shooter.atSetpoint());
-  Button auto = new Button(() -> DriverStation.isAutonomous());
+  Button auto = new Button(() -> m_conveyor.getAutoConvey());
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -125,7 +125,7 @@ public class RobotContainer {
 
     m_swerveSubsystem.setDefaultCommand(new RunCommand(() -> dt.setModuleStates(m_scheme.getJoystickSpeeds()), m_swerveSubsystem));
 
-    //LiveWindow.disableAllTelemetry();
+    LiveWindow.disableAllTelemetry();
 
     m_PhotonVision.fieldSetup(m_swerveSubsystem.dt.getField());
 
@@ -179,6 +179,18 @@ public class RobotContainer {
         DRIVE.MAX_FWD_REV_SPEED_FAST, DRIVE.MAX_STRAFE_SPEED_FAST, DRIVE.MAX_ROTATE_SPEED_FAST);
         fast = true;}),
       () -> fast));
+
+    // Turn on the conveyor when the bottom sensor is blocked (ball waiting to go up)
+    // unless top sensor blocked (the ball has no place to go)
+    (topConveyorSensor.negate().and(frontConveyorSensor).and(op.BButton.negate()).and(auto))
+    .whenActive(() -> {
+          m_conveyor.m_ConveyorMotor.set(CONVEYOR.SPEED);
+          drv.setRumble(0.8);
+          op.setRumble(0.8);})
+    .whenInactive(() -> {
+          m_conveyor.m_ConveyorMotor.set(0);
+          drv.setRumble(0);
+          op.setRumble(0);});
   
     // When start button is pressed reorient the field drive to the current heading
     drv.StartButton.whenActive(() -> dt.zeroGyroscope());
@@ -200,6 +212,11 @@ public class RobotContainer {
     op.XButton.whenActive(new InstantCommand(() -> {
       m_shooter.setRPS(39.0, SHOOTER.FENDERFF);
       m_shooter.setHoodPosition(0);
+    }, m_shooter));
+
+    op.BackButton.whenActive(new InstantCommand(() -> {
+      m_shooter.setRPS(39.0, SHOOTER.LAUNCHFF);
+      m_shooter.setHoodPosition(SHOOTER.HOODCIRCLE);
     }, m_shooter));
   
     // Stop the Shooter when the Y button is pressed

@@ -42,6 +42,8 @@ public class Mid5Ball extends SequentialCommandGroup {
             // Pickup the C and HP balls
             m_swerve.dt.createCommandForTrajectory(trajectory2, m_swerve).raceWith(new TrajectoryLogging(trajectory2, () -> m_swerve.dt.getPose())),
 
+            new WaitCommand(2),
+
             // Go back to the A Ball and pickup that too
             m_swerve.dt.createCommandForTrajectory(trajectory3, m_swerve).raceWith(new TrajectoryLogging(trajectory3, () -> m_swerve.dt.getPose())),
 

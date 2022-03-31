@@ -14,7 +14,7 @@ import frc.robot.UA6391.StatusFrameHelper;
 import frc.robot.UA6391.XboxController6391;
 
 public class ConveyorSubsystem extends SubsystemBase implements Loggable{
-    private final WPI_TalonSRX m_ConveyorMotor = new WPI_TalonSRX(CONVEYOR.CANID);
+    public final WPI_TalonSRX m_ConveyorMotor = new WPI_TalonSRX(CONVEYOR.CANID);
 
     DigitalInput frontconveyor = new DigitalInput(CONVEYOR.FRONTSENSORPORT);
     DigitalInput topconveyor = new DigitalInput(CONVEYOR.TOPSENSORPORT);
@@ -22,6 +22,7 @@ public class ConveyorSubsystem extends SubsystemBase implements Loggable{
     XboxController6391 drv;
     XboxController6391 op;
 
+    @Log
     private boolean autoConvey = true;
 
     public ConveyorSubsystem(XboxController6391 drv, XboxController6391 op) {
@@ -35,20 +36,20 @@ public class ConveyorSubsystem extends SubsystemBase implements Loggable{
 
     @Config
     public void turnOff() {
-        this.m_ConveyorMotor.set(0);
+        m_ConveyorMotor.set(0);
         setAutoConvey(true);
     }
 
     @Config
     public void on(double speed) {
         setAutoConvey(false);
-        this.m_ConveyorMotor.set(speed);
+        m_ConveyorMotor.set(speed);
     }
 
     @Config
     public void turnBackwards() {
         setAutoConvey(false);
-        this.m_ConveyorMotor.set(CONVEYOR.BACKSPEED);
+        m_ConveyorMotor.set(CONVEYOR.BACKSPEED);
     }
 
     @Log
@@ -68,21 +69,7 @@ public class ConveyorSubsystem extends SubsystemBase implements Loggable{
         autoConvey = value;
     }
 
-    @Override
-    public void periodic() {
-        // Turn on the conveyor when the bottom sensor is blocked (ball waiting to go up)
-        // unless top sensor blocked (the ball has no place to go)
-        if (autoConvey) {
-            if (!getTopConveyor() && getFrontConveyor()) {
-                on(CONVEYOR.SPEED);
-                drv.setRumble(0.8);
-                op.setRumble(0.8);
-            }          
-            else {
-                turnOff();
-                drv.setRumble(0);
-                op.setRumble(0);
-            }
-        }
+    public boolean getAutoConvey() {
+        return autoConvey;
     }
 }

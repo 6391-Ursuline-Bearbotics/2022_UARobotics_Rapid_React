@@ -37,8 +37,8 @@ public class Right5Ball extends SequentialCommandGroup {
             m_swerve.dt.createCommandForTrajectory(trajectory1, m_swerve).raceWith(new TrajectoryLogging(trajectory1, () -> m_swerve.dt.getPose())),
 
             // Shoot the A ball and preload
-            new RunCommand(() -> m_conveyor.on(CONVEYOR.SHOOTSPEED), m_conveyor).withTimeout(AUTO.TWOBALLTIME)
-                .andThen(new InstantCommand(m_conveyor::turnOff, m_conveyor)),
+            new RunCommand(() -> m_conveyor.on(CONVEYOR.SHOOTSPEED)).withTimeout(AUTO.TWOBALLTIME)
+                .andThen(new InstantCommand(m_conveyor::turnOff)),
                 
             // Pickup the B ball
             m_swerve.dt.createCommandForTrajectory(trajectory2, m_swerve).raceWith(new TrajectoryLogging(trajectory2, () -> m_swerve.dt.getPose())),
