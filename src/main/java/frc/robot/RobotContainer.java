@@ -206,7 +206,7 @@ public class RobotContainer {
     // When right bumper is pressed raise/lower the intake and stop/start the intake on both controllers
     op.BumperR.whenActive(() -> m_intake.toggleIntake(true));
 
-    op.BumperL.whenActive(() -> m_climb.toggleArms());
+    op.StartButton.whenActive(() -> m_climb.toggleArms());
 
     // Spin up the shooter for the fender shot when the 'X' button is pressed.
     op.XButton.whenActive(new InstantCommand(() -> {

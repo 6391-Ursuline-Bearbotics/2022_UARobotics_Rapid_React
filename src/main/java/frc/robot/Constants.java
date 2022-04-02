@@ -164,7 +164,7 @@ public final class Constants {
         public static final int SOLENOID1FWD = 3;
         public static final int SOLENOID1REV = 2;
 
-        public static final double SPEED = 0.75;
+        public static final double SPEED = 1.0;
 
         public static final double STALLCURRENT = 20;
         public static final int STALLTIME = 500;
@@ -228,6 +228,7 @@ public final class Constants {
         public static final double FENDERFF = 0.45; //.38 for low energy shot
         public static final double CIRCLEFF = 0.5;//.5
         public static final double LAUNCHFF = 0.55;
+        public static final double DEFENDFF = 0.36;
         public static final double P = 0;//999999999999999.0;
         public static final double D = 0;
     
