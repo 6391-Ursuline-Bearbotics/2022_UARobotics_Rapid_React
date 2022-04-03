@@ -41,7 +41,7 @@ public class Left2BallD extends SequentialCommandGroup {
 
             //adjust hood angle and speed for low shot
             new InstantCommand(() -> {m_shooter.setRPS(SHOOTER.SETPOINT2, SHOOTER.DEFENDFF);
-                m_shooter.setHoodPosition(SHOOTER.HOODCIRCLE);}, m_shooter),
+                m_shooter.setHoodPosition(SHOOTER.HOODDEFENSE);}, m_shooter),
                 
             // Pickup the RedB ball
             m_swerve.dt.createCommandForTrajectory(trajectory2, m_swerve).raceWith(new TrajectoryLogging(trajectory2, () -> m_swerve.dt.getPose())),

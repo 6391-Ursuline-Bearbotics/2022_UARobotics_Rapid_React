@@ -213,6 +213,7 @@ public final class Constants {
         public static final double HOODkP = 0.01;
         public static final int HOODCIRCLE = -55500;
         public static final int HOODLOW = -30000;
+        public static final int HOODDEFENSE = -65500;
 
         public static final double TOLERANCERPS = 6.0;
         
@@ -225,8 +226,8 @@ public final class Constants {
         public static final double RPSTORAW = (double) ENCODERCPR / 10;
 
         public static final double LOWFF = 0.24;
-        public static final double FENDERFF = 0.45; //.38 for low energy shot
-        public static final double CIRCLEFF = 0.5;//.5
+        public static final double FENDERFF = 0.4; //.45 for low energy shot
+        public static final double CIRCLEFF = 0.45;//.5
         public static final double LAUNCHFF = 0.55;
         public static final double DEFENDFF = 0.36;
         public static final double P = 0;//999999999999999.0;
