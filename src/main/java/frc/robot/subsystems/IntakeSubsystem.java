@@ -31,7 +31,7 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
         //intakeStall.setMinStallMillis(INTAKE.STALLTIME);
         m_IntakeMotor2.follow(m_IntakeMotor);
         m_IntakeMotor2.setInverted(InvertType.OpposeMaster);
-        StatusFrameHelper.statusFrameOff(m_IntakeMotor);
+        StatusFrameHelper.statusFrameOffExcept1(m_IntakeMotor);
         StatusFrameHelper.statusFrameOff(m_IntakeMotor2);
     }
 
