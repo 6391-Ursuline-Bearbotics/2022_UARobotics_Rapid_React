@@ -92,7 +92,7 @@ public class RobotContainer {
   // The driver's controller
   XboxController6391 drv = new XboxController6391(OI.DRVCONTROLLERPORT, 0.1);
   XboxControllerSim m_driverControllerSim = new XboxControllerSim(OI.DRVCONTROLLERPORT);
-  private final ControlScheme m_scheme = new ControlScheme(drv.getXboxController());
+  private final ControlScheme m_scheme = new ControlScheme(drv);
 
   // The operator's controller
   XboxController6391 op = new XboxController6391(OI.OPCONTROLLERPORT, 0.1);

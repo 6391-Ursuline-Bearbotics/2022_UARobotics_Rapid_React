@@ -1,13 +1,13 @@
 package frc.robot;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.UA6391.XboxController6391;
 import frc.swervelib.SwerveInput;
 
 public class ControlScheme {
-    private final XboxController m_controller;
+    private final XboxController6391 m_controller;
     private static final SendableChooser<String> driverChooser = new SendableChooser<>();
 
     private SlewRateLimiter slewX = new SlewRateLimiter(10);
@@ -18,7 +18,7 @@ public class ControlScheme {
     private double m_translationY;
     private double m_rotation;
 
-    public ControlScheme(XboxController controller) {
+    public ControlScheme(XboxController6391 controller) {
         this.m_controller = controller;
 
         // Control Scheme Chooser
@@ -32,30 +32,36 @@ public class ControlScheme {
     public SwerveInput getJoystickSpeeds() {
         switch (driverChooser.getSelected()) {
             case "Both Sticks":
-              m_translationX = slewX.calculate(modifyAxis(-m_controller.getLeftY()));
-              m_translationY = slewY.calculate(modifyAxis(-m_controller.getLeftX()));
-              m_rotation = slewRot.calculate(modifyAxis(-m_controller.getRightX()));
+              m_translationX = slewX.calculate(modifyAxis(-m_controller.JoystickLY()));
+              m_translationY = slewY.calculate(modifyAxis(-m_controller.JoystickLX()));
+              m_rotation = slewRot.calculate(modifyAxis(-m_controller.JoystickRX()));
               break;
             case "Left Stick and Triggers":
-              m_translationX = slewX.calculate(modifyAxis(-m_controller.getLeftY()));
-              m_translationY = slewY.calculate(modifyAxis(-m_controller.getLeftX()));
-              m_rotation = slewRot.calculate(m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis());
+              m_translationX = slewX.calculate(modifyAxis(-m_controller.JoystickLY()));
+              m_translationY = slewY.calculate(modifyAxis(-m_controller.JoystickLX()));
+              m_rotation = slewRot.calculate(m_controller.TriggerCombined());
               break;
             case "Split Sticks and Triggers":
-              m_translationX = slewX.calculate(modifyAxis(-m_controller.getLeftY()));
-              m_translationY = slewY.calculate(modifyAxis(-m_controller.getRightX()));
-              m_rotation = slewRot.calculate(m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis());
+              m_translationX = slewX.calculate(modifyAxis(-m_controller.JoystickLY()));
+              m_translationY = slewY.calculate(modifyAxis(-m_controller.JoystickRX()));
+              m_rotation = slewRot.calculate(m_controller.TriggerCombined());
               break;
             case "Gas Pedal":
-              m_translationX = modifyAxis(-m_controller.getLeftY());
-              m_translationY = modifyAxis(-m_controller.getLeftX());
+              m_translationX = modifyAxis(-m_controller.JoystickLY());
+              m_translationY = modifyAxis(-m_controller.JoystickLX());
               double angle = calculateTranslationDirection(m_translationX, m_translationY);
-              m_translationX = slewX.calculate(Math.cos(angle) * m_controller.getRightTriggerAxis());
-              m_translationY = slewY.calculate(Math.sin(angle) * m_controller.getRightTriggerAxis());
-              m_rotation = slewRot.calculate(modifyAxis(-m_controller.getRightX()));
+              m_translationX = slewX.calculate(Math.cos(angle) * m_controller.TriggerR());
+              m_translationY = slewY.calculate(Math.sin(angle) * m_controller.TriggerR());
+              m_rotation = slewRot.calculate(modifyAxis(-m_controller.JoystickRX()));
               break;
         }
         return new SwerveInput(m_translationX, m_translationY, m_rotation);
+    }
+
+    public void modifySlew(double slewX, double slewY, double slewRotate) {
+        this.slewX = new SlewRateLimiter(slewX);
+        this.slewY = new SlewRateLimiter(slewY);
+        this.slewRot = new SlewRateLimiter(slewRotate);
     }
 
   private static double modifyAxis(double value) {
