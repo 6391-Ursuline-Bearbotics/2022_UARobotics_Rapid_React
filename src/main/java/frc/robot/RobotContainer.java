@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoAimRotate;
@@ -172,11 +173,10 @@ public class RobotContainer {
     //drv.YButton.whileActiveOnce(new AutoAimRotate(m_swerveSubsystem, m_PhotonVision, true, m_scheme));
 
     // When the left bumper is pressed on driver controller controls are slower
-    drv.BumperL.whenActive(new ConditionalCommand(new InstantCommand(() -> {m_swerveSubsystem.dt.setMaxSpeeds(
-        DRIVE.MAX_FWD_REV_SPEED_SLOW, DRIVE.MAX_STRAFE_SPEED_SLOW, DRIVE.MAX_ROTATE_SPEED_SLOW);
+    drv.BumperL.whenActive(new ConditionalCommand(new InstantCommand(() -> {setDriveMaxSpeed(
+        DRIVE.MAX_STRAFE_SPEED_SLOW, DRIVE.MAX_ROTATE_SPEED_SLOW);
         fast = false;}),
-      new InstantCommand(() -> {m_swerveSubsystem.dt.setMaxSpeeds(
-        DRIVE.MAX_FWD_REV_SPEED_FAST, DRIVE.MAX_STRAFE_SPEED_FAST, DRIVE.MAX_ROTATE_SPEED_FAST);
+      new InstantCommand(() -> {setDriveMaxSpeed(DRIVE.MAX_STRAFE_SPEED_FAST, DRIVE.MAX_ROTATE_SPEED_FAST);
         fast = true;}),
       () -> fast));
 
@@ -248,5 +248,15 @@ public class RobotContainer {
   @Log
   public String getPose() {
     return dt.getPose().toString();
+  }
+
+  @Config
+  private void setDriveMaxSpeed(double maxStrafe, double maxRotate) {
+    m_swerveSubsystem.dt.setMaxSpeeds(maxStrafe, maxStrafe, maxRotate);
+  }
+
+  @Config
+  private void setDriveMaxRamp(double maxStrafeRamp, double maxRotateRamp) {
+    m_swerveSubsystem.dt.setMaxRamp(maxStrafeRamp, maxRotateRamp);
   }
 }
