@@ -257,6 +257,6 @@ public class RobotContainer {
 
   @Config
   private void setDriveMaxRamp(double maxStrafeRamp, double maxRotateRamp) {
-    m_swerveSubsystem.dt.setMaxRamp(maxStrafeRamp, maxRotateRamp);
+    m_scheme.modifySlew(maxStrafeRamp, maxStrafeRamp, maxRotateRamp);
   }
 }
